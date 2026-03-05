@@ -1,5 +1,7 @@
-data/
+data/collected/
+data/subscribers.csv
 drafts/
+!data/seen_articles.json
 *.log
 .env
 __pycache__/

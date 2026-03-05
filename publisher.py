@@ -248,10 +248,11 @@ def _esc(text):
 
 def build_header(home_prefix=""):
     """smol.ai-style header: logo box left, nav links right."""
+    subscribe_href = f"{home_prefix}index.html#subscribe" if home_prefix else "#subscribe"
     return f"""<div class="site-header">
     <a class="logo" href="{home_prefix}index.html">{NEWSLETTER_NAME}</a>
     <nav>
-      <a href="#subscribe">subscribe</a>
+      <a href="{subscribe_href}">subscribe</a>
       <span class="sep">/</span>
       <a href="{home_prefix}archive.html">issues</a>
       <span class="sep">/</span>

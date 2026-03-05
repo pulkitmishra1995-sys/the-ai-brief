@@ -1,0 +1,70 @@
+name: Daily Newsletter
+
+on:
+  schedule:
+    # Run at 7:00 AM UTC (start of day)
+    - cron: '0 7 * * *'
+    # Run at 10:00 PM UTC (end of day)
+    - cron: '0 22 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+jobs:
+  collect-and-publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: pip install python-dotenv
+
+      - name: Collect fresh data
+        run: python3 collector.py
+
+      - name: Generate draft (local mode)
+        run: python3 summarizer.py --local
+
+      - name: Publish to site
+        run: python3 publisher.py --site-only
+
+      - name: Commit and push changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add site/ data/seen_articles.json
+          git diff --cached --quiet || git commit -m "Daily newsletter update — $(date -u +%Y-%m-%d)"
+          git push
+
+  deploy:
+    needs: collect-and-publish
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
