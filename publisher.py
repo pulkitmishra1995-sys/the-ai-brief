@@ -800,7 +800,7 @@ def update_index_page(timeline_html, target_date, md_content=None):
 
   <div class="subscribe-inline" id="subscribe">
     <span class="subscribe-label">Get the daily AI & tech digest in your inbox</span>
-    <a class="subscribe-btn" href="mailto:theaibrief.subscribe@gmail.com?subject=Subscribe%20to%20The%20AI%20Brief&body=Please%20add%20me%20to%20the%20newsletter.%0A%0AName%3A%20%0A" target="_blank">Subscribe via Email</a>
+    <a class="subscribe-btn" href="mailto:pulkitmishra1995@gmail.com?subject=Subscribe%20to%20The%20AI%20Brief&body=Please%20add%20me%20to%20the%20newsletter.%0A%0AName%3A%20%0A" target="_blank">Subscribe via Email</a>
   </div>
 
   <div class="title-bar">
