@@ -23,7 +23,7 @@ from pathlib import Path
 
 from config import (
     DRAFTS_DIR, SITE_DIR, ISSUES_DIR, EMAIL,
-    NEWSLETTER_NAME, OXFORD_BLUE, FORMSPREE_ENDPOINT,
+    NEWSLETTER_NAME, OXFORD_BLUE,
 )
 from subscribe import get_active_emails
 
@@ -751,7 +751,6 @@ def update_index_page(timeline_html, target_date, md_content=None):
     except ValueError:
         date_display = target_date
 
-    formspree_action = f"https://formspree.io/f/{FORMSPREE_ENDPOINT}" if FORMSPREE_ENDPOINT else "#"
     header = build_header()
     date_picker = build_date_picker(current_date=target_date, link_prefix="")
 
@@ -800,12 +799,8 @@ def update_index_page(timeline_html, target_date, md_content=None):
   {date_picker}
 
   <div class="subscribe-inline" id="subscribe">
-    <form action="{formspree_action}" method="POST">
-      <label>Subscribe:</label>
-      <input type="email" name="email" placeholder="your@email.com" required>
-      <input type="text" name="name" placeholder="Name">
-      <button type="submit">Subscribe</button>
-    </form>
+    <span class="subscribe-label">Get the daily AI & tech digest in your inbox</span>
+    <a class="subscribe-btn" href="mailto:theaibrief.subscribe@gmail.com?subject=Subscribe%20to%20The%20AI%20Brief&body=Please%20add%20me%20to%20the%20newsletter.%0A%0AName%3A%20%0A" target="_blank">Subscribe via Email</a>
   </div>
 
   <div class="title-bar">
