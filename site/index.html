@@ -15,11 +15,113 @@
       <a href="archive.html">issues</a>
       <span class="sep">/</span>
       <a href="archive.html#tags">tags</a>
+      <span class="sep">/</span>
+      <button class="prefs-btn" onclick="togglePrefsPanel()" title="Preferences">&#9881;</button>
     </nav>
+  </div>
+  <div class="prefs-overlay" onclick="togglePrefsPanel()"></div>
+  <div class="prefs-panel">
+    <div class="prefs-panel-header">
+      <h3>Preferences</h3>
+      <button class="prefs-close-btn" onclick="togglePrefsPanel()">&times;</button>
+    </div>
+    <div class="prefs-section">
+      <div class="prefs-section-title">Topics I Care About</div>
+      <div class="prefs-section-title" style="font-size:0.7rem;margin-bottom:6px;margin-top:0;">Companies</div>
+      <div class="pref-pills">
+        <span class="pref-pill" data-topic="openai">OpenAI</span>
+        <span class="pref-pill" data-topic="anthropic">Anthropic</span>
+        <span class="pref-pill" data-topic="google">Google</span>
+        <span class="pref-pill" data-topic="meta">Meta</span>
+        <span class="pref-pill" data-topic="microsoft">Microsoft</span>
+        <span class="pref-pill" data-topic="nvidia">Nvidia</span>
+        <span class="pref-pill" data-topic="deepmind">DeepMind</span>
+        <span class="pref-pill" data-topic="apple">Apple</span>
+        <span class="pref-pill" data-topic="amazon">Amazon</span>
+      </div>
+      <div class="prefs-section-title" style="margin-top:12px;font-size:0.7rem;margin-bottom:6px;">Models</div>
+      <div class="pref-pills">
+        <span class="pref-pill" data-topic="gpt">GPT</span>
+        <span class="pref-pill" data-topic="claude">Claude</span>
+        <span class="pref-pill" data-topic="gemini">Gemini</span>
+        <span class="pref-pill" data-topic="llama">LLaMA</span>
+        <span class="pref-pill" data-topic="codex">Codex</span>
+      </div>
+      <div class="prefs-section-title" style="margin-top:12px;font-size:0.7rem;margin-bottom:6px;">Topics</div>
+      <div class="pref-pills">
+        <span class="pref-pill" data-topic="ai-safety">AI Safety</span>
+        <span class="pref-pill" data-topic="regulation">Regulation</span>
+        <span class="pref-pill" data-topic="robotics">Robotics</span>
+        <span class="pref-pill" data-topic="agents">Agents</span>
+        <span class="pref-pill" data-topic="multimodal">Multimodal</span>
+        <span class="pref-pill" data-topic="funding">Funding</span>
+        <span class="pref-pill" data-topic="startups">Startups</span>
+        <span class="pref-pill" data-topic="autonomous">Autonomous</span>
+      </div>
+    </div>
+    <div class="prefs-section">
+      <div class="prefs-section-title">Content I Want Most</div>
+      <div class="pref-content-row" data-section="news">
+        <label class="pref-toggle">
+          <input type="checkbox" checked>
+          <span class="pref-toggle-slider"></span>
+        </label>
+        <span class="pref-content-label">News Articles</span>
+        <div class="pref-priority">
+          <span>Pri</span>
+          <select><option value="1" selected>1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select>
+        </div>
+      </div>
+      <div class="pref-content-row" data-section="funding">
+        <label class="pref-toggle">
+          <input type="checkbox" checked>
+          <span class="pref-toggle-slider"></span>
+        </label>
+        <span class="pref-content-label">Funding &amp; Deals</span>
+        <div class="pref-priority">
+          <span>Pri</span>
+          <select><option value="1">1</option><option value="2" selected>2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select>
+        </div>
+      </div>
+      <div class="pref-content-row" data-section="podcast">
+        <label class="pref-toggle">
+          <input type="checkbox" checked>
+          <span class="pref-toggle-slider"></span>
+        </label>
+        <span class="pref-content-label">Podcasts</span>
+        <div class="pref-priority">
+          <span>Pri</span>
+          <select><option value="1">1</option><option value="2">2</option><option value="3" selected>3</option><option value="4">4</option><option value="5">5</option></select>
+        </div>
+      </div>
+      <div class="pref-content-row" data-section="event">
+        <label class="pref-toggle">
+          <input type="checkbox" checked>
+          <span class="pref-toggle-slider"></span>
+        </label>
+        <span class="pref-content-label">Events</span>
+        <div class="pref-priority">
+          <span>Pri</span>
+          <select><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4" selected>4</option><option value="5">5</option></select>
+        </div>
+      </div>
+      <div class="pref-content-row" data-section="video">
+        <label class="pref-toggle">
+          <input type="checkbox" checked>
+          <span class="pref-toggle-slider"></span>
+        </label>
+        <span class="pref-content-label">Videos</span>
+        <div class="pref-priority">
+          <span>Pri</span>
+          <select><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5" selected>5</option></select>
+        </div>
+      </div>
+    </div>
+    <button class="prefs-reset-btn" onclick="resetPrefs()">Reset preferences</button>
   </div>
   <div class="date-picker">
   <div class="dp-months"><span class="dp-month-tab active" data-month="2026-03">Mar 2026</span><span class="dp-month-tab" data-month="2026-02">Feb 2026</span></div>
-  <div class="dp-dates-row active" data-month="2026-03"><a class="dp-date" href="issues/2026-03-01.html">1</a><a class="dp-date" href="issues/2026-03-02.html">2</a><span class="dp-date empty">3</span><span class="dp-date empty">4</span><a class="dp-date" href="issues/2026-03-05.html">5</a><span class="dp-date empty">6</span><a class="dp-date" href="issues/2026-03-07.html">7</a><a class="dp-date" href="issues/2026-03-08.html">8</a><a class="dp-date current" href="issues/2026-03-09.html">9</a><span class="dp-date empty">10</span><span class="dp-date empty">11</span><span class="dp-date empty">12</span><span class="dp-date empty">13</span><span class="dp-date empty">14</span><span class="dp-date empty">15</span><span class="dp-date empty">16</span><span class="dp-date empty">17</span><span class="dp-date empty">18</span><span class="dp-date empty">19</span><span class="dp-date empty">20</span><span class="dp-date empty">21</span><span class="dp-date empty">22</span><span class="dp-date empty">23</span><span class="dp-date empty">24</span><span class="dp-date empty">25</span><span class="dp-date empty">26</span><span class="dp-date empty">27</span><span class="dp-date empty">28</span><span class="dp-date empty">29</span><span class="dp-date empty">30</span><span class="dp-date empty">31</span></div><div class="dp-dates-row" data-month="2026-02"><span class="dp-date empty">1</span><span class="dp-date empty">2</span><span class="dp-date empty">3</span><span class="dp-date empty">4</span><span class="dp-date empty">5</span><span class="dp-date empty">6</span><span class="dp-date empty">7</span><span class="dp-date empty">8</span><span class="dp-date empty">9</span><span class="dp-date empty">10</span><span class="dp-date empty">11</span><span class="dp-date empty">12</span><span class="dp-date empty">13</span><span class="dp-date empty">14</span><span class="dp-date empty">15</span><a class="dp-date" href="issues/2026-02-16.html">16</a><a class="dp-date" href="issues/2026-02-17.html">17</a><a class="dp-date" href="issues/2026-02-18.html">18</a><a class="dp-date" href="issues/2026-02-19.html">19</a><a class="dp-date" href="issues/2026-02-20.html">20</a><a class="dp-date" href="issues/2026-02-21.html">21</a><a class="dp-date" href="issues/2026-02-22.html">22</a><a class="dp-date" href="issues/2026-02-23.html">23</a><a class="dp-date" href="issues/2026-02-24.html">24</a><a class="dp-date" href="issues/2026-02-25.html">25</a><a class="dp-date" href="issues/2026-02-26.html">26</a><a class="dp-date" href="issues/2026-02-27.html">27</a><a class="dp-date" href="issues/2026-02-28.html">28</a></div>
+  <div class="dp-dates-row active" data-month="2026-03"><a class="dp-date" href="issues/2026-03-01.html">1</a><a class="dp-date" href="issues/2026-03-02.html">2</a><span class="dp-date empty">3</span><span class="dp-date empty">4</span><a class="dp-date" href="issues/2026-03-05.html">5</a><span class="dp-date empty">6</span><a class="dp-date current" href="issues/2026-03-07.html">7</a><span class="dp-date empty">8</span><span class="dp-date empty">9</span><span class="dp-date empty">10</span><span class="dp-date empty">11</span><span class="dp-date empty">12</span><span class="dp-date empty">13</span><span class="dp-date empty">14</span><span class="dp-date empty">15</span><span class="dp-date empty">16</span><span class="dp-date empty">17</span><span class="dp-date empty">18</span><span class="dp-date empty">19</span><span class="dp-date empty">20</span><span class="dp-date empty">21</span><span class="dp-date empty">22</span><span class="dp-date empty">23</span><span class="dp-date empty">24</span><span class="dp-date empty">25</span><span class="dp-date empty">26</span><span class="dp-date empty">27</span><span class="dp-date empty">28</span><span class="dp-date empty">29</span><span class="dp-date empty">30</span><span class="dp-date empty">31</span></div><div class="dp-dates-row" data-month="2026-02"><span class="dp-date empty">1</span><span class="dp-date empty">2</span><span class="dp-date empty">3</span><span class="dp-date empty">4</span><span class="dp-date empty">5</span><span class="dp-date empty">6</span><span class="dp-date empty">7</span><span class="dp-date empty">8</span><span class="dp-date empty">9</span><span class="dp-date empty">10</span><span class="dp-date empty">11</span><span class="dp-date empty">12</span><span class="dp-date empty">13</span><span class="dp-date empty">14</span><span class="dp-date empty">15</span><a class="dp-date" href="issues/2026-02-16.html">16</a><a class="dp-date" href="issues/2026-02-17.html">17</a><a class="dp-date" href="issues/2026-02-18.html">18</a><a class="dp-date" href="issues/2026-02-19.html">19</a><a class="dp-date" href="issues/2026-02-20.html">20</a><a class="dp-date" href="issues/2026-02-21.html">21</a><a class="dp-date" href="issues/2026-02-22.html">22</a><a class="dp-date" href="issues/2026-02-23.html">23</a><a class="dp-date" href="issues/2026-02-24.html">24</a><a class="dp-date" href="issues/2026-02-25.html">25</a><a class="dp-date" href="issues/2026-02-26.html">26</a><a class="dp-date" href="issues/2026-02-27.html">27</a><a class="dp-date" href="issues/2026-02-28.html">28</a></div>
 </div>
 <script>
 document.querySelectorAll('.dp-month-tab').forEach(function(tab) {
@@ -50,121 +152,680 @@ document.querySelectorAll('.dp-month-tab').forEach(function(tab) {
 
   <div class="timeline-container">
     <ol class="timeline">
-  <li class="tl-section">Top AI Stories</li>
-  <li class="tl-entry has-content">
+  <li class="tl-section" data-section="news">Top AI Stories</li>
+  <li class="tl-entry has-content" data-tags="agents" data-section="news">
     <div class="tl-header" onclick="this.parentElement.classList.toggle('expanded')">
-      <span class="tl-date">Mar 09</span>
-      <span class="tl-title"><a href="https://techcrunch.com/2026/03/08/rings-jamie-siminoff-has-been-trying-to-calm-privacy-fears-since-the-super-bowl-but-his-answers-may-not-help/">Ring’s Jamie Siminoff has been trying to calm privacy fears since the Super Bowl, but his answers may not help</a></span>
+      <span class="tl-date">Mar 07</span>
+      <span class="tl-title"><a href="https://techcrunch.com/2026/03/06/microsoft-anthropic-claude-remains-available-to-customers-except-the-defense-department/">Microsoft, Google, Amazon say Anthropic Claude remains available to non-defense customers</a></span>
+      <span class="tl-arrow">&rarr;</span>
+    </div>
+    <div class="tl-body">
+      <button class="close-btn" onclick="this.closest('.tl-entry').classList.remove('expanded')">&times;</button>
+      <div class="tags-cloud"><span class="tag-pill gray">anthropic</span><span class="tag-pill gray">google</span><span class="tag-pill gray">microsoft</span><span class="tag-pill gray">amazon</span><span class="tag-pill green">claude</span><span class="tag-pill blue">news</span></div>
+      <div class="detail-text"><p>Trump's Department of War feud with Anthropic won't impact other companies that are using Claude via Microsoft and Google products</p></div>
+      <div class="source-label">Source: <a href="https://techcrunch.com/2026/03/06/microsoft-anthropic-claude-remains-available-to-customers-except-the-defense-department/">TechCrunch AI</a></div>
+    </div>
+  </li>
+  <li class="tl-entry has-content" data-tags="" data-section="news">
+    <div class="tl-header" onclick="this.parentElement.classList.toggle('expanded')">
+      <span class="tl-date">Mar 07</span>
+      <span class="tl-title"><a href="https://techcrunch.com/2026/03/06/anthropics-claude-found-22-vulnerabilities-in-firefox-over-two-weeks/">Anthropic's Claude found 22 vulnerabilities in Firefox over two weeks</a></span>
+      <span class="tl-arrow">&rarr;</span>
+    </div>
+    <div class="tl-body">
+      <button class="close-btn" onclick="this.closest('.tl-entry').classList.remove('expanded')">&times;</button>
+      <div class="tags-cloud"><span class="tag-pill gray">anthropic</span><span class="tag-pill green">claude</span><span class="tag-pill blue">news</span></div>
+      <div class="detail-text"><p>In a recent security partnership with Mozilla, Anthropic found 22 separate vulnerabilities in Firefox — 14 of them classified as "high-severity."</p></div>
+      <div class="source-label">Source: <a href="https://techcrunch.com/2026/03/06/anthropics-claude-found-22-vulnerabilities-in-firefox-over-two-weeks/">TechCrunch AI</a></div>
+    </div>
+  </li>
+  <li class="tl-entry has-content" data-tags="" data-section="news">
+    <div class="tl-header" onclick="this.parentElement.classList.toggle('expanded')">
+      <span class="tl-date">Mar 07</span>
+      <span class="tl-title"><a href="https://techcrunch.com/2026/03/06/claudes-consumer-growth-surge-continues-after-pentagon-deal-debacle/">Claude's consumer growth surge continues after Pentagon deal debacle</a></span>
+      <span class="tl-arrow">&rarr;</span>
+    </div>
+    <div class="tl-body">
+      <button class="close-btn" onclick="this.closest('.tl-entry').classList.remove('expanded')">&times;</button>
+      <div class="tags-cloud"><span class="tag-pill green">gpt</span><span class="tag-pill green">claude</span><span class="tag-pill blue">news</span></div>
+      <div class="detail-text"><p>Claude's app is now seeing more new installs than ChatGPT and is growing its daily active users</p></div>
+      <div class="source-label">Source: <a href="https://techcrunch.com/2026/03/06/claudes-consumer-growth-surge-continues-after-pentagon-deal-debacle/">TechCrunch AI</a></div>
+    </div>
+  </li>
+  <li class="tl-entry has-content" data-tags="" data-section="news">
+    <div class="tl-header" onclick="this.parentElement.classList.toggle('expanded')">
+      <span class="tl-date">Mar 07</span>
+      <span class="tl-title"><a href="https://techcrunch.com/2026/03/06/after-europe-whatsapp-will-let-rival-ai-companies-offer-chatbots-in-brazil/">After Europe, WhatsApp will let rival AI companies offer chatbots in Brazil</a></span>
+      <span class="tl-arrow">&rarr;</span>
+    </div>
+    <div class="tl-body">
+      <button class="close-btn" onclick="this.closest('.tl-entry').classList.remove('expanded')">&times;</button>
+      <div class="tags-cloud"><span class="tag-pill gray">meta</span><span class="tag-pill blue">news</span></div>
+      <div class="detail-text"><p>Meta is now allowing rival AI companies to provide their chatbots on WhatsApp to Brazilian users for a fee, a day after the company confirmed a sim</p></div>
+      <div class="source-label">Source: <a href="https://techcrunch.com/2026/03/06/after-europe-whatsapp-will-let-rival-ai-companies-offer-chatbots-in-brazil/">TechCrunch AI</a></div>
+    </div>
+  </li>
+  <li class="tl-entry has-content" data-tags="agents" data-section="news">
+    <div class="tl-header" onclick="this.parentElement.classList.toggle('expanded')">
+      <span class="tl-date">Mar 07</span>
+      <span class="tl-title"><a href="https://techcrunch.com/2026/03/05/anthropic-to-challenge-dods-supply-chain-label-in-court/">Anthropic to challenge DOD's supply-chain label in court</a></span>
+      <span class="tl-arrow">&rarr;</span>
+    </div>
+    <div class="tl-body">
+      <button class="close-btn" onclick="this.closest('.tl-entry').classList.remove('expanded')">&times;</button>
+      <div class="tags-cloud"><span class="tag-pill gray">anthropic</span><span class="tag-pill blue">news</span></div>
+      <div class="detail-text"><p>Anthropic CEO Dario Amodei said he plans to challenge the Department of Defense's designation of the AI firm as a supply-chain risk</p></div>
+      <div class="source-label">Source: <a href="https://techcrunch.com/2026/03/05/anthropic-to-challenge-dods-supply-chain-label-in-court/">TechCrunch AI</a></div>
+    </div>
+  </li>
+  <li class="tl-entry has-content" data-tags="" data-section="news">
+    <div class="tl-header" onclick="this.parentElement.classList.toggle('expanded')">
+      <span class="tl-date">Mar 07</span>
+      <span class="tl-title"><a href="https://techcrunch.com/2026/03/05/diligencesquared-uses-ai-voice-agents-to-make-ma-research-affordable/">DiligenceSquared uses AI, voice agents to make M&amp;A research affordable</a></span>
+      <span class="tl-arrow">&rarr;</span>
+    </div>
+    <div class="tl-body">
+      <button class="close-btn" onclick="this.closest('.tl-entry').classList.remove('expanded')">&times;</button>
+      <div class="tags-cloud"><span class="tag-pill blue">startup</span><span class="tag-pill purple">agents</span><span class="tag-pill blue">news</span></div>
+      <div class="detail-text"><p>Instead of relying on expensive management consultants, the startup uses AI voice agents to conduct interviews with customers of the companies the</p></div>
+      <div class="source-label">Source: <a href="https://techcrunch.com/2026/03/05/diligencesquared-uses-ai-voice-agents-to-make-ma-research-affordable/">TechCrunch AI</a></div>
+    </div>
+  </li>
+  <li class="tl-entry has-content" data-tags="agents" data-section="news">
+    <div class="tl-header" onclick="this.parentElement.classList.toggle('expanded')">
+      <span class="tl-date">Mar 07</span>
+      <span class="tl-title"><a href="https://techcrunch.com/2026/03/05/aws-amazon-connect-health-ai-agent-platform-health-care-providers/">AWS launches a new AI agent platform specifically for healthcare</a></span>
+      <span class="tl-arrow">&rarr;</span>
+    </div>
+    <div class="tl-body">
+      <button class="close-btn" onclick="this.closest('.tl-entry').classList.remove('expanded')">&times;</button>
+      <div class="tags-cloud"><span class="tag-pill gray">amazon</span><span class="tag-pill purple">agents</span><span class="tag-pill blue">news</span></div>
+      <div class="detail-text"><p>AWS is launching Amazon Connect Health, an AI agent platform that will help with patient scheduling, documentation, and patient verification</p></div>
+      <div class="source-label">Source: <a href="https://techcrunch.com/2026/03/05/aws-amazon-connect-health-ai-agent-platform-health-care-providers/">TechCrunch AI</a></div>
+    </div>
+  </li>
+  <li class="tl-entry has-content" data-tags="" data-section="news">
+    <div class="tl-header" onclick="this.parentElement.classList.toggle('expanded')">
+      <span class="tl-date">Mar 05</span>
+      <span class="tl-title"><a href="https://importai.substack.com/p/import-ai-447-the-agi-economy-testing">Import AI 447: The AGI economy; testing AIs with generated games; and agent ecologies</a></span>
       <span class="tl-arrow">&rarr;</span>
     </div>
     <div class="tl-body">
       <button class="close-btn" onclick="this.closest('.tl-entry').classList.remove('expanded')">&times;</button>
       <div class="tags-cloud"><span class="tag-pill blue">news</span></div>
-      <div class="detail-text"><p>The facial recognition question is where things get more tangled</p></div>
-      <div class="source-label">Source: <a href="https://techcrunch.com/2026/03/08/rings-jamie-siminoff-has-been-trying-to-calm-privacy-fears-since-the-super-bowl-but-his-answers-may-not-help/">TechCrunch AI</a></div>
+      <div class="detail-text"></div>
+      <div class="source-label">Source: <a href="https://importai.substack.com/p/import-ai-447-the-agi-economy-testing">Import AI</a></div>
     </div>
   </li>
-  <li class="tl-section">Podcasts Worth Your Commute</li>
-  <li class="tl-entry has-content">
+  <li class="tl-entry has-content" data-tags="" data-section="news">
     <div class="tl-header" onclick="this.parentElement.classList.toggle('expanded')">
-      <span class="tl-date">Mar 09</span>
-      <span class="tl-title"><a href="https://thetwentyminutevc.libsyn.com/20vc-inside-accels-4bn-growth-investing-machine-cursor-is-dead-is-total-bs-here-is-why-what-missing-rippling-and-elevenlabs-taught-us-are-2bn-10bn-ipos-dead-why-now-is-a-great-time-to-be-thoma-bravo-with-miles-clements">20VC with Harry Stebbings — 20VC: Inside Accel's $4BN Growth Investing Machine | Cursor is Dead is Total BS: Here is Why | What Missing Rippling and ElevenLabs Taught Us | Are $2BN-$10BN IPOs Dead | Why Now is a Great Time to be Thoma Bravo with Miles Clements</a></span>
+      <span class="tl-date">Mar 05</span>
+      <span class="tl-title"><a href="https://importai.substack.com/p/import-ai-446-nuclear-llms-chinas">Import AI 446: Nuclear LLMs; China's big AI benchmark; measurement and AI policy</a></span>
+      <span class="tl-arrow">&rarr;</span>
+    </div>
+    <div class="tl-body">
+      <button class="close-btn" onclick="this.closest('.tl-entry').classList.remove('expanded')">&times;</button>
+      <div class="tags-cloud"><span class="tag-pill blue">news</span></div>
+      <div class="detail-text"></div>
+      <div class="source-label">Source: <a href="https://importai.substack.com/p/import-ai-446-nuclear-llms-chinas">Import AI</a></div>
+    </div>
+  </li>
+  <li class="tl-entry has-content" data-tags="" data-section="news">
+    <div class="tl-header" onclick="this.parentElement.classList.toggle('expanded')">
+      <span class="tl-date">Mar 05</span>
+      <span class="tl-title"><a href="https://importai.substack.com/p/import-ai-445-timing-superintelligence">Import AI 445: Timing superintelligence; AIs solve frontier math proofs; a new ML research benchmark</a></span>
+      <span class="tl-arrow">&rarr;</span>
+    </div>
+    <div class="tl-body">
+      <button class="close-btn" onclick="this.closest('.tl-entry').classList.remove('expanded')">&times;</button>
+      <div class="tags-cloud"><span class="tag-pill blue">news</span></div>
+      <div class="detail-text"></div>
+      <div class="source-label">Source: <a href="https://importai.substack.com/p/import-ai-445-timing-superintelligence">Import AI</a></div>
+    </div>
+  </li>
+  <li class="tl-entry has-content" data-tags="" data-section="news">
+    <div class="tl-header" onclick="this.parentElement.classList.toggle('expanded')">
+      <span class="tl-date">Mar 05</span>
+      <span class="tl-title"><a href="https://importai.substack.com/p/import-ai-444-llm-societies-huawei">Import AI 444: LLM societies; Huawei makes kernels with AI; ChipBench</a></span>
+      <span class="tl-arrow">&rarr;</span>
+    </div>
+    <div class="tl-body">
+      <button class="close-btn" onclick="this.closest('.tl-entry').classList.remove('expanded')">&times;</button>
+      <div class="tags-cloud"><span class="tag-pill blue">news</span></div>
+      <div class="detail-text"></div>
+      <div class="source-label">Source: <a href="https://importai.substack.com/p/import-ai-444-llm-societies-huawei">Import AI</a></div>
+    </div>
+  </li>
+  <li class="tl-entry has-content" data-tags="agents" data-section="news">
+    <div class="tl-header" onclick="this.parentElement.classList.toggle('expanded')">
+      <span class="tl-date">Mar 05</span>
+      <span class="tl-title"><a href="https://importai.substack.com/p/import-ai-443-into-the-mist-moltbook">Import AI 443: Into the mist: Moltbook, agent ecologies, and the internet in transition</a></span>
+      <span class="tl-arrow">&rarr;</span>
+    </div>
+    <div class="tl-body">
+      <button class="close-btn" onclick="this.closest('.tl-entry').classList.remove('expanded')">&times;</button>
+      <div class="tags-cloud"><span class="tag-pill purple">agents</span><span class="tag-pill blue">news</span></div>
+      <div class="detail-text"></div>
+      <div class="source-label">Source: <a href="https://importai.substack.com/p/import-ai-443-into-the-mist-moltbook">Import AI</a></div>
+    </div>
+  </li>
+  <li class="tl-entry has-content" data-tags="" data-section="news">
+    <div class="tl-header" onclick="this.parentElement.classList.toggle('expanded')">
+      <span class="tl-date">Mar 05</span>
+      <span class="tl-title"><a href="https://importai.substack.com/p/import-ai-442-winners-and-losers">Import AI 442: Winners and losers in the AI economy; math proof automation; and industrialization of cyber espionage</a></span>
+      <span class="tl-arrow">&rarr;</span>
+    </div>
+    <div class="tl-body">
+      <button class="close-btn" onclick="this.closest('.tl-entry').classList.remove('expanded')">&times;</button>
+      <div class="tags-cloud"><span class="tag-pill blue">news</span></div>
+      <div class="detail-text"></div>
+      <div class="source-label">Source: <a href="https://importai.substack.com/p/import-ai-442-winners-and-losers">Import AI</a></div>
+    </div>
+  </li>
+  <li class="tl-entry has-content" data-tags="agents" data-section="news">
+    <div class="tl-header" onclick="this.parentElement.classList.toggle('expanded')">
+      <span class="tl-date">Mar 05</span>
+      <span class="tl-title"><a href="https://importai.substack.com/p/import-ai-441-my-agents-are-working">Import AI 441: My agents are working. Are yours?</a></span>
+      <span class="tl-arrow">&rarr;</span>
+    </div>
+    <div class="tl-body">
+      <button class="close-btn" onclick="this.closest('.tl-entry').classList.remove('expanded')">&times;</button>
+      <div class="tags-cloud"><span class="tag-pill purple">agents</span><span class="tag-pill blue">news</span></div>
+      <div class="detail-text"></div>
+      <div class="source-label">Source: <a href="https://importai.substack.com/p/import-ai-441-my-agents-are-working">Import AI</a></div>
+    </div>
+  </li>
+  <li class="tl-section" data-section="funding">Funding &amp; Deals</li>
+  <li class="tl-entry has-content" data-tags="startup" data-section="funding">
+    <div class="tl-header" onclick="this.parentElement.classList.toggle('expanded')">
+      <span class="tl-date">Mar 07</span>
+      <span class="tl-title"><a href="https://techcrunch.com/video/anthropics-pentagon-deal-is-a-cautionary-tale-for-startups-chasing-federal-contracts/">Anthropic's Pentagon deal is a cautionary tale for startups chasing federal contracts</a></span>
+      <span class="tl-arrow">&rarr;</span>
+    </div>
+    <div class="tl-body">
+      <button class="close-btn" onclick="this.closest('.tl-entry').classList.remove('expanded')">&times;</button>
+      <div class="tags-cloud"><span class="tag-pill gray">anthropic</span><span class="tag-pill blue">startup</span><span class="tag-pill green">funding</span></div>
+      <div class="detail-text"><p>The Pentagon has officially designated Anthropic a supply-chain risk after the two failed to agree on how much control the military should have ove</p></div>
+      <div class="source-label">Source: <a href="https://techcrunch.com/video/anthropics-pentagon-deal-is-a-cautionary-tale-for-startups-chasing-federal-contracts/">TechCrunch AI</a></div>
+    </div>
+  </li>
+  <li class="tl-entry has-content" data-tags="startup" data-section="funding">
+    <div class="tl-header" onclick="this.parentElement.classList.toggle('expanded')">
+      <span class="tl-date">Mar 05</span>
+      <span class="tl-title"><a href="https://techcrunch.com/2026/03/05/how-1000-customer-calls-shaped-a-breakout-enterprise-ai-startup/">How 1,000+ customer calls shaped a breakout enterprise AI startup</a></span>
+      <span class="tl-arrow">&rarr;</span>
+    </div>
+    <div class="tl-body">
+      <button class="close-btn" onclick="this.closest('.tl-entry').classList.remove('expanded')">&times;</button>
+      <div class="tags-cloud"><span class="tag-pill blue">startup</span><span class="tag-pill green">funding</span></div>
+      <div class="detail-text"><p>On this episode of Build Mode, David Park joins Isabelle Johannessen to discuss how he and his team are intentionally iterating, fundraising, and s</p></div>
+      <div class="source-label">Source: <a href="https://techcrunch.com/2026/03/05/how-1000-customer-calls-shaped-a-breakout-enterprise-ai-startup/">TechCrunch AI</a></div>
+    </div>
+  </li>
+  <li class="tl-entry has-content" data-tags="series-round,startup" data-section="funding">
+    <div class="tl-header" onclick="this.parentElement.classList.toggle('expanded')">
+      <span class="tl-date">Mar 05</span>
+      <span class="tl-title"><a href="https://techcrunch.com/2026/03/05/lio-ai-series-a-a16z-30m-raise-automate-enterprise-procurement/">Lio raises $30M from Andreessen Horowitz and others to automate enterprise procurement</a></span>
+      <span class="tl-arrow">&rarr;</span>
+    </div>
+    <div class="tl-body">
+      <button class="close-btn" onclick="this.closest('.tl-entry').classList.remove('expanded')">&times;</button>
+      <div class="tags-cloud"><span class="tag-pill blue">startup</span><span class="tag-pill green">funding</span></div>
+      <div class="detail-text"></div>
+      <div class="source-label">Source: <a href="https://techcrunch.com/2026/03/05/lio-ai-series-a-a16z-30m-raise-automate-enterprise-procurement/">TechCrunch AI</a></div>
+    </div>
+  </li>
+  <li class="tl-entry has-content" data-tags="openai,anthropic,nvidia,investment" data-section="funding">
+    <div class="tl-header" onclick="this.parentElement.classList.toggle('expanded')">
+      <span class="tl-date">Mar 07</span>
+      <span class="tl-title"><a href="https://techcrunch.com/podcast/anthropic-vs-the-pentagon-the-saaspocalypse-and-why-competitions-is-good-actually/">Anthropic vs. the Pentagon, the SaaSpocalypse, and why competitions is good, actually</a></span>
+      <span class="tl-arrow">&rarr;</span>
+    </div>
+    <div class="tl-body">
+      <button class="close-btn" onclick="this.closest('.tl-entry').classList.remove('expanded')">&times;</button>
+      <div class="tags-cloud"><span class="tag-pill gray">anthropic</span><span class="tag-pill green">funding</span></div>
+      <div class="detail-text"><p>The Pentagon has officially designated Anthropic a supply-chain risk after the two failed to agree on how much control the military should have ove</p></div>
+      <div class="source-label">Source: <a href="https://techcrunch.com/podcast/anthropic-vs-the-pentagon-the-saaspocalypse-and-why-competitions-is-good-actually/">TechCrunch AI</a></div>
+    </div>
+  </li>
+  <li class="tl-entry has-content" data-tags="openai,anthropic,nvidia,investment" data-section="funding">
+    <div class="tl-header" onclick="this.parentElement.classList.toggle('expanded')">
+      <span class="tl-date">Mar 05</span>
+      <span class="tl-title"><a href="https://techcrunch.com/2026/03/04/jensen-huang-says-nvidia-is-pulling-back-from-openai-and-anthropic-but-his-explanation-raises-more-questions-than-it-answers/">Jensen Huang says Nvidia is pulling back from OpenAI and Anthropic, but his explanation raises more questions than it answers</a></span>
+      <span class="tl-arrow">&rarr;</span>
+    </div>
+    <div class="tl-body">
+      <button class="close-btn" onclick="this.closest('.tl-entry').classList.remove('expanded')">&times;</button>
+      <div class="tags-cloud"><span class="tag-pill gray">openai</span><span class="tag-pill gray">anthropic</span><span class="tag-pill gray">nvidia</span><span class="tag-pill green">funding</span></div>
+      <div class="detail-text"></div>
+      <div class="source-label">Source: <a href="https://techcrunch.com/2026/03/04/jensen-huang-says-nvidia-is-pulling-back-from-openai-and-anthropic-but-his-explanation-raises-more-questions-than-it-answers/">TechCrunch AI</a></div>
+    </div>
+  </li>
+  <li class="tl-entry has-content" data-tags="openai,anthropic,ai-safety" data-section="funding">
+    <div class="tl-header" onclick="this.parentElement.classList.toggle('expanded')">
+      <span class="tl-date">Mar 07</span>
+      <span class="tl-title"><a href="https://techcrunch.com/2026/03/06/city-detect-uses-ai-to-help-cities-stay-safe-and-clean/">City Detect, which uses AI to help cities stay safe and clean, raises $13M Series A</a></span>
+      <span class="tl-arrow">&rarr;</span>
+    </div>
+    <div class="tl-body">
+      <button class="close-btn" onclick="this.closest('.tl-entry').classList.remove('expanded')">&times;</button>
+      <div class="tags-cloud"><span class="tag-pill blue">series-round</span><span class="tag-pill green">funding</span></div>
+      <div class="detail-text"><p>City Detect, a company that helps local governments prevent urban decay, is in at least 17 cities so far, including Dallas and Miami</p></div>
+      <div class="source-label">Source: <a href="https://techcrunch.com/2026/03/06/city-detect-uses-ai-to-help-cities-stay-safe-and-clean/">TechCrunch AI</a></div>
+    </div>
+  </li>
+  <li class="tl-entry has-content" data-tags="openai,anthropic,ai-safety" data-section="funding">
+    <div class="tl-header" onclick="this.parentElement.classList.toggle('expanded')">
+      <span class="tl-date">Mar 05</span>
+      <span class="tl-title"><a href="https://techcrunch.com/2026/03/04/anthropic-ceo-dario-amodei-calls-openais-messaging-around-military-deal-straight-up-lies-report-says/">Anthropic CEO Dario Amodei calls OpenAI's messaging around military deal 'straight up lies,' report says</a></span>
+      <span class="tl-arrow">&rarr;</span>
+    </div>
+    <div class="tl-body">
+      <button class="close-btn" onclick="this.closest('.tl-entry').classList.remove('expanded')">&times;</button>
+      <div class="tags-cloud"><span class="tag-pill gray">openai</span><span class="tag-pill gray">anthropic</span><span class="tag-pill purple">ai-safety</span><span class="tag-pill green">funding</span></div>
+      <div class="detail-text"></div>
+      <div class="source-label">Source: <a href="https://techcrunch.com/2026/03/04/anthropic-ceo-dario-amodei-calls-openais-messaging-around-military-deal-straight-up-lies-report-says/">TechCrunch AI</a></div>
+    </div>
+  </li>
+  <li class="tl-section" data-section="podcast">Podcasts Worth Your Commute</li>
+  <li class="tl-entry has-content" data-tags="openai,anthropic" data-section="podcast">
+    <div class="tl-header" onclick="this.parentElement.classList.toggle('expanded')">
+      <span class="tl-date">Mar 07</span>
+      <span class="tl-title"><a href="https://www.theverge.com/streaming/889973/netflix-ben-affleck-interpositive-ai">Netflix is buying Ben Affleck's AI startup</a></span>
+      <span class="tl-arrow">&rarr;</span>
+    </div>
+    <div class="tl-body">
+      <button class="close-btn" onclick="this.closest('.tl-entry').classList.remove('expanded')">&times;</button>
+      <div class="tags-cloud"><span class="tag-pill blue">startup</span><span class="tag-pill green">funding</span></div>
+      <div class="detail-text"><p>Though Netflix lost the war for Warner Bros., it has just bought an AI startup from the internet's favorite Dunkin' Donuts aficionado</p></div>
+      <div class="source-label">Source: <a href="https://www.theverge.com/streaming/889973/netflix-ben-affleck-interpositive-ai">The Verge AI</a></div>
+    </div>
+  </li>
+  <li class="tl-entry has-content" data-tags="openai,anthropic" data-section="podcast">
+    <div class="tl-header" onclick="this.parentElement.classList.toggle('expanded')">
+      <span class="tl-date">Mar 07</span>
+      <span class="tl-title"><a href="https://thetwentyminutevc.libsyn.com/20vc-why-the-saas-apocalypse-is-bs-why-china-will-win-the-ai-war-why-50-of-vcs-should-not-exist-and-are-tourists-why-stock-based-comp-is-the-hidden-sin-of-the-valley-with-mitchell-green-lead-edge-capital">20VC with Harry Stebbings — 20VC: Why the SaaS Apocalypse is BS | Why China Will Win the AI War | Why 50% of VCs Should Not Exist and are Tourists | Why Stock-Based Comp is the Hidden Sin of the Valley with Mitchell Green, Lead Edge Capital</a></span>
       <span class="tl-arrow">&rarr;</span>
     </div>
     <div class="tl-body">
       <button class="close-btn" onclick="this.closest('.tl-entry').classList.remove('expanded')">&times;</button>
       <div class="tags-cloud"><span class="tag-pill purple">podcast</span></div>
-      
-      <div class="source-label">Source: <a href="https://thetwentyminutevc.libsyn.com/20vc-inside-accels-4bn-growth-investing-machine-cursor-is-dead-is-total-bs-here-is-why-what-missing-rippling-and-elevenlabs-taught-us-are-2bn-10bn-ipos-dead-why-now-is-a-great-time-to-be-thoma-bravo-with-miles-clements">Listen</a></div>
+
+      <div class="source-label">Source: <a href="https://thetwentyminutevc.libsyn.com/20vc-why-the-saas-apocalypse-is-bs-why-china-will-win-the-ai-war-why-50-of-vcs-should-not-exist-and-are-tourists-why-stock-based-comp-is-the-hidden-sin-of-the-valley-with-mitchell-green-lead-edge-capital">Listen</a></div>
     </div>
   </li>
-  <li class="tl-section">Events Near You (London &amp; Oxford)</li>
-  <li class="tl-entry has-content">
+  <li class="tl-entry has-content" data-tags="openai,anthropic" data-section="podcast">
     <div class="tl-header" onclick="this.parentElement.classList.toggle('expanded')">
-      <span class="tl-date">Mar 09</span>
-      <span class="tl-title"><a href="https://lu.ma/tpt48xa9">ISTConversations: From STEM Classrooms to Career Pathways</a></span>
+      <span class="tl-date">Mar 05</span>
+      <span class="tl-title"><a href="https://thetwentyminutevc.libsyn.com/20vc-anthropic-vs-the-pentagon-who-wins-openais-110bn-mega-round-cursor-hits-2bn-in-arr-blocks-40-headcount-reduction-ai-or-overhiring">20VC with Harry Stebbings — 20VC: Anthropic vs The Pentagon: Who Wins | OpenAI's $110BN Mega Round | Cursor Hits $2BN in ARR | Block's 40% Headcount Reduction: AI or Overhiring</a></span>
+      <span class="tl-arrow">&rarr;</span>
+    </div>
+    <div class="tl-body">
+      <button class="close-btn" onclick="this.closest('.tl-entry').classList.remove('expanded')">&times;</button>
+      <div class="tags-cloud"><span class="tag-pill gray">openai</span><span class="tag-pill gray">anthropic</span><span class="tag-pill purple">podcast</span></div>
+
+      <div class="source-label">Source: <a href="https://thetwentyminutevc.libsyn.com/20vc-anthropic-vs-the-pentagon-who-wins-openais-110bn-mega-round-cursor-hits-2bn-in-arr-blocks-40-headcount-reduction-ai-or-overhiring">Listen</a></div>
+    </div>
+  </li>
+  <li class="tl-entry has-content" data-tags="" data-section="podcast">
+    <div class="tl-header" onclick="this.parentElement.classList.toggle('expanded')">
+      <span class="tl-date">Mar 05</span>
+      <span class="tl-title"><a href="https://allinchamathjason.libsyn.com/ray-dalio-our-system-is-in-jeopardy-debt-ai-the-cycle-that-destroyed-rome">All-In Podcast — Ray Dalio: Our System Is in Jeopardy - Debt, AI &amp; the Cycle That Destroyed Rome</a></span>
+      <span class="tl-arrow">&rarr;</span>
+    </div>
+    <div class="tl-body">
+      <button class="close-btn" onclick="this.closest('.tl-entry').classList.remove('expanded')">&times;</button>
+      <div class="tags-cloud"><span class="tag-pill purple">podcast</span></div>
+
+      <div class="source-label">Source: <a href="https://allinchamathjason.libsyn.com/ray-dalio-our-system-is-in-jeopardy-debt-ai-the-cycle-that-destroyed-rome">Listen</a></div>
+    </div>
+  </li>
+  <li class="tl-entry has-content" data-tags="agents" data-section="podcast">
+    <div class="tl-header" onclick="this.parentElement.classList.toggle('expanded')">
+      <span class="tl-date">Mar 07</span>
+      <span class="tl-title"><a href="https://allinchamathjason.libsyn.com/inside-the-iran-war-and-the-pentagons-feud-with-anthropic-with-under-secretary-of-war-emil-michael">All-In Podcast — Inside the Iran War and the Pentagon's Feud with Anthropic with Under Secretary of War Emil Michael</a></span>
+      <span class="tl-arrow">&rarr;</span>
+    </div>
+    <div class="tl-body">
+      <button class="close-btn" onclick="this.closest('.tl-entry').classList.remove('expanded')">&times;</button>
+      <div class="tags-cloud"><span class="tag-pill gray">anthropic</span><span class="tag-pill purple">podcast</span></div>
+
+      <div class="source-label">Source: <a href="https://allinchamathjason.libsyn.com/inside-the-iran-war-and-the-pentagons-feud-with-anthropic-with-under-secretary-of-war-emil-michael">Listen</a></div>
+    </div>
+  </li>
+  <li class="tl-entry has-content" data-tags="agents" data-section="podcast">
+    <div class="tl-header" onclick="this.parentElement.classList.toggle('expanded')">
+      <span class="tl-date">Mar 05</span>
+      <span class="tl-title"><a href="https://thetwentyminutevc.libsyn.com/20vc-mondaycom-ceo-on-is-saas-dead-will-everything-be-vibe-coded-will-systems-of-record-become-valueless-databases-in-an-agentic-world-will-llms-own-the-value-in-the-application-layer-with-eran-zinman">20VC with Harry Stebbings — 20VC: Monday.com CEO on Is SaaS Dead: Will Everything Be Vibe Coded | Will Systems of Record Become Valueless Databases in an Agentic World | Will LLMs Own the Value in the Application Layer with Eran Zinman</a></span>
+      <span class="tl-arrow">&rarr;</span>
+    </div>
+    <div class="tl-body">
+      <button class="close-btn" onclick="this.closest('.tl-entry').classList.remove('expanded')">&times;</button>
+      <div class="tags-cloud"><span class="tag-pill gray">anthropic</span><span class="tag-pill purple">podcast</span></div>
+
+      <div class="source-label">Source: <a href="https://thetwentyminutevc.libsyn.com/20vc-mondaycom-ceo-on-is-saas-dead-will-everything-be-vibe-coded-will-systems-of-record-become-valueless-databases-in-an-agentic-world-will-llms-own-the-value-in-the-application-layer-with-eran-zinman">Listen</a></div>
+    </div>
+  </li>
+  <li class="tl-entry has-content" data-tags="" data-section="podcast">
+    <div class="tl-header" onclick="this.parentElement.classList.toggle('expanded')">
+      <span class="tl-date">Mar 05</span>
+      <span class="tl-title"><a href="https://lexfridman.com/rick-beato/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=rick-beato">Lex Fridman Podcast — #492 – Rick Beato: Greatest Guitarists of All Time, History &amp; Future of Music</a></span>
+      <span class="tl-arrow">&rarr;</span>
+    </div>
+    <div class="tl-body">
+      <button class="close-btn" onclick="this.closest('.tl-entry').classList.remove('expanded')">&times;</button>
+      <div class="tags-cloud"><span class="tag-pill purple">podcast</span></div>
+
+      <div class="source-label">Source: <a href="https://lexfridman.com/rick-beato/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=rick-beato">Listen</a></div>
+    </div>
+  </li>
+  <li class="tl-entry has-content" data-tags="openai,anthropic" data-section="podcast">
+    <div class="tl-header" onclick="this.parentElement.classList.toggle('expanded')">
+      <span class="tl-date">Mar 05</span>
+      <span class="tl-title"><a href="https://www.nytimes.com/column/hard-fork">Hard Fork (NYT) — At the Pentagon, OpenAI is In and Anthropic Is Out</a></span>
+      <span class="tl-arrow">&rarr;</span>
+    </div>
+    <div class="tl-body">
+      <button class="close-btn" onclick="this.closest('.tl-entry').classList.remove('expanded')">&times;</button>
+      <div class="tags-cloud"><span class="tag-pill gray">openai</span><span class="tag-pill gray">anthropic</span><span class="tag-pill purple">podcast</span></div>
+
+      <div class="source-label">Source: <a href="https://www.nytimes.com/column/hard-fork">Listen</a></div>
+    </div>
+  </li>
+  <li class="tl-section" data-section="news">Events Near You (London &amp; Oxford)</li>
+  <li class="tl-entry has-content" data-tags="agents" data-section="news">
+    <div class="tl-header" onclick="this.parentElement.classList.toggle('expanded')">
+      <span class="tl-date">Mar 07</span>
+      <span class="tl-title"><a href="https://lu.ma/jrqrk85k">EmpowerHer Panel</a></span>
       <span class="tl-arrow">&rarr;</span>
     </div>
     <div class="tl-body">
       <button class="close-btn" onclick="this.closest('.tl-entry').classList.remove('expanded')">&times;</button>
       <div class="tags-cloud"><span class="tag-pill gray">news</span></div>
-      <div class="detail-text"><p>Luma (Chicago)</p></div>
-      <div class="source-label">Source: <a href="https://lu.ma/tpt48xa9">RSVP</a></div>
+      <div class="detail-text"><p>Luma (Phoenix)</p></div>
+      <div class="source-label">Source: <a href="https://lu.ma/jrqrk85k">RSVP</a></div>
     </div>
   </li>
-  <li class="tl-entry has-content">
+  <li class="tl-entry has-content" data-tags="agents" data-section="news">
     <div class="tl-header" onclick="this.parentElement.classList.toggle('expanded')">
-      <span class="tl-date">Mar 09</span>
-      <span class="tl-title"><a href="https://lu.ma/whzknv9q">Sentrock Print Release + Closing Reception</a></span>
+      <span class="tl-date">Mar 05</span>
+      <span class="tl-title"><a href="https://lu.ma/lcsqwmf3">LONDON Hackathon: Agents &amp; Knowledge Graphs (LangChain x SurrealDB)</a></span>
+      <span class="tl-arrow">&rarr;</span>
+    </div>
+    <div class="tl-body">
+      <button class="close-btn" onclick="this.closest('.tl-entry').classList.remove('expanded')">&times;</button>
+      <div class="tags-cloud"><span class="tag-pill purple">agents</span><span class="tag-pill gray">news</span></div>
+      <div class="detail-text"><p>Luma (London)</p></div>
+      <div class="source-label">Source: <a href="https://lu.ma/lcsqwmf3">RSVP</a></div>
+    </div>
+  </li>
+  <li class="tl-entry has-content" data-tags="" data-section="news">
+    <div class="tl-header" onclick="this.parentElement.classList.toggle('expanded')">
+      <span class="tl-date">Mar 05</span>
+      <span class="tl-title"><a href="https://lu.ma/exdtjnza">Clay in London: How Modern GTM Teams Win ft. Varun Anand (Co-Founder, Clay), lemlist &amp; Dealfront</a></span>
       <span class="tl-arrow">&rarr;</span>
     </div>
     <div class="tl-body">
       <button class="close-btn" onclick="this.closest('.tl-entry').classList.remove('expanded')">&times;</button>
       <div class="tags-cloud"><span class="tag-pill gray">news</span></div>
-      <div class="detail-text"><p>Luma (Chicago)</p></div>
-      <div class="source-label">Source: <a href="https://lu.ma/whzknv9q">RSVP</a></div>
+      <div class="detail-text"><p>Luma (London)</p></div>
+      <div class="source-label">Source: <a href="https://lu.ma/exdtjnza">RSVP</a></div>
     </div>
   </li>
-  <li class="tl-section">Videos Going Viral</li>
+  <li class="tl-entry has-content" data-tags="" data-section="news">
+    <div class="tl-header" onclick="this.parentElement.classList.toggle('expanded')">
+      <span class="tl-date">Mar 07</span>
+      <span class="tl-title"><a href="https://lu.ma/eg21khuk">PHX FWD Pitch Practice: Learn, Observe, or Pitch</a></span>
+      <span class="tl-arrow">&rarr;</span>
+    </div>
+    <div class="tl-body">
+      <button class="close-btn" onclick="this.closest('.tl-entry').classList.remove('expanded')">&times;</button>
+      <div class="tags-cloud"><span class="tag-pill gray">news</span></div>
+      <div class="detail-text"><p>Luma (Tempe)</p></div>
+      <div class="source-label">Source: <a href="https://lu.ma/eg21khuk">RSVP</a></div>
+    </div>
+  </li>
+  <li class="tl-entry has-content" data-tags="" data-section="news">
+    <div class="tl-header" onclick="this.parentElement.classList.toggle('expanded')">
+      <span class="tl-date">Mar 05</span>
+      <span class="tl-title"><a href="https://lu.ma/kpicdog1">LLM London Sessions #10</a></span>
+      <span class="tl-arrow">&rarr;</span>
+    </div>
+    <div class="tl-body">
+      <button class="close-btn" onclick="this.closest('.tl-entry').classList.remove('expanded')">&times;</button>
+      <div class="tags-cloud"><span class="tag-pill gray">news</span></div>
+      <div class="detail-text"><p>Luma (London)</p></div>
+      <div class="source-label">Source: <a href="https://lu.ma/kpicdog1">RSVP</a></div>
+    </div>
+  </li>
+  <li class="tl-entry has-content" data-tags="" data-section="news">
+    <div class="tl-header" onclick="this.parentElement.classList.toggle('expanded')">
+      <span class="tl-date">Mar 07</span>
+      <span class="tl-title"><a href="https://lu.ma/brrjhhzs">Morning Walk @ Veterans Oasis Park</a></span>
+      <span class="tl-arrow">&rarr;</span>
+    </div>
+    <div class="tl-body">
+      <button class="close-btn" onclick="this.closest('.tl-entry').classList.remove('expanded')">&times;</button>
+      <div class="tags-cloud"><span class="tag-pill gray">news</span></div>
+      <div class="detail-text"><p>Luma (Chandler)</p></div>
+      <div class="source-label">Source: <a href="https://lu.ma/brrjhhzs">RSVP</a></div>
+    </div>
+  </li>
+  <li class="tl-entry has-content" data-tags="" data-section="news">
+    <div class="tl-header" onclick="this.parentElement.classList.toggle('expanded')">
+      <span class="tl-date">Mar 05</span>
+      <span class="tl-title"><a href="https://lu.ma/sgetr751">All-women AI Workshop &amp; Brunch @ Granola</a></span>
+      <span class="tl-arrow">&rarr;</span>
+    </div>
+    <div class="tl-body">
+      <button class="close-btn" onclick="this.closest('.tl-entry').classList.remove('expanded')">&times;</button>
+      <div class="tags-cloud"><span class="tag-pill gray">news</span></div>
+      <div class="detail-text"><p>Luma (London)</p></div>
+      <div class="source-label">Source: <a href="https://lu.ma/sgetr751">RSVP</a></div>
+    </div>
+  </li>
+  <li class="tl-entry has-content" data-tags="agents" data-section="news">
+    <div class="tl-header" onclick="this.parentElement.classList.toggle('expanded')">
+      <span class="tl-date">Mar 07</span>
+      <span class="tl-title"><a href="https://lu.ma/w7io3mr2">ALO + WORKSHOP PILATES: Heated Mat Pilates</a></span>
+      <span class="tl-arrow">&rarr;</span>
+    </div>
+    <div class="tl-body">
+      <button class="close-btn" onclick="this.closest('.tl-entry').classList.remove('expanded')">&times;</button>
+      <div class="tags-cloud"><span class="tag-pill gray">news</span></div>
+      <div class="detail-text"><p>Luma (Phoenix)</p></div>
+      <div class="source-label">Source: <a href="https://lu.ma/w7io3mr2">RSVP</a></div>
+    </div>
+  </li>
+  <li class="tl-entry has-content" data-tags="agents" data-section="news">
+    <div class="tl-header" onclick="this.parentElement.classList.toggle('expanded')">
+      <span class="tl-date">Mar 05</span>
+      <span class="tl-title"><a href="https://lu.ma/4hs6hs36">Coding Agents and ACP with JetBrains</a></span>
+      <span class="tl-arrow">&rarr;</span>
+    </div>
+    <div class="tl-body">
+      <button class="close-btn" onclick="this.closest('.tl-entry').classList.remove('expanded')">&times;</button>
+      <div class="tags-cloud"><span class="tag-pill purple">agents</span><span class="tag-pill gray">news</span></div>
+      <div class="detail-text"><p>Luma (London)</p></div>
+      <div class="source-label">Source: <a href="https://lu.ma/4hs6hs36">RSVP</a></div>
+    </div>
+  </li>
+  <li class="tl-entry has-content" data-tags="claude" data-section="news">
+    <div class="tl-header" onclick="this.parentElement.classList.toggle('expanded')">
+      <span class="tl-date">Mar 05</span>
+      <span class="tl-title"><a href="https://lu.ma/claude-code-curious-3">London | Claude Code Curious #3</a></span>
+      <span class="tl-arrow">&rarr;</span>
+    </div>
+    <div class="tl-body">
+      <button class="close-btn" onclick="this.closest('.tl-entry').classList.remove('expanded')">&times;</button>
+      <div class="tags-cloud"><span class="tag-pill green">claude</span><span class="tag-pill gray">news</span></div>
+      <div class="detail-text"><p>Luma (London)</p></div>
+      <div class="source-label">Source: <a href="https://lu.ma/claude-code-curious-3">RSVP</a></div>
+    </div>
+  </li>
+  <li class="tl-entry has-content" data-tags="" data-section="news">
+    <div class="tl-header" onclick="this.parentElement.classList.toggle('expanded')">
+      <span class="tl-date">Mar 05</span>
+      <span class="tl-title"><a href="https://lu.ma/secure-software">Building Secure Software at Scale</a></span>
+      <span class="tl-arrow">&rarr;</span>
+    </div>
+    <div class="tl-body">
+      <button class="close-btn" onclick="this.closest('.tl-entry').classList.remove('expanded')">&times;</button>
+      <div class="tags-cloud"><span class="tag-pill gray">news</span></div>
+      <div class="detail-text"><p>Luma (London)</p></div>
+      <div class="source-label">Source: <a href="https://lu.ma/secure-software">RSVP</a></div>
+    </div>
+  </li>
+  <li class="tl-entry has-content" data-tags="" data-section="news">
+    <div class="tl-header" onclick="this.parentElement.classList.toggle('expanded')">
+      <span class="tl-date">Mar 07</span>
+      <span class="tl-title"><a href="https://lu.ma/beautyafterhours">Beauty After Hours</a></span>
+      <span class="tl-arrow">&rarr;</span>
+    </div>
+    <div class="tl-body">
+      <button class="close-btn" onclick="this.closest('.tl-entry').classList.remove('expanded')">&times;</button>
+      <div class="tags-cloud"><span class="tag-pill gray">news</span></div>
+      <div class="detail-text"><p>Luma (Glendale)</p></div>
+      <div class="source-label">Source: <a href="https://lu.ma/beautyafterhours">RSVP</a></div>
+    </div>
+  </li>
+  <li class="tl-entry has-content" data-tags="" data-section="news">
+    <div class="tl-header" onclick="this.parentElement.classList.toggle('expanded')">
+      <span class="tl-date">Mar 05</span>
+      <span class="tl-title"><a href="https://lu.ma/FreepikXBytePlusMeetup">AI Creative Minds: Freepik x BytePlus Meetup</a></span>
+      <span class="tl-arrow">&rarr;</span>
+    </div>
+    <div class="tl-body">
+      <button class="close-btn" onclick="this.closest('.tl-entry').classList.remove('expanded')">&times;</button>
+      <div class="tags-cloud"><span class="tag-pill gray">news</span></div>
+      <div class="detail-text"><p>Luma (London)</p></div>
+      <div class="source-label">Source: <a href="https://lu.ma/FreepikXBytePlusMeetup">RSVP</a></div>
+    </div>
+  </li>
   <li class="tl-entry has-content">
     <div class="tl-header" onclick="this.parentElement.classList.toggle('expanded')">
-      <span class="tl-date">Mar 09</span>
-      <span class="tl-title"><a href="https://www.youtube.com/watch?v=qF_tfIieeE0">Most People Miss What Makes This Impossible</a></span>
+      <span class="tl-date">Mar 07</span>
+      <span class="tl-title"><a href="https://lu.ma/e2h5i61u">Gospel Skate PHOENIX</a></span>
+      <span class="tl-arrow">&rarr;</span>
+    </div>
+    <div class="tl-body">
+      <button class="close-btn" onclick="this.closest('.tl-entry').classList.remove('expanded')">&times;</button>
+      <div class="tags-cloud"><span class="tag-pill gray">news</span></div>
+      <div class="detail-text"><p>Luma (Mesa)</p></div>
+      <div class="source-label">Source: <a href="https://lu.ma/e2h5i61u">RSVP</a></div>
+    </div>
+  </li>
+  <li class="tl-entry has-content">
+    <div class="tl-header" onclick="this.parentElement.classList.toggle('expanded')">
+      <span class="tl-date">Mar 07</span>
+      <span class="tl-title"><a href="https://lu.ma/3sdg45hy">Porsche X Pilates Hosted by Reform Room</a></span>
+      <span class="tl-arrow">&rarr;</span>
+    </div>
+    <div class="tl-body">
+      <button class="close-btn" onclick="this.closest('.tl-entry').classList.remove('expanded')">&times;</button>
+      <div class="tags-cloud"><span class="tag-pill gray">news</span></div>
+      <div class="detail-text"><p>Luma (Scottsdale)</p></div>
+      <div class="source-label">Source: <a href="https://lu.ma/3sdg45hy">RSVP</a></div>
+    </div>
+  </li>
+  <li class="tl-entry has-content">
+    <div class="tl-header" onclick="this.parentElement.classList.toggle('expanded')">
+      <span class="tl-date">Mar 07</span>
+      <span class="tl-title"><a href="https://lu.ma/h4ov99qw">Scottsdale Scoop Happy Hour + Sample North Italia Favorites</a></span>
+      <span class="tl-arrow">&rarr;</span>
+    </div>
+    <div class="tl-body">
+      <button class="close-btn" onclick="this.closest('.tl-entry').classList.remove('expanded')">&times;</button>
+      <div class="tags-cloud"><span class="tag-pill gray">news</span></div>
+      <div class="detail-text"><p>Luma (Phoenix)</p></div>
+      <div class="source-label">Source: <a href="https://lu.ma/h4ov99qw">RSVP</a></div>
+    </div>
+  </li>
+  <li class="tl-section" data-section="video">Videos Going Viral</li>
+  <li class="tl-entry has-content" data-tags="" data-section="video">
+    <div class="tl-header" onclick="this.parentElement.classList.toggle('expanded')">
+      <span class="tl-date">Mar 07</span>
+      <span class="tl-title"><a href="https://www.youtube.com/watch?v=xHi8PUIVyoo">I BUILT A FULLY AUTOMATIC MANSPLAINER</a></span>
       <span class="tl-arrow">&rarr;</span>
     </div>
     <div class="tl-body">
       <button class="close-btn" onclick="this.closest('.tl-entry').classList.remove('expanded')">&times;</button>
       <div class="tags-cloud"><span class="tag-pill red">video</span></div>
-      <div class="detail-text"><p>Two Minute Papers</p></div>
-      <div class="source-label">Source: <a href="https://www.youtube.com/watch?v=qF_tfIieeE0">Watch</a></div>
+      <div class="detail-text"><p>Yannic Kilcher</p></div>
+      <div class="source-label">Source: <a href="https://www.youtube.com/watch?v=xHi8PUIVyoo">Watch</a></div>
     </div>
   </li>
-  <li class="tl-entry has-content">
+  <li class="tl-entry has-content" data-tags="" data-section="video">
     <div class="tl-header" onclick="this.parentElement.classList.toggle('expanded')">
-      <span class="tl-date">Mar 09</span>
-      <span class="tl-title"><a href="https://www.youtube.com/watch?v=65O6pHDOu6Y">Is AI destroying music? | Rick Beato and Lex Fridman</a></span>
+      <span class="tl-date">Mar 05</span>
+      <span class="tl-title"><a href="https://www.youtube.com/watch?v=ODj26jXkSR0">The genius of Rick Rubin | Rick Beato and Lex Fridman</a></span>
       <span class="tl-arrow">&rarr;</span>
     </div>
     <div class="tl-body">
       <button class="close-btn" onclick="this.closest('.tl-entry').classList.remove('expanded')">&times;</button>
       <div class="tags-cloud"><span class="tag-pill red">video</span></div>
       <div class="detail-text"><p>Matt Wolfe</p></div>
-      <div class="source-label">Source: <a href="https://www.youtube.com/watch?v=65O6pHDOu6Y">Watch</a></div>
+      <div class="source-label">Source: <a href="https://www.youtube.com/watch?v=ODj26jXkSR0">Watch</a></div>
     </div>
   </li>
-  <li class="tl-entry has-content">
+  <li class="tl-entry has-content" data-tags="" data-section="video">
     <div class="tl-header" onclick="this.parentElement.classList.toggle('expanded')">
-      <span class="tl-date">Mar 09</span>
-      <span class="tl-title"><a href="https://www.youtube.com/watch?v=hzjw-yPKCd8">The 27 Club: Why so many rock stars died at 27 | Rick Beato and Lex Fridman</a></span>
+      <span class="tl-date">Mar 05</span>
+      <span class="tl-title"><a href="https://www.youtube.com/watch?v=rmB4OV_et-s">Perfect pitch vs relative pitch explained | Rick Beato and Lex Fridman</a></span>
       <span class="tl-arrow">&rarr;</span>
     </div>
     <div class="tl-body">
       <button class="close-btn" onclick="this.closest('.tl-entry').classList.remove('expanded')">&times;</button>
       <div class="tags-cloud"><span class="tag-pill red">video</span></div>
       <div class="detail-text"><p>Matt Wolfe</p></div>
-      <div class="source-label">Source: <a href="https://www.youtube.com/watch?v=hzjw-yPKCd8">Watch</a></div>
+      <div class="source-label">Source: <a href="https://www.youtube.com/watch?v=rmB4OV_et-s">Watch</a></div>
+    </div>
+  </li>
+  <li class="tl-entry has-content" data-tags="openai,google,gpt,gemini" data-section="video">
+    <div class="tl-header" onclick="this.parentElement.classList.toggle('expanded')">
+      <span class="tl-date">Mar 05</span>
+      <span class="tl-title"><a href="https://www.youtube.com/watch?v=T0WvxKW_ptU">GPT-5.3 Instant &amp; Gemini 3.1 Flash Lite - OpenAI and Google's Newest And Fastest AI Yet</a></span>
+      <span class="tl-arrow">&rarr;</span>
+    </div>
+    <div class="tl-body">
+      <button class="close-btn" onclick="this.closest('.tl-entry').classList.remove('expanded')">&times;</button>
+      <div class="tags-cloud"><span class="tag-pill gray">openai</span><span class="tag-pill gray">google</span><span class="tag-pill green">gpt</span><span class="tag-pill green">gemini</span><span class="tag-pill red">video</span></div>
+      <div class="detail-text"><p>TheAIGRID</p></div>
+      <div class="source-label">Source: <a href="https://www.youtube.com/watch?v=T0WvxKW_ptU">Watch</a></div>
+    </div>
+  </li>
+  <li class="tl-entry has-content" data-tags="" data-section="video">
+    <div class="tl-header" onclick="this.parentElement.classList.toggle('expanded')">
+      <span class="tl-date">Mar 05</span>
+      <span class="tl-title"><a href="https://www.youtube.com/shorts/i4KOhtPKQMM">Universal-3 Pro Streaming: Subway test</a></span>
+      <span class="tl-arrow">&rarr;</span>
+    </div>
+    <div class="tl-body">
+      <button class="close-btn" onclick="this.closest('.tl-entry').classList.remove('expanded')">&times;</button>
+      <div class="tags-cloud"><span class="tag-pill red">video</span></div>
+      <div class="detail-text"><p>AssemblyAI</p></div>
+      <div class="source-label">Source: <a href="https://www.youtube.com/shorts/i4KOhtPKQMM">Watch</a></div>
+    </div>
+  </li>
+  <li class="tl-entry has-content" data-tags="autonomous" data-section="video">
+    <div class="tl-header" onclick="this.parentElement.classList.toggle('expanded')">
+      <span class="tl-date">Mar 05</span>
+      <span class="tl-title"><a href="https://www.youtube.com/watch?v=Cru804JMjPI">Deadline Day for Autonomous AI Weapons &amp; Mass Surveillance</a></span>
+      <span class="tl-arrow">&rarr;</span>
+    </div>
+    <div class="tl-body">
+      <button class="close-btn" onclick="this.closest('.tl-entry').classList.remove('expanded')">&times;</button>
+      <div class="tags-cloud"><span class="tag-pill purple">autonomous</span><span class="tag-pill red">video</span></div>
+      <div class="detail-text"><p>AI Explained</p></div>
+      <div class="source-label">Source: <a href="https://www.youtube.com/watch?v=Cru804JMjPI">Watch</a></div>
     </div>
   </li>
 </ol>
     <ol class="timeline" style="margin-top:0;">
   <li class="tl-entry">
-    <div class="tl-header" onclick="window.location.href='issues/2026-03-08.html'">
-      <span class="tl-date">Mar 08</span>
-      <span class="tl-title"><a href="issues/2026-03-08.html">March 8, 2026</a></span>
-      <span class="tl-arrow">&rarr;</span>
-    </div>
-  </li>
-  <li class="tl-entry">
-    <div class="tl-header" onclick="window.location.href='issues/2026-03-07.html'">
-      <span class="tl-date">Mar 07</span>
-      <span class="tl-title"><a href="issues/2026-03-07.html">March 7, 2026</a></span>
-      <span class="tl-arrow">&rarr;</span>
-    </div>
-  </li>
-  <li class="tl-entry">
-    <div class="tl-header" onclick="window.location.href='issues/2026-03-05.html'">
-      <span class="tl-date">Mar 05</span>
-      <span class="tl-title"><a href="issues/2026-03-05.html">March 5, 2026</a></span>
+    <div class="tl-header" onclick="window.location.href='issues/2026-03-02.html'">
+      <span class="tl-date">Mar 02</span>
+      <span class="tl-title"><a href="issues/2026-03-02.html">March 2, 2026</a></span>
       <span class="tl-arrow">&rarr;</span>
     </div>
   </li>
@@ -245,6 +906,20 @@ document.querySelectorAll('.dp-month-tab').forEach(function(tab) {
       <span class="tl-arrow">&rarr;</span>
     </div>
   </li>
+  <li class="tl-entry">
+    <div class="tl-header" onclick="window.location.href='issues/2026-02-19.html'">
+      <span class="tl-date">Feb 19</span>
+      <span class="tl-title"><a href="issues/2026-02-19.html">February 19, 2026</a></span>
+      <span class="tl-arrow">&rarr;</span>
+    </div>
+  </li>
+  <li class="tl-entry">
+    <div class="tl-header" onclick="window.location.href='issues/2026-02-18.html'">
+      <span class="tl-date">Feb 18</span>
+      <span class="tl-title"><a href="issues/2026-02-18.html">February 18, 2026</a></span>
+      <span class="tl-arrow">&rarr;</span>
+    </div>
+  </li>
     </ol>
   </div>
 
@@ -286,6 +961,163 @@ if (filterInput) {
     });
   });
 }
+
+// ── Preference engine ──────────────────────────────────────────────────────
+
+var PREFS_KEY = 'aibrief_prefs';
+
+function defaultPrefs() {
+  return {
+    topics: [],
+    sections: {
+      news:    { on: true, pri: 1 },
+      funding: { on: true, pri: 2 },
+      podcast: { on: true, pri: 3 },
+      event:   { on: true, pri: 4 },
+      video:   { on: true, pri: 5 }
+    }
+  };
+}
+
+function loadPrefs() {
+  try {
+    var raw = localStorage.getItem(PREFS_KEY);
+    if (raw) return JSON.parse(raw);
+  } catch(e) {}
+  return defaultPrefs();
+}
+
+function savePrefs(prefs) {
+  try { localStorage.setItem(PREFS_KEY, JSON.stringify(prefs)); } catch(e) {}
+}
+
+function applyPrefs() {
+  var prefs = loadPrefs();
+  var hasTopics = prefs.topics.length > 0;
+
+  // Apply to timeline entries
+  document.querySelectorAll('li.tl-entry[data-section]').forEach(function(li) {
+    var section = li.getAttribute('data-section');
+    var tags = (li.getAttribute('data-tags') || '').split(',').filter(Boolean);
+
+    li.classList.remove('preferred', 'dimmed', 'section-hidden');
+
+    // Check if section is disabled
+    if (prefs.sections[section] && !prefs.sections[section].on) {
+      li.classList.add('section-hidden');
+      return;
+    }
+
+    if (!hasTopics) return; // no topic prefs = show all equally
+
+    // Check tag match
+    var matched = false;
+    for (var i = 0; i < tags.length; i++) {
+      if (prefs.topics.indexOf(tags[i]) !== -1) { matched = true; break; }
+    }
+
+    if (matched) {
+      li.classList.add('preferred');
+    } else {
+      li.classList.add('dimmed');
+    }
+  });
+
+  // Apply to section headers
+  document.querySelectorAll('li.tl-section[data-section]').forEach(function(li) {
+    var section = li.getAttribute('data-section');
+    li.classList.remove('collapsed');
+    if (prefs.sections[section] && !prefs.sections[section].on) {
+      li.classList.add('collapsed');
+    }
+  });
+
+  // Sync panel UI
+  syncPanelUI(prefs);
+}
+
+function syncPanelUI(prefs) {
+  // Sync topic pills
+  document.querySelectorAll('.pref-pill[data-topic]').forEach(function(pill) {
+    var topic = pill.getAttribute('data-topic');
+    if (prefs.topics.indexOf(topic) !== -1) {
+      pill.classList.add('active');
+    } else {
+      pill.classList.remove('active');
+    }
+  });
+
+  // Sync content rows
+  document.querySelectorAll('.pref-content-row[data-section]').forEach(function(row) {
+    var section = row.getAttribute('data-section');
+    var cfg = prefs.sections[section];
+    if (!cfg) return;
+    var cb = row.querySelector('input[type="checkbox"]');
+    var sel = row.querySelector('select');
+    if (cb) cb.checked = cfg.on;
+    if (sel) sel.value = cfg.pri;
+  });
+}
+
+// Panel open/close
+function togglePrefsPanel() {
+  var panel = document.querySelector('.prefs-panel');
+  var overlay = document.querySelector('.prefs-overlay');
+  if (panel && overlay) {
+    panel.classList.toggle('open');
+    overlay.classList.toggle('open');
+  }
+}
+
+// Reset handler
+function resetPrefs() {
+  localStorage.removeItem(PREFS_KEY);
+  applyPrefs();
+}
+
+// Pill click handlers
+document.querySelectorAll('.pref-pill[data-topic]').forEach(function(pill) {
+  pill.addEventListener('click', function() {
+    var prefs = loadPrefs();
+    var topic = this.getAttribute('data-topic');
+    var idx = prefs.topics.indexOf(topic);
+    if (idx === -1) {
+      prefs.topics.push(topic);
+    } else {
+      prefs.topics.splice(idx, 1);
+    }
+    savePrefs(prefs);
+    applyPrefs();
+  });
+});
+
+// Content toggle + priority handlers
+document.querySelectorAll('.pref-content-row[data-section]').forEach(function(row) {
+  var section = row.getAttribute('data-section');
+
+  var cb = row.querySelector('input[type="checkbox"]');
+  if (cb) {
+    cb.addEventListener('change', function() {
+      var prefs = loadPrefs();
+      if (prefs.sections[section]) prefs.sections[section].on = this.checked;
+      savePrefs(prefs);
+      applyPrefs();
+    });
+  }
+
+  var sel = row.querySelector('select');
+  if (sel) {
+    sel.addEventListener('change', function() {
+      var prefs = loadPrefs();
+      if (prefs.sections[section]) prefs.sections[section].pri = parseInt(this.value);
+      savePrefs(prefs);
+      applyPrefs();
+    });
+  }
+});
+
+// Apply on page load
+applyPrefs();
 </script>
 </body>
 </html>

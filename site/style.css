@@ -869,6 +869,271 @@ footer a {
 
 footer a:hover { text-decoration: underline; }
 
+/* ── Preferences button (gear icon in header) ────────────────────────────── */
+
+.prefs-btn {
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 4px 8px;
+  cursor: pointer;
+  color: var(--text-muted);
+  font-size: 1.1rem;
+  line-height: 1;
+  transition: color 0.15s, border-color 0.15s;
+}
+
+.prefs-btn:hover {
+  color: var(--text-primary);
+  border-color: var(--border-strong);
+}
+
+/* ── Preferences overlay + slide-out panel ───────────────────────────────── */
+
+.prefs-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.35);
+  z-index: 900;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s;
+}
+
+.prefs-overlay.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.prefs-panel {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 340px;
+  max-width: 90vw;
+  height: 100vh;
+  background: var(--bg);
+  border-left: 1px solid var(--border);
+  z-index: 910;
+  transform: translateX(100%);
+  transition: transform 0.25s ease;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.prefs-panel.open {
+  transform: translateX(0);
+}
+
+.prefs-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+.prefs-panel-header h3 {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.prefs-close-btn {
+  background: none;
+  border: none;
+  font-size: 1.3rem;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 2px 6px;
+  line-height: 1;
+}
+
+.prefs-close-btn:hover { color: var(--text-primary); }
+
+.prefs-section {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border);
+}
+
+.prefs-section-title {
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-muted);
+  margin-bottom: 12px;
+}
+
+/* ── Preference pills (topic toggles) ────────────────────────────────────── */
+
+.pref-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.pref-pill {
+  display: inline-block;
+  font-size: 0.78rem;
+  font-weight: 500;
+  padding: 5px 12px;
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.15s;
+  user-select: none;
+}
+
+.pref-pill:hover {
+  border-color: var(--border-strong);
+  color: var(--text-primary);
+}
+
+.pref-pill.active {
+  background: var(--text-primary);
+  color: var(--bg);
+  border-color: var(--text-primary);
+}
+
+/* ── Content type rows (toggle + priority) ───────────────────────────────── */
+
+.pref-content-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.pref-content-row:last-child { border-bottom: none; }
+
+.pref-content-label {
+  flex: 1;
+  font-size: 0.88rem;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.pref-toggle {
+  position: relative;
+  width: 36px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+.pref-toggle input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.pref-toggle-slider {
+  position: absolute;
+  inset: 0;
+  background: var(--border-strong);
+  border-radius: 20px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.pref-toggle-slider::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 16px;
+  height: 16px;
+  background: #fff;
+  border-radius: 50%;
+  transition: transform 0.2s;
+}
+
+.pref-toggle input:checked + .pref-toggle-slider {
+  background: var(--text-primary);
+}
+
+.pref-toggle input:checked + .pref-toggle-slider::after {
+  transform: translateX(16px);
+}
+
+.pref-priority {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.pref-priority select {
+  font-size: 0.78rem;
+  padding: 2px 4px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background: var(--bg);
+  color: var(--text-secondary);
+  font-family: inherit;
+}
+
+/* ── Reset button ────────────────────────────────────────────────────────── */
+
+.prefs-reset-btn {
+  display: block;
+  width: calc(100% - 40px);
+  margin: 16px 20px;
+  padding: 8px 0;
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-size: 0.82rem;
+  font-family: inherit;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.prefs-reset-btn:hover {
+  border-color: var(--tag-red-border);
+  color: var(--tag-red-text);
+}
+
+/* ── Timeline entry preference states ────────────────────────────────────── */
+
+li.tl-entry.preferred {
+  border-left: 3px solid var(--text-primary);
+  margin-left: -3px;
+}
+
+li.tl-entry.dimmed {
+  opacity: 0.45;
+}
+
+li.tl-entry.dimmed:hover {
+  opacity: 0.7;
+}
+
+/* ── Collapsed section ───────────────────────────────────────────────────── */
+
+li.tl-section.collapsed {
+  opacity: 0.5;
+}
+
+li.tl-section.collapsed::after {
+  content: ' (hidden)';
+  font-weight: 400;
+  font-size: 0.7rem;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+li.tl-entry.section-hidden {
+  display: none;
+}
+
 /* ── Dark mode ───────────────────────────────────────────────────────────── */
 
 @media (prefers-color-scheme: dark) {
@@ -956,6 +1221,8 @@ footer a:hover { text-decoration: underline; }
   .dp-date { min-width: 32px; height: 28px; font-size: 0.72rem; }
   .subscribe-inline { padding: 12px 16px; flex-direction: column; align-items: flex-start; }
   footer { padding: 20px 16px; }
+
+  .prefs-panel { width: 300px; }
 }
 
 @media (max-width: 480px) {

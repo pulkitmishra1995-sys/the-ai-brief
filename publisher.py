@@ -247,7 +247,7 @@ def _esc(text):
 # ── Site page builders ───────────────────────────────────────────────────────
 
 def build_header(home_prefix=""):
-    """smol.ai-style header: logo box left, nav links right."""
+    """smol.ai-style header: logo box left, nav links right + gear icon."""
     subscribe_href = f"{home_prefix}index.html#subscribe" if home_prefix else "#subscribe"
     return f"""<div class="site-header">
     <a class="logo" href="{home_prefix}index.html">{NEWSLETTER_NAME}</a>
@@ -257,7 +257,82 @@ def build_header(home_prefix=""):
       <a href="{home_prefix}archive.html">issues</a>
       <span class="sep">/</span>
       <a href="{home_prefix}archive.html#tags">tags</a>
+      <span class="sep">/</span>
+      <button class="prefs-btn" onclick="togglePrefsPanel()" title="Preferences">&#9881;</button>
     </nav>
+  </div>
+  {build_prefs_panel()}"""
+
+
+def build_prefs_panel():
+    """Build the preferences slide-out drawer HTML."""
+    # Topic pills — grouped by category
+    companies = ["OpenAI", "Anthropic", "Google", "Meta", "Microsoft", "Nvidia", "DeepMind", "Apple", "Amazon"]
+    models = ["GPT", "Claude", "Gemini", "LLaMA", "Codex"]
+    topics = ["AI Safety", "Regulation", "Robotics", "Agents", "Multimodal", "Funding", "Startups", "Autonomous"]
+
+    def _pills(items):
+        parts = []
+        for item in items:
+            data_val = item.lower().replace(" ", "-")
+            parts.append(f'<span class="pref-pill" data-topic="{_esc(data_val)}">{_esc(item)}</span>')
+        return "\n        ".join(parts)
+
+    # Content type rows
+    content_types = [
+        ("news", "News Articles"),
+        ("funding", "Funding &amp; Deals"),
+        ("podcast", "Podcasts"),
+        ("event", "Events"),
+        ("video", "Videos"),
+    ]
+
+    def _content_rows():
+        parts = []
+        for i, (key, label) in enumerate(content_types, 1):
+            pri_options = "".join(
+                f'<option value="{n}"{" selected" if n == i else ""}>{n}</option>'
+                for n in range(1, 6)
+            )
+            parts.append(f"""      <div class="pref-content-row" data-section="{key}">
+        <label class="pref-toggle">
+          <input type="checkbox" checked>
+          <span class="pref-toggle-slider"></span>
+        </label>
+        <span class="pref-content-label">{label}</span>
+        <div class="pref-priority">
+          <span>Pri</span>
+          <select>{pri_options}</select>
+        </div>
+      </div>""")
+        return "\n".join(parts)
+
+    return f"""<div class="prefs-overlay" onclick="togglePrefsPanel()"></div>
+  <div class="prefs-panel">
+    <div class="prefs-panel-header">
+      <h3>Preferences</h3>
+      <button class="prefs-close-btn" onclick="togglePrefsPanel()">&times;</button>
+    </div>
+    <div class="prefs-section">
+      <div class="prefs-section-title">Topics I Care About</div>
+      <div class="prefs-section-title" style="font-size:0.7rem;margin-bottom:6px;margin-top:0;">Companies</div>
+      <div class="pref-pills">
+        {_pills(companies)}
+      </div>
+      <div class="prefs-section-title" style="margin-top:12px;font-size:0.7rem;margin-bottom:6px;">Models</div>
+      <div class="pref-pills">
+        {_pills(models)}
+      </div>
+      <div class="prefs-section-title" style="margin-top:12px;font-size:0.7rem;margin-bottom:6px;">Topics</div>
+      <div class="pref-pills">
+        {_pills(topics)}
+      </div>
+    </div>
+    <div class="prefs-section">
+      <div class="prefs-section-title">Content I Want Most</div>
+{_content_rows()}
+    </div>
+    <button class="prefs-reset-btn" onclick="resetPrefs()">Reset preferences</button>
   </div>"""
 
 
@@ -308,7 +383,11 @@ def build_timeline_entry(item, section, date_short):
       {source_html}
     </div>"""
 
-    return f"""  <li class="tl-entry{has_class}">
+    # data-tags for preference matching
+    tag_names = ",".join(t["name"] for t in item.get("tags", []))
+    data_attrs = f' data-tags="{_esc(tag_names)}" data-section="{_esc(section["tag"])}"'
+
+    return f"""  <li class="tl-entry{has_class}"{data_attrs}>
     <div class="tl-header" onclick="this.parentElement.classList.toggle('expanded')">
       <span class="tl-date">{date_short}</span>
       <span class="tl-title">{title_link}</span>
@@ -339,7 +418,7 @@ def markdown_to_timeline_html(md, target_date):
     html_parts = ['<ol class="timeline">']
 
     for section in sections:
-        html_parts.append(f'  <li class="tl-section">{_esc(section["heading"])}</li>')
+        html_parts.append(f'  <li class="tl-section" data-section="{_esc(section["tag"])}">{_esc(section["heading"])}</li>')
 
         if section["items"]:
             for item in section["items"]:
@@ -634,6 +713,163 @@ if (filterInput) {
     });
   });
 }
+
+// ── Preference engine ──────────────────────────────────────────────────────
+
+var PREFS_KEY = 'aibrief_prefs';
+
+function defaultPrefs() {
+  return {
+    topics: [],
+    sections: {
+      news:    { on: true, pri: 1 },
+      funding: { on: true, pri: 2 },
+      podcast: { on: true, pri: 3 },
+      event:   { on: true, pri: 4 },
+      video:   { on: true, pri: 5 }
+    }
+  };
+}
+
+function loadPrefs() {
+  try {
+    var raw = localStorage.getItem(PREFS_KEY);
+    if (raw) return JSON.parse(raw);
+  } catch(e) {}
+  return defaultPrefs();
+}
+
+function savePrefs(prefs) {
+  try { localStorage.setItem(PREFS_KEY, JSON.stringify(prefs)); } catch(e) {}
+}
+
+function applyPrefs() {
+  var prefs = loadPrefs();
+  var hasTopics = prefs.topics.length > 0;
+
+  // Apply to timeline entries
+  document.querySelectorAll('li.tl-entry[data-section]').forEach(function(li) {
+    var section = li.getAttribute('data-section');
+    var tags = (li.getAttribute('data-tags') || '').split(',').filter(Boolean);
+
+    li.classList.remove('preferred', 'dimmed', 'section-hidden');
+
+    // Check if section is disabled
+    if (prefs.sections[section] && !prefs.sections[section].on) {
+      li.classList.add('section-hidden');
+      return;
+    }
+
+    if (!hasTopics) return; // no topic prefs = show all equally
+
+    // Check tag match
+    var matched = false;
+    for (var i = 0; i < tags.length; i++) {
+      if (prefs.topics.indexOf(tags[i]) !== -1) { matched = true; break; }
+    }
+
+    if (matched) {
+      li.classList.add('preferred');
+    } else {
+      li.classList.add('dimmed');
+    }
+  });
+
+  // Apply to section headers
+  document.querySelectorAll('li.tl-section[data-section]').forEach(function(li) {
+    var section = li.getAttribute('data-section');
+    li.classList.remove('collapsed');
+    if (prefs.sections[section] && !prefs.sections[section].on) {
+      li.classList.add('collapsed');
+    }
+  });
+
+  // Sync panel UI
+  syncPanelUI(prefs);
+}
+
+function syncPanelUI(prefs) {
+  // Sync topic pills
+  document.querySelectorAll('.pref-pill[data-topic]').forEach(function(pill) {
+    var topic = pill.getAttribute('data-topic');
+    if (prefs.topics.indexOf(topic) !== -1) {
+      pill.classList.add('active');
+    } else {
+      pill.classList.remove('active');
+    }
+  });
+
+  // Sync content rows
+  document.querySelectorAll('.pref-content-row[data-section]').forEach(function(row) {
+    var section = row.getAttribute('data-section');
+    var cfg = prefs.sections[section];
+    if (!cfg) return;
+    var cb = row.querySelector('input[type="checkbox"]');
+    var sel = row.querySelector('select');
+    if (cb) cb.checked = cfg.on;
+    if (sel) sel.value = cfg.pri;
+  });
+}
+
+// Panel open/close
+function togglePrefsPanel() {
+  var panel = document.querySelector('.prefs-panel');
+  var overlay = document.querySelector('.prefs-overlay');
+  if (panel && overlay) {
+    panel.classList.toggle('open');
+    overlay.classList.toggle('open');
+  }
+}
+
+// Reset handler
+function resetPrefs() {
+  localStorage.removeItem(PREFS_KEY);
+  applyPrefs();
+}
+
+// Pill click handlers
+document.querySelectorAll('.pref-pill[data-topic]').forEach(function(pill) {
+  pill.addEventListener('click', function() {
+    var prefs = loadPrefs();
+    var topic = this.getAttribute('data-topic');
+    var idx = prefs.topics.indexOf(topic);
+    if (idx === -1) {
+      prefs.topics.push(topic);
+    } else {
+      prefs.topics.splice(idx, 1);
+    }
+    savePrefs(prefs);
+    applyPrefs();
+  });
+});
+
+// Content toggle + priority handlers
+document.querySelectorAll('.pref-content-row[data-section]').forEach(function(row) {
+  var section = row.getAttribute('data-section');
+
+  var cb = row.querySelector('input[type="checkbox"]');
+  if (cb) {
+    cb.addEventListener('change', function() {
+      var prefs = loadPrefs();
+      if (prefs.sections[section]) prefs.sections[section].on = this.checked;
+      savePrefs(prefs);
+      applyPrefs();
+    });
+  }
+
+  var sel = row.querySelector('select');
+  if (sel) {
+    sel.addEventListener('change', function() {
+      var prefs = loadPrefs();
+      if (prefs.sections[section]) prefs.sections[section].pri = parseInt(this.value);
+      savePrefs(prefs);
+      applyPrefs();
+    });
+  }
+});
+
+// Apply on page load
+applyPrefs();
 </script>"""
 
 

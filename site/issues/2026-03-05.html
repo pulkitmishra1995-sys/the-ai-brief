@@ -15,7 +15,109 @@
       <a href="../archive.html">issues</a>
       <span class="sep">/</span>
       <a href="../archive.html#tags">tags</a>
+      <span class="sep">/</span>
+      <button class="prefs-btn" onclick="togglePrefsPanel()" title="Preferences">&#9881;</button>
     </nav>
+  </div>
+  <div class="prefs-overlay" onclick="togglePrefsPanel()"></div>
+  <div class="prefs-panel">
+    <div class="prefs-panel-header">
+      <h3>Preferences</h3>
+      <button class="prefs-close-btn" onclick="togglePrefsPanel()">&times;</button>
+    </div>
+    <div class="prefs-section">
+      <div class="prefs-section-title">Topics I Care About</div>
+      <div class="prefs-section-title" style="font-size:0.7rem;margin-bottom:6px;margin-top:0;">Companies</div>
+      <div class="pref-pills">
+        <span class="pref-pill" data-topic="openai">OpenAI</span>
+        <span class="pref-pill" data-topic="anthropic">Anthropic</span>
+        <span class="pref-pill" data-topic="google">Google</span>
+        <span class="pref-pill" data-topic="meta">Meta</span>
+        <span class="pref-pill" data-topic="microsoft">Microsoft</span>
+        <span class="pref-pill" data-topic="nvidia">Nvidia</span>
+        <span class="pref-pill" data-topic="deepmind">DeepMind</span>
+        <span class="pref-pill" data-topic="apple">Apple</span>
+        <span class="pref-pill" data-topic="amazon">Amazon</span>
+      </div>
+      <div class="prefs-section-title" style="margin-top:12px;font-size:0.7rem;margin-bottom:6px;">Models</div>
+      <div class="pref-pills">
+        <span class="pref-pill" data-topic="gpt">GPT</span>
+        <span class="pref-pill" data-topic="claude">Claude</span>
+        <span class="pref-pill" data-topic="gemini">Gemini</span>
+        <span class="pref-pill" data-topic="llama">LLaMA</span>
+        <span class="pref-pill" data-topic="codex">Codex</span>
+      </div>
+      <div class="prefs-section-title" style="margin-top:12px;font-size:0.7rem;margin-bottom:6px;">Topics</div>
+      <div class="pref-pills">
+        <span class="pref-pill" data-topic="ai-safety">AI Safety</span>
+        <span class="pref-pill" data-topic="regulation">Regulation</span>
+        <span class="pref-pill" data-topic="robotics">Robotics</span>
+        <span class="pref-pill" data-topic="agents">Agents</span>
+        <span class="pref-pill" data-topic="multimodal">Multimodal</span>
+        <span class="pref-pill" data-topic="funding">Funding</span>
+        <span class="pref-pill" data-topic="startups">Startups</span>
+        <span class="pref-pill" data-topic="autonomous">Autonomous</span>
+      </div>
+    </div>
+    <div class="prefs-section">
+      <div class="prefs-section-title">Content I Want Most</div>
+      <div class="pref-content-row" data-section="news">
+        <label class="pref-toggle">
+          <input type="checkbox" checked>
+          <span class="pref-toggle-slider"></span>
+        </label>
+        <span class="pref-content-label">News Articles</span>
+        <div class="pref-priority">
+          <span>Pri</span>
+          <select><option value="1" selected>1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select>
+        </div>
+      </div>
+      <div class="pref-content-row" data-section="funding">
+        <label class="pref-toggle">
+          <input type="checkbox" checked>
+          <span class="pref-toggle-slider"></span>
+        </label>
+        <span class="pref-content-label">Funding &amp; Deals</span>
+        <div class="pref-priority">
+          <span>Pri</span>
+          <select><option value="1">1</option><option value="2" selected>2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select>
+        </div>
+      </div>
+      <div class="pref-content-row" data-section="podcast">
+        <label class="pref-toggle">
+          <input type="checkbox" checked>
+          <span class="pref-toggle-slider"></span>
+        </label>
+        <span class="pref-content-label">Podcasts</span>
+        <div class="pref-priority">
+          <span>Pri</span>
+          <select><option value="1">1</option><option value="2">2</option><option value="3" selected>3</option><option value="4">4</option><option value="5">5</option></select>
+        </div>
+      </div>
+      <div class="pref-content-row" data-section="event">
+        <label class="pref-toggle">
+          <input type="checkbox" checked>
+          <span class="pref-toggle-slider"></span>
+        </label>
+        <span class="pref-content-label">Events</span>
+        <div class="pref-priority">
+          <span>Pri</span>
+          <select><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4" selected>4</option><option value="5">5</option></select>
+        </div>
+      </div>
+      <div class="pref-content-row" data-section="video">
+        <label class="pref-toggle">
+          <input type="checkbox" checked>
+          <span class="pref-toggle-slider"></span>
+        </label>
+        <span class="pref-content-label">Videos</span>
+        <div class="pref-priority">
+          <span>Pri</span>
+          <select><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5" selected>5</option></select>
+        </div>
+      </div>
+    </div>
+    <button class="prefs-reset-btn" onclick="resetPrefs()">Reset preferences</button>
   </div>
   <div class="date-picker">
   <div class="dp-months"><span class="dp-month-tab active" data-month="2026-03">Mar 2026</span><span class="dp-month-tab" data-month="2026-02">Feb 2026</span></div>
@@ -227,6 +329,163 @@ if (filterInput) {
     });
   });
 }
+
+// ── Preference engine ──────────────────────────────────────────────────────
+
+var PREFS_KEY = 'aibrief_prefs';
+
+function defaultPrefs() {
+  return {
+    topics: [],
+    sections: {
+      news:    { on: true, pri: 1 },
+      funding: { on: true, pri: 2 },
+      podcast: { on: true, pri: 3 },
+      event:   { on: true, pri: 4 },
+      video:   { on: true, pri: 5 }
+    }
+  };
+}
+
+function loadPrefs() {
+  try {
+    var raw = localStorage.getItem(PREFS_KEY);
+    if (raw) return JSON.parse(raw);
+  } catch(e) {}
+  return defaultPrefs();
+}
+
+function savePrefs(prefs) {
+  try { localStorage.setItem(PREFS_KEY, JSON.stringify(prefs)); } catch(e) {}
+}
+
+function applyPrefs() {
+  var prefs = loadPrefs();
+  var hasTopics = prefs.topics.length > 0;
+
+  // Apply to timeline entries
+  document.querySelectorAll('li.tl-entry[data-section]').forEach(function(li) {
+    var section = li.getAttribute('data-section');
+    var tags = (li.getAttribute('data-tags') || '').split(',').filter(Boolean);
+
+    li.classList.remove('preferred', 'dimmed', 'section-hidden');
+
+    // Check if section is disabled
+    if (prefs.sections[section] && !prefs.sections[section].on) {
+      li.classList.add('section-hidden');
+      return;
+    }
+
+    if (!hasTopics) return; // no topic prefs = show all equally
+
+    // Check tag match
+    var matched = false;
+    for (var i = 0; i < tags.length; i++) {
+      if (prefs.topics.indexOf(tags[i]) !== -1) { matched = true; break; }
+    }
+
+    if (matched) {
+      li.classList.add('preferred');
+    } else {
+      li.classList.add('dimmed');
+    }
+  });
+
+  // Apply to section headers
+  document.querySelectorAll('li.tl-section[data-section]').forEach(function(li) {
+    var section = li.getAttribute('data-section');
+    li.classList.remove('collapsed');
+    if (prefs.sections[section] && !prefs.sections[section].on) {
+      li.classList.add('collapsed');
+    }
+  });
+
+  // Sync panel UI
+  syncPanelUI(prefs);
+}
+
+function syncPanelUI(prefs) {
+  // Sync topic pills
+  document.querySelectorAll('.pref-pill[data-topic]').forEach(function(pill) {
+    var topic = pill.getAttribute('data-topic');
+    if (prefs.topics.indexOf(topic) !== -1) {
+      pill.classList.add('active');
+    } else {
+      pill.classList.remove('active');
+    }
+  });
+
+  // Sync content rows
+  document.querySelectorAll('.pref-content-row[data-section]').forEach(function(row) {
+    var section = row.getAttribute('data-section');
+    var cfg = prefs.sections[section];
+    if (!cfg) return;
+    var cb = row.querySelector('input[type="checkbox"]');
+    var sel = row.querySelector('select');
+    if (cb) cb.checked = cfg.on;
+    if (sel) sel.value = cfg.pri;
+  });
+}
+
+// Panel open/close
+function togglePrefsPanel() {
+  var panel = document.querySelector('.prefs-panel');
+  var overlay = document.querySelector('.prefs-overlay');
+  if (panel && overlay) {
+    panel.classList.toggle('open');
+    overlay.classList.toggle('open');
+  }
+}
+
+// Reset handler
+function resetPrefs() {
+  localStorage.removeItem(PREFS_KEY);
+  applyPrefs();
+}
+
+// Pill click handlers
+document.querySelectorAll('.pref-pill[data-topic]').forEach(function(pill) {
+  pill.addEventListener('click', function() {
+    var prefs = loadPrefs();
+    var topic = this.getAttribute('data-topic');
+    var idx = prefs.topics.indexOf(topic);
+    if (idx === -1) {
+      prefs.topics.push(topic);
+    } else {
+      prefs.topics.splice(idx, 1);
+    }
+    savePrefs(prefs);
+    applyPrefs();
+  });
+});
+
+// Content toggle + priority handlers
+document.querySelectorAll('.pref-content-row[data-section]').forEach(function(row) {
+  var section = row.getAttribute('data-section');
+
+  var cb = row.querySelector('input[type="checkbox"]');
+  if (cb) {
+    cb.addEventListener('change', function() {
+      var prefs = loadPrefs();
+      if (prefs.sections[section]) prefs.sections[section].on = this.checked;
+      savePrefs(prefs);
+      applyPrefs();
+    });
+  }
+
+  var sel = row.querySelector('select');
+  if (sel) {
+    sel.addEventListener('change', function() {
+      var prefs = loadPrefs();
+      if (prefs.sections[section]) prefs.sections[section].pri = parseInt(this.value);
+      savePrefs(prefs);
+      applyPrefs();
+    });
+  }
+});
+
+// Apply on page load
+applyPrefs();
 </script>
 </body>
 </html>
