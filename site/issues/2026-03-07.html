@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The AI Brief — Saturday, March 07, 2026</title>
+  <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+  <div class="site-header">
+    <a class="logo" href="../index.html">The AI Brief</a>
+    <nav>
+      <a href="../index.html#subscribe">subscribe</a>
+      <span class="sep">/</span>
+      <a href="../archive.html">issues</a>
+      <span class="sep">/</span>
+      <a href="../archive.html#tags">tags</a>
+    </nav>
+  </div>
+  <div class="date-picker">
+  <div class="dp-months"><span class="dp-month-tab active" data-month="2026-03">Mar 2026</span><span class="dp-month-tab" data-month="2026-02">Feb 2026</span></div>
+  <div class="dp-dates-row active" data-month="2026-03"><a class="dp-date" href="2026-03-01.html">1</a><a class="dp-date" href="2026-03-02.html">2</a><span class="dp-date empty">3</span><span class="dp-date empty">4</span><a class="dp-date" href="2026-03-05.html">5</a><span class="dp-date empty">6</span><a class="dp-date current" href="2026-03-07.html">7</a><span class="dp-date empty">8</span><span class="dp-date empty">9</span><span class="dp-date empty">10</span><span class="dp-date empty">11</span><span class="dp-date empty">12</span><span class="dp-date empty">13</span><span class="dp-date empty">14</span><span class="dp-date empty">15</span><span class="dp-date empty">16</span><span class="dp-date empty">17</span><span class="dp-date empty">18</span><span class="dp-date empty">19</span><span class="dp-date empty">20</span><span class="dp-date empty">21</span><span class="dp-date empty">22</span><span class="dp-date empty">23</span><span class="dp-date empty">24</span><span class="dp-date empty">25</span><span class="dp-date empty">26</span><span class="dp-date empty">27</span><span class="dp-date empty">28</span><span class="dp-date empty">29</span><span class="dp-date empty">30</span><span class="dp-date empty">31</span></div><div class="dp-dates-row" data-month="2026-02"><span class="dp-date empty">1</span><span class="dp-date empty">2</span><span class="dp-date empty">3</span><span class="dp-date empty">4</span><span class="dp-date empty">5</span><span class="dp-date empty">6</span><span class="dp-date empty">7</span><span class="dp-date empty">8</span><span class="dp-date empty">9</span><span class="dp-date empty">10</span><span class="dp-date empty">11</span><span class="dp-date empty">12</span><span class="dp-date empty">13</span><span class="dp-date empty">14</span><span class="dp-date empty">15</span><a class="dp-date" href="2026-02-16.html">16</a><a class="dp-date" href="2026-02-17.html">17</a><a class="dp-date" href="2026-02-18.html">18</a><a class="dp-date" href="2026-02-19.html">19</a><a class="dp-date" href="2026-02-20.html">20</a><a class="dp-date" href="2026-02-21.html">21</a><a class="dp-date" href="2026-02-22.html">22</a><a class="dp-date" href="2026-02-23.html">23</a><a class="dp-date" href="2026-02-24.html">24</a><a class="dp-date" href="2026-02-25.html">25</a><a class="dp-date" href="2026-02-26.html">26</a><a class="dp-date" href="2026-02-27.html">27</a><a class="dp-date" href="2026-02-28.html">28</a></div>
+</div>
+<script>
+document.querySelectorAll('.dp-month-tab').forEach(function(tab) {
+  tab.addEventListener('click', function() {
+    var m = this.dataset.month;
+    var picker = this.closest('.date-picker');
+    picker.querySelectorAll('.dp-month-tab').forEach(function(t) { t.classList.remove('active'); });
+    picker.querySelectorAll('.dp-dates-row').forEach(function(r) { r.classList.remove('active'); });
+    this.classList.add('active');
+    picker.querySelector('.dp-dates-row[data-month="'+m+'"]').classList.add('active');
+  });
+});
+</script>
+  <div class="issue-nav"><a href="2026-03-05.html">&larr; Mar 5, 2026</a><span class="nav-placeholder">&rarr;</span></div>
+  <div style="max-width:960px;margin:0 auto;padding:0 32px;">
+    <h1 style="font-size:1.1rem;color:#888;font-weight:400;margin:20px 0 4px;">Saturday, March 07, 2026</h1>
+  </div>
+  <div class="issue-tags" id="tags">
+    <div class="issue-tags-header">
+      <div></div>
+      <button class="tags-toggle-btn" onclick="this.closest('.issue-tags').classList.toggle('hidden-tags')">show/hide tags</button>
+    </div>
+    <div class="tag-group"><div class="tag-category">SECTIONS</div><span class="tag-pill blue">news</span> <span class="tag-pill green">funding</span> <span class="tag-pill purple">podcast</span> <span class="tag-pill gray">news</span> <span class="tag-pill red">video</span></div>
+    <div class="tag-group"><div class="tag-category">SOURCES</div><span class="tag-pill gray">techcrunch-ai</span> <span class="tag-pill gray">the-verge-ai</span> <span class="tag-pill gray">listen</span> <span class="tag-pill gray">rsvp</span> <span class="tag-pill gray">watch</span></div>
+    <div class="tag-group"><div class="tag-category">TOPICS</div><span class="tag-pill gray">anthropic</span> <span class="tag-pill gray">google</span> <span class="tag-pill gray">microsoft</span> <span class="tag-pill gray">amazon</span> <span class="tag-pill green">claude</span> <span class="tag-pill green">gpt</span> <span class="tag-pill gray">meta</span> <span class="tag-pill blue">startup</span> <span class="tag-pill purple">agents</span> <span class="tag-pill blue">series-round</span></div>
+  </div>
+
+  <div class="issue-layout">
+    <aside class="toc-sidebar">
+      <div class="toc-toggle" onclick="this.parentElement.classList.toggle('collapsed')">TABLE OF CONTENTS</div>
+      <ul class="toc-list">
+    <li><a href="#top-ai-stories">Top AI Stories</a>
+      <div class="toc-sub">
+        <a href="#top-ai-stories-0">Microsoft, Google, Amazon say Anthropic Claud...</a>
+        <a href="#top-ai-stories-1">Anthropic’s Claude found 22 vulnerabilities i...</a>
+        <a href="#top-ai-stories-2">Claude’s consumer growth surge continues afte...</a>
+        <a href="#top-ai-stories-3">After Europe, WhatsApp will let rival AI comp...</a>
+        <a href="#top-ai-stories-4">Anthropic to challenge DOD’s supply-chain lab...</a>
+      </div>
+    </li>
+    <li><a href="#funding-deals">Funding &amp; Deals</a>
+      <div class="toc-sub">
+        <a href="#funding-deals-0">Anthropic’s Pentagon deal is a cautionary tal...</a>
+        <a href="#funding-deals-1">Anthropic vs. the Pentagon, the SaaSpocalypse...</a>
+        <a href="#funding-deals-2">City Detect, which uses AI to help cities sta...</a>
+        <a href="#funding-deals-3">Netflix is buying Ben Affleck’s AI startup</a>
+      </div>
+    </li>
+    <li><a href="#podcasts-worth-your-commute">Podcasts Worth Your Commute</a>
+      <div class="toc-sub">
+        <a href="#podcasts-worth-your-commute-0">20VC with Harry Stebbings — 20VC: Why the Saa...</a>
+        <a href="#podcasts-worth-your-commute-1">All-In Podcast — Inside the Iran War and the ...</a>
+      </div>
+    </li>
+    <li><a href="#events-near-you-london-oxford">Events Near You (London &amp; Oxford)</a>
+      <div class="toc-sub">
+        <a href="#events-near-you-london-oxford-0">EmpowerHer Panel</a>
+        <a href="#events-near-you-london-oxford-1">PHX FWD Pitch Practice: Learn, Observe, or Pi...</a>
+        <a href="#events-near-you-london-oxford-2">Morning Walk @ Veterans Oasis Park</a>
+        <a href="#events-near-you-london-oxford-3">ALO + WORKSHOP PILATES: Heated Mat Pilates</a>
+        <a href="#events-near-you-london-oxford-4">Beauty After Hours</a>
+      </div>
+    </li>
+    <li><a href="#videos-going-viral">Videos Going Viral</a>
+      <div class="toc-sub">
+        <a href="#videos-going-viral-0">I BUILT A FULLY AUTOMATIC MANSPLAINER</a>
+      </div>
+    </li>
+      </ul>
+    </aside>
+
+    <div class="issue-content">
+    <h2 id="top-ai-stories">Top AI Stories</h2>
+    <h3 id="top-ai-stories-0"><a href="https://techcrunch.com/2026/03/06/microsoft-anthropic-claude-remains-available-to-customers-except-the-defense-department/">Microsoft, Google, Amazon say Anthropic Claude remains available to non-defense customers</a></h3>
+    <p>Trump's Department of War feud with Anthropic won't impact other companies that are using Claude via Microsoft and Google products</p>
+    <p class="source-label">Source: <a href="https://techcrunch.com/2026/03/06/microsoft-anthropic-claude-remains-available-to-customers-except-the-defense-department/">TechCrunch AI</a></p>
+    <h3 id="top-ai-stories-1"><a href="https://techcrunch.com/2026/03/06/anthropics-claude-found-22-vulnerabilities-in-firefox-over-two-weeks/">Anthropic’s Claude found 22 vulnerabilities in Firefox over two weeks</a></h3>
+    <p>In a recent security partnership with Mozilla, Anthropic found 22 separate vulnerabilities in Firefox — 14 of them classified as "high-severity."</p>
+    <p class="source-label">Source: <a href="https://techcrunch.com/2026/03/06/anthropics-claude-found-22-vulnerabilities-in-firefox-over-two-weeks/">TechCrunch AI</a></p>
+    <h3 id="top-ai-stories-2"><a href="https://techcrunch.com/2026/03/06/claudes-consumer-growth-surge-continues-after-pentagon-deal-debacle/">Claude’s consumer growth surge continues after Pentagon deal debacle</a></h3>
+    <p>Claude's app is now seeing more new installs than ChatGPT and is growing its daily active users</p>
+    <p class="source-label">Source: <a href="https://techcrunch.com/2026/03/06/claudes-consumer-growth-surge-continues-after-pentagon-deal-debacle/">TechCrunch AI</a></p>
+    <h3 id="top-ai-stories-3"><a href="https://techcrunch.com/2026/03/06/after-europe-whatsapp-will-let-rival-ai-companies-offer-chatbots-in-brazil/">After Europe, WhatsApp will let rival AI companies offer chatbots in Brazil</a></h3>
+    <p>Meta is now allowing rival AI companies to provide their chatbots on WhatsApp to Brazilian users for a fee, a day after the company confirmed a sim</p>
+    <p class="source-label">Source: <a href="https://techcrunch.com/2026/03/06/after-europe-whatsapp-will-let-rival-ai-companies-offer-chatbots-in-brazil/">TechCrunch AI</a></p>
+    <h3 id="top-ai-stories-4"><a href="https://techcrunch.com/2026/03/05/anthropic-to-challenge-dods-supply-chain-label-in-court/">Anthropic to challenge DOD’s supply-chain label in court</a></h3>
+    <p>Anthropic CEO Dario Amodei said he plans to challenge the Department of Defense's designation of the AI firm as a supply-chain risk</p>
+    <p class="source-label">Source: <a href="https://techcrunch.com/2026/03/05/anthropic-to-challenge-dods-supply-chain-label-in-court/">TechCrunch AI</a></p>
+    <h3 id="top-ai-stories-5"><a href="https://techcrunch.com/2026/03/05/diligencesquared-uses-ai-voice-agents-to-make-ma-research-affordable/">DiligenceSquared uses AI, voice agents to make M&amp;A research affordable</a></h3>
+    <p>Instead of relying on expensive management consultants, the startup uses AI voice agents to conduct interviews with customers of the companies the</p>
+    <p class="source-label">Source: <a href="https://techcrunch.com/2026/03/05/diligencesquared-uses-ai-voice-agents-to-make-ma-research-affordable/">TechCrunch AI</a></p>
+    <h3 id="top-ai-stories-6"><a href="https://techcrunch.com/2026/03/05/aws-amazon-connect-health-ai-agent-platform-health-care-providers/">AWS launches a new AI agent platform specifically for healthcare</a></h3>
+    <p>AWS is launching Amazon Connect Health, an AI agent platform that will help with patient scheduling, documentation, and patient verification</p>
+    <p class="source-label">Source: <a href="https://techcrunch.com/2026/03/05/aws-amazon-connect-health-ai-agent-platform-health-care-providers/">TechCrunch AI</a></p>
+    <h2 id="funding-deals">Funding &amp; Deals</h2>
+    <h3 id="funding-deals-0"><a href="https://techcrunch.com/video/anthropics-pentagon-deal-is-a-cautionary-tale-for-startups-chasing-federal-contracts/">Anthropic’s Pentagon deal is a cautionary tale for startups chasing federal contracts</a></h3>
+    <p>The Pentagon has officially designated Anthropic a supply-chain risk after the two failed to agree on how much control the military should have ove</p>
+    <p class="source-label">Source: <a href="https://techcrunch.com/video/anthropics-pentagon-deal-is-a-cautionary-tale-for-startups-chasing-federal-contracts/">TechCrunch AI</a></p>
+    <h3 id="funding-deals-1"><a href="https://techcrunch.com/podcast/anthropic-vs-the-pentagon-the-saaspocalypse-and-why-competitions-is-good-actually/">Anthropic vs. the Pentagon, the SaaSpocalypse, and why competitions is good, actually</a></h3>
+    <p>The Pentagon has officially designated Anthropic a supply-chain risk after the two failed to agree on how much control the military should have ove</p>
+    <p class="source-label">Source: <a href="https://techcrunch.com/podcast/anthropic-vs-the-pentagon-the-saaspocalypse-and-why-competitions-is-good-actually/">TechCrunch AI</a></p>
+    <h3 id="funding-deals-2"><a href="https://techcrunch.com/2026/03/06/city-detect-uses-ai-to-help-cities-stay-safe-and-clean/">City Detect, which uses AI to help cities stay safe and clean, raises $13M Series A</a></h3>
+    <p>City Detect, a company that helps local governments prevent urban decay, is in at least 17 cities so far, including Dallas and Miami</p>
+    <p class="source-label">Source: <a href="https://techcrunch.com/2026/03/06/city-detect-uses-ai-to-help-cities-stay-safe-and-clean/">TechCrunch AI</a></p>
+    <h3 id="funding-deals-3"><a href="https://www.theverge.com/streaming/889973/netflix-ben-affleck-interpositive-ai">Netflix is buying Ben Affleck’s AI startup</a></h3>
+    <p>Though Netflix lost the war for Warner Bros., it has just bought an AI startup from the internet's favorite Dunkin' Donuts aficionado</p>
+    <p class="source-label">Source: <a href="https://www.theverge.com/streaming/889973/netflix-ben-affleck-interpositive-ai">The Verge AI</a></p>
+    <h2 id="podcasts-worth-your-commute">Podcasts Worth Your Commute</h2>
+    <h3 id="podcasts-worth-your-commute-0"><a href="https://thetwentyminutevc.libsyn.com/20vc-why-the-saas-apocalypse-is-bs-why-china-will-win-the-ai-war-why-50-of-vcs-should-not-exist-and-are-tourists-why-stock-based-comp-is-the-hidden-sin-of-the-valley-with-mitchell-green-lead-edge-capital">20VC with Harry Stebbings — 20VC: Why the SaaS Apocalypse is BS | Why China Will Win the AI War | Why 50% of VCs Should Not Exist and are Tourists | Why Stock-Based Comp is the Hidden Sin of the Valley with Mitchell Green, Lead Edge Capital</a></h3>
+    <p class="source-label">Source: <a href="https://thetwentyminutevc.libsyn.com/20vc-why-the-saas-apocalypse-is-bs-why-china-will-win-the-ai-war-why-50-of-vcs-should-not-exist-and-are-tourists-why-stock-based-comp-is-the-hidden-sin-of-the-valley-with-mitchell-green-lead-edge-capital">Listen</a></p>
+    <h3 id="podcasts-worth-your-commute-1"><a href="https://allinchamathjason.libsyn.com/inside-the-iran-war-and-the-pentagons-feud-with-anthropic-with-under-secretary-of-war-emil-michael">All-In Podcast — Inside the Iran War and the Pentagon's Feud with Anthropic with Under Secretary of War Emil Michael</a></h3>
+    <p class="source-label">Source: <a href="https://allinchamathjason.libsyn.com/inside-the-iran-war-and-the-pentagons-feud-with-anthropic-with-under-secretary-of-war-emil-michael">Listen</a></p>
+    <h2 id="events-near-you-london-oxford">Events Near You (London &amp; Oxford)</h2>
+    <h3 id="events-near-you-london-oxford-0"><a href="https://lu.ma/jrqrk85k">EmpowerHer Panel</a></h3>
+    <p>Luma (Phoenix)</p>
+    <p class="source-label">Source: <a href="https://lu.ma/jrqrk85k">RSVP</a></p>
+    <h3 id="events-near-you-london-oxford-1"><a href="https://lu.ma/eg21khuk">PHX FWD Pitch Practice: Learn, Observe, or Pitch</a></h3>
+    <p>Luma (Tempe)</p>
+    <p class="source-label">Source: <a href="https://lu.ma/eg21khuk">RSVP</a></p>
+    <h3 id="events-near-you-london-oxford-2"><a href="https://lu.ma/brrjhhzs">Morning Walk @ Veterans Oasis Park</a></h3>
+    <p>Luma (Chandler)</p>
+    <p class="source-label">Source: <a href="https://lu.ma/brrjhhzs">RSVP</a></p>
+    <h3 id="events-near-you-london-oxford-3"><a href="https://lu.ma/w7io3mr2">ALO + WORKSHOP PILATES: Heated Mat Pilates</a></h3>
+    <p>Luma (Phoenix)</p>
+    <p class="source-label">Source: <a href="https://lu.ma/w7io3mr2">RSVP</a></p>
+    <h3 id="events-near-you-london-oxford-4"><a href="https://lu.ma/beautyafterhours">Beauty After Hours</a></h3>
+    <p>Luma (Glendale)</p>
+    <p class="source-label">Source: <a href="https://lu.ma/beautyafterhours">RSVP</a></p>
+    <h3 id="events-near-you-london-oxford-5"><a href="https://lu.ma/e2h5i61u">Gospel Skate PHOENIX</a></h3>
+    <p>Luma (Mesa)</p>
+    <p class="source-label">Source: <a href="https://lu.ma/e2h5i61u">RSVP</a></p>
+    <h3 id="events-near-you-london-oxford-6"><a href="https://lu.ma/3sdg45hy">Porsche X Pilates Hosted by Reform Room 🏁</a></h3>
+    <p>Luma (Scottsdale)</p>
+    <p class="source-label">Source: <a href="https://lu.ma/3sdg45hy">RSVP</a></p>
+    <h3 id="events-near-you-london-oxford-7"><a href="https://lu.ma/h4ov99qw">Scottsdale Scoop Happy Hour + Sample North Italia Favorites</a></h3>
+    <p>Luma (Phoenix)</p>
+    <p class="source-label">Source: <a href="https://lu.ma/h4ov99qw">RSVP</a></p>
+    <h2 id="videos-going-viral">Videos Going Viral</h2>
+    <h3 id="videos-going-viral-0"><a href="https://www.youtube.com/watch?v=xHi8PUIVyoo">I BUILT A FULLY AUTOMATIC MANSPLAINER</a></h3>
+    <p>Yannic Kilcher</p>
+    <p class="source-label">Source: <a href="https://www.youtube.com/watch?v=xHi8PUIVyoo">Watch</a></p>
+    </div>
+  </div>
+  <div class="issue-nav"><a href="2026-03-05.html">&larr; Mar 5, 2026</a><span class="nav-placeholder">&rarr;</span></div>
+  <footer>
+    <a href="../index.html">Home</a> &middot; <a href="../archive.html">All Issues</a>
+  </footer>
+  <script>
+// Toggle timeline card expansion
+document.querySelectorAll('.tl-entry .tl-header').forEach(function(el) {
+  el.addEventListener('click', function(e) {
+    if (e.target.tagName === 'A') return;
+    this.parentElement.classList.toggle('expanded');
+  });
+});
+
+// Smooth TOC scroll
+document.querySelectorAll('.toc-list a').forEach(function(a) {
+  a.addEventListener('click', function(e) {
+    var target = document.querySelector(this.getAttribute('href'));
+    if (target) {
+      e.preventDefault();
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      history.replaceState(null, '', this.getAttribute('href'));
+    }
+  });
+});
+
+// Filter titles on index
+var filterInput = document.getElementById('regex-filter');
+if (filterInput) {
+  filterInput.addEventListener('input', function() {
+    var pattern;
+    try { pattern = new RegExp(this.value, 'i'); } catch(e) { return; }
+    document.querySelectorAll('.tl-entry').forEach(function(li) {
+      var title = li.querySelector('.tl-title');
+      if (title) {
+        li.style.display = pattern.test(title.textContent) ? '' : 'none';
+      }
+    });
+  });
+}
+</script>
+</body>
+</html>
