@@ -15,7 +15,109 @@
       <a href="../archive.html">issues</a>
       <span class="sep">/</span>
       <a href="../archive.html#tags">tags</a>
+      <span class="sep">/</span>
+      <button class="prefs-btn" onclick="togglePrefsPanel()" title="Preferences">&#9881;</button>
     </nav>
+  </div>
+  <div class="prefs-overlay" onclick="togglePrefsPanel()"></div>
+  <div class="prefs-panel">
+    <div class="prefs-panel-header">
+      <h3>Preferences</h3>
+      <button class="prefs-close-btn" onclick="togglePrefsPanel()">&times;</button>
+    </div>
+    <div class="prefs-section">
+      <div class="prefs-section-title">Topics I Care About</div>
+      <div class="prefs-section-title" style="font-size:0.7rem;margin-bottom:6px;margin-top:0;">Companies</div>
+      <div class="pref-pills">
+        <span class="pref-pill" data-topic="openai">OpenAI</span>
+        <span class="pref-pill" data-topic="anthropic">Anthropic</span>
+        <span class="pref-pill" data-topic="google">Google</span>
+        <span class="pref-pill" data-topic="meta">Meta</span>
+        <span class="pref-pill" data-topic="microsoft">Microsoft</span>
+        <span class="pref-pill" data-topic="nvidia">Nvidia</span>
+        <span class="pref-pill" data-topic="deepmind">DeepMind</span>
+        <span class="pref-pill" data-topic="apple">Apple</span>
+        <span class="pref-pill" data-topic="amazon">Amazon</span>
+      </div>
+      <div class="prefs-section-title" style="margin-top:12px;font-size:0.7rem;margin-bottom:6px;">Models</div>
+      <div class="pref-pills">
+        <span class="pref-pill" data-topic="gpt">GPT</span>
+        <span class="pref-pill" data-topic="claude">Claude</span>
+        <span class="pref-pill" data-topic="gemini">Gemini</span>
+        <span class="pref-pill" data-topic="llama">LLaMA</span>
+        <span class="pref-pill" data-topic="codex">Codex</span>
+      </div>
+      <div class="prefs-section-title" style="margin-top:12px;font-size:0.7rem;margin-bottom:6px;">Topics</div>
+      <div class="pref-pills">
+        <span class="pref-pill" data-topic="ai-safety">AI Safety</span>
+        <span class="pref-pill" data-topic="regulation">Regulation</span>
+        <span class="pref-pill" data-topic="robotics">Robotics</span>
+        <span class="pref-pill" data-topic="agents">Agents</span>
+        <span class="pref-pill" data-topic="multimodal">Multimodal</span>
+        <span class="pref-pill" data-topic="funding">Funding</span>
+        <span class="pref-pill" data-topic="startups">Startups</span>
+        <span class="pref-pill" data-topic="autonomous">Autonomous</span>
+      </div>
+    </div>
+    <div class="prefs-section">
+      <div class="prefs-section-title">Content I Want Most</div>
+      <div class="pref-content-row" data-section="news">
+        <label class="pref-toggle">
+          <input type="checkbox" checked>
+          <span class="pref-toggle-slider"></span>
+        </label>
+        <span class="pref-content-label">News Articles</span>
+        <div class="pref-priority">
+          <span>Pri</span>
+          <select><option value="1" selected>1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select>
+        </div>
+      </div>
+      <div class="pref-content-row" data-section="funding">
+        <label class="pref-toggle">
+          <input type="checkbox" checked>
+          <span class="pref-toggle-slider"></span>
+        </label>
+        <span class="pref-content-label">Funding &amp; Deals</span>
+        <div class="pref-priority">
+          <span>Pri</span>
+          <select><option value="1">1</option><option value="2" selected>2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select>
+        </div>
+      </div>
+      <div class="pref-content-row" data-section="podcast">
+        <label class="pref-toggle">
+          <input type="checkbox" checked>
+          <span class="pref-toggle-slider"></span>
+        </label>
+        <span class="pref-content-label">Podcasts</span>
+        <div class="pref-priority">
+          <span>Pri</span>
+          <select><option value="1">1</option><option value="2">2</option><option value="3" selected>3</option><option value="4">4</option><option value="5">5</option></select>
+        </div>
+      </div>
+      <div class="pref-content-row" data-section="event">
+        <label class="pref-toggle">
+          <input type="checkbox" checked>
+          <span class="pref-toggle-slider"></span>
+        </label>
+        <span class="pref-content-label">Events</span>
+        <div class="pref-priority">
+          <span>Pri</span>
+          <select><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4" selected>4</option><option value="5">5</option></select>
+        </div>
+      </div>
+      <div class="pref-content-row" data-section="video">
+        <label class="pref-toggle">
+          <input type="checkbox" checked>
+          <span class="pref-toggle-slider"></span>
+        </label>
+        <span class="pref-content-label">Videos</span>
+        <div class="pref-priority">
+          <span>Pri</span>
+          <select><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5" selected>5</option></select>
+        </div>
+      </div>
+    </div>
+    <button class="prefs-reset-btn" onclick="resetPrefs()">Reset preferences</button>
   </div>
   <div class="date-picker">
   <div class="dp-months"><span class="dp-month-tab active" data-month="2026-03">Mar 2026</span><span class="dp-month-tab" data-month="2026-02">Feb 2026</span></div>
@@ -42,8 +144,9 @@ document.querySelectorAll('.dp-month-tab').forEach(function(tab) {
       <div></div>
       <button class="tags-toggle-btn" onclick="this.closest('.issue-tags').classList.toggle('hidden-tags')">show/hide tags</button>
     </div>
-    <div class="tag-group"><div class="tag-category">SECTIONS</div><span class="tag-pill blue">news</span> <span class="tag-pill purple">podcast</span> <span class="tag-pill gray">news</span> <span class="tag-pill red">video</span></div>
-    <div class="tag-group"><div class="tag-category">SOURCES</div><span class="tag-pill gray">techcrunch-ai</span> <span class="tag-pill gray">listen</span> <span class="tag-pill gray">rsvp</span> <span class="tag-pill gray">watch</span></div>
+    <div class="tag-group"><div class="tag-category">SECTIONS</div><span class="tag-pill blue">news</span> <span class="tag-pill green">funding</span> <span class="tag-pill purple">podcast</span> <span class="tag-pill gray">news</span> <span class="tag-pill red">video</span></div>
+    <div class="tag-group"><div class="tag-category">SOURCES</div><span class="tag-pill gray">techcrunch-ai</span> <span class="tag-pill gray">the-verge-ai</span> <span class="tag-pill gray">crunchbase-ai-funding</span> <span class="tag-pill gray">techcrunch-venture</span> <span class="tag-pill gray">listen</span> <span class="tag-pill gray">rsvp</span> <span class="tag-pill gray">watch</span></div>
+    <div class="tag-group"><div class="tag-category">TOPICS</div><span class="tag-pill gray">openai</span> <span class="tag-pill gray">anthropic</span> <span class="tag-pill gray">google</span> <span class="tag-pill gray">deepmind</span> <span class="tag-pill green">claude</span> <span class="tag-pill purple">agents</span> <span class="tag-pill purple">robotics</span> <span class="tag-pill gray">apple</span> <span class="tag-pill gray">nvidia</span> <span class="tag-pill blue">valuation</span> <span class="tag-pill blue">startup</span> <span class="tag-pill blue">funding</span> <span class="tag-pill blue">series-round</span></div>
   </div>
 
   <div class="issue-layout">
@@ -52,25 +155,40 @@ document.querySelectorAll('.dp-month-tab').forEach(function(tab) {
       <ul class="toc-list">
     <li><a href="#top-ai-stories">Top AI Stories</a>
       <div class="toc-sub">
-        <a href="#top-ai-stories-0">Ring’s Jamie Siminoff has been trying to calm...</a>
+        <a href="#top-ai-stories-0">OpenAI and Google employees rush to Anthropic...</a>
+        <a href="#top-ai-stories-1">Anthropic launches code review tool to check ...</a>
+        <a href="#top-ai-stories-2">Anthropic sues Defense Department over supply...</a>
+        <a href="#top-ai-stories-3">Qualcomm’s partnership with Neura Robotics is...</a>
+        <a href="#top-ai-stories-4">Apple smart home display rumors now point to ...</a>
+      </div>
+    </li>
+    <li><a href="#funding-deals">Funding &amp; Deals</a>
+      <div class="toc-sub">
+        <a href="#funding-deals-0">OpenAI acquires Promptfoo to secure its AI ag...</a>
+        <a href="#funding-deals-1">Sandberg, Clegg join Nscale board as this ‘St...</a>
+        <a href="#funding-deals-2">The Series B Pipeline Looks Refreshingly Dive...</a>
+        <a href="#funding-deals-3">Xprize founder Peter Diamandis launches new c...</a>
       </div>
     </li>
     <li><a href="#podcasts-worth-your-commute">Podcasts Worth Your Commute</a>
       <div class="toc-sub">
-        <a href="#podcasts-worth-your-commute-0">20VC with Harry Stebbings — 20VC: Inside Acce...</a>
+        <a href="#podcasts-worth-your-commute-0">All-In Podcast — Graham Allison on the Global...</a>
+        <a href="#podcasts-worth-your-commute-1">Practical AI — AI policy and the battle for c...</a>
       </div>
     </li>
     <li><a href="#events-near-you-london-oxford">Events Near You (London &amp; Oxford)</a>
       <div class="toc-sub">
-        <a href="#events-near-you-london-oxford-0">ISTConversations: From STEM Classrooms to Car...</a>
-        <a href="#events-near-you-london-oxford-1">Sentrock Print Release + Closing Reception</a>
+        <a href="#events-near-you-london-oxford-0">Agents World: Visual AI Hackathon at ASU - Ma...</a>
+        <a href="#events-near-you-london-oxford-1">Capital Raising Series: Late-Stage Equity: Se...</a>
+        <a href="#events-near-you-london-oxford-2">Workshop: Building the Plane While Flying It ...</a>
+        <a href="#events-near-you-london-oxford-3">Barefoot &amp; In Love- A Couples Dance Pop-Up Ex...</a>
       </div>
     </li>
     <li><a href="#videos-going-viral">Videos Going Viral</a>
       <div class="toc-sub">
-        <a href="#videos-going-viral-0">Most People Miss What Makes This Impossible</a>
-        <a href="#videos-going-viral-1">Is AI destroying music? | Rick Beato and Lex ...</a>
-        <a href="#videos-going-viral-2">The 27 Club: Why so many rock stars died at 2...</a>
+        <a href="#videos-going-viral-0">The greatest unsolved problem in computer sci...</a>
+        <a href="#videos-going-viral-1">Lex Fridman on Mark Knopfler and Dire Straits</a>
+        <a href="#videos-going-viral-2">How The Beatles had so many | Rick Beato and ...</a>
       </div>
     </li>
       </ul>
@@ -78,29 +196,68 @@ document.querySelectorAll('.dp-month-tab').forEach(function(tab) {
 
     <div class="issue-content">
     <h2 id="top-ai-stories">Top AI Stories</h2>
-    <h3 id="top-ai-stories-0"><a href="https://techcrunch.com/2026/03/08/rings-jamie-siminoff-has-been-trying-to-calm-privacy-fears-since-the-super-bowl-but-his-answers-may-not-help/">Ring’s Jamie Siminoff has been trying to calm privacy fears since the Super Bowl, but his answers may not help</a></h3>
-    <p>The facial recognition question is where things get more tangled</p>
-    <p class="source-label">Source: <a href="https://techcrunch.com/2026/03/08/rings-jamie-siminoff-has-been-trying-to-calm-privacy-fears-since-the-super-bowl-but-his-answers-may-not-help/">TechCrunch AI</a></p>
+    <h3 id="top-ai-stories-0"><a href="https://techcrunch.com/2026/03/09/openai-and-google-employees-rush-to-anthropics-defense-in-dod-lawsuit/">OpenAI and Google employees rush to Anthropic’s defense in DOD lawsuit</a></h3>
+    <p>More than 30 OpenAI and Google DeepMind employees signed onto a statement supporting Anthropic's lawsuit against the Defense Department after the a</p>
+    <p class="source-label">Source: <a href="https://techcrunch.com/2026/03/09/openai-and-google-employees-rush-to-anthropics-defense-in-dod-lawsuit/">TechCrunch AI</a></p>
+    <h3 id="top-ai-stories-1"><a href="https://techcrunch.com/2026/03/09/anthropic-launches-code-review-tool-to-check-flood-of-ai-generated-code/">Anthropic launches code review tool to check flood of AI-generated code</a></h3>
+    <p>Anthropic launched Code Review in Claude Code, a multi-agent system that automatically analyzes AI-generated code, flags logic errors, and helps en</p>
+    <p class="source-label">Source: <a href="https://techcrunch.com/2026/03/09/anthropic-launches-code-review-tool-to-check-flood-of-ai-generated-code/">TechCrunch AI</a></p>
+    <h3 id="top-ai-stories-2"><a href="https://techcrunch.com/2026/03/09/anthropic-sues-defense-department-over-supply-chain-risk-designation/">Anthropic sues Defense Department over supply-chain risk designation</a></h3>
+    <p>Anthropic filed suit against the Department of Defense on Monday after the agency labeled it a supply-chain risk</p>
+    <p class="source-label">Source: <a href="https://techcrunch.com/2026/03/09/anthropic-sues-defense-department-over-supply-chain-risk-designation/">TechCrunch AI</a></p>
+    <h3 id="top-ai-stories-3"><a href="https://techcrunch.com/2026/03/09/qualcomms-partnership-with-neura-robotics-is-just-the-beginning/">Qualcomm’s partnership with Neura Robotics is just the beginning</a></h3>
+    <p>Neura Robotics is going to build new robots on top of Qualcomm's new IQ10 processors that were released at CES</p>
+    <p class="source-label">Source: <a href="https://techcrunch.com/2026/03/09/qualcomms-partnership-with-neura-robotics-is-just-the-beginning/">TechCrunch AI</a></p>
+    <h3 id="top-ai-stories-4"><a href="https://www.theverge.com/ai-artificial-intelligence/891723/apple-homepad-delay-rumor">Apple smart home display rumors now point to a fall launch with iOS 27</a></h3>
+    <p>The rumored "HomePod with a screen" we've heard so much about was reportedly lined up for launch in 2025, and then this spring, and now, according</p>
+    <p class="source-label">Source: <a href="https://www.theverge.com/ai-artificial-intelligence/891723/apple-homepad-delay-rumor">The Verge AI</a></p>
+    <h3 id="top-ai-stories-5"><a href="https://www.theverge.com/ai-artificial-intelligence/891514/anthropic-pentagon-lawsuit-amicus-brief-openai-google">Employees across OpenAI and Google support Anthropic’s lawsuit against the Pentagon</a></h3>
+    <p>On Monday, Anthropic filed its lawsuit against the Department of Defense over being designated as a supply chain risk</p>
+    <p class="source-label">Source: <a href="https://www.theverge.com/ai-artificial-intelligence/891514/anthropic-pentagon-lawsuit-amicus-brief-openai-google">The Verge AI</a></p>
+    <h3 id="top-ai-stories-6"><a href="https://www.theverge.com/ai-artificial-intelligence/891377/anthropic-dod-lawsuit">Anthropic is suing the Department of Defense</a></h3>
+    <p>Anthropic has sued the US government over its designation as a supply-chain risk, the latest move in a weekslong battle between it and the Pentagon</p>
+    <p class="source-label">Source: <a href="https://www.theverge.com/ai-artificial-intelligence/891377/anthropic-dod-lawsuit">The Verge AI</a></p>
+    <h2 id="funding-deals">Funding &amp; Deals</h2>
+    <h3 id="funding-deals-0"><a href="https://techcrunch.com/2026/03/09/openai-acquires-promptfoo-to-secure-its-ai-agents/">OpenAI acquires Promptfoo to secure its AI agents</a></h3>
+    <p>This deal underscores how frontier labs are scrambling to prove their technology can be used safely in critical business operations</p>
+    <p class="source-label">Source: <a href="https://techcrunch.com/2026/03/09/openai-acquires-promptfoo-to-secure-its-ai-agents/">TechCrunch AI</a></p>
+    <h3 id="funding-deals-1"><a href="https://techcrunch.com/2026/03/09/sandberg-clegg-join-nscale-board-as-this-stargate-norway-startup-hits-14-6b-valuation/">Sandberg, Clegg join Nscale board as this ‘Stargate Norway’ startup hits $14.6B  valuation</a></h3>
+    <p>Nvidia-backed British AI infrastructure startup Nscale has raised another megaround of $2 billion</p>
+    <p class="source-label">Source: <a href="https://techcrunch.com/2026/03/09/sandberg-clegg-join-nscale-board-as-this-stargate-norway-startup-hits-14-6b-valuation/">TechCrunch AI</a></p>
+    <h3 id="funding-deals-2"><a href="https://news.crunchbase.com/venture/data-series-b-startup-funding-ai-defense-health/">The Series B Pipeline Looks Refreshingly Diversified</a></h3>
+    <p>Annual Series B funding is moving steadily higher after hitting a low in 2023, Crunchbase data shows, and this year is off to a strong start as well</p>
+    <p class="source-label">Source: <a href="https://news.crunchbase.com/venture/data-series-b-startup-funding-ai-defense-health/">Crunchbase AI Funding</a></p>
+    <h3 id="funding-deals-3"><a href="https://techcrunch.com/2026/03/09/xprize-founder-peter-diamandis-launches-new-contest-to-manifest-a-new-star-trek/">Xprize founder Peter Diamandis launches new contest to manifest a new ‘Star Trek’</a></h3>
+    <p>The famed author and investor has launched the Future Vision Xprize with sponsors like Google, Marc Benioff, and Ben Horowitz to fund optimistic sc</p>
+    <p class="source-label">Source: <a href="https://techcrunch.com/2026/03/09/xprize-founder-peter-diamandis-launches-new-contest-to-manifest-a-new-star-trek/">TechCrunch Venture</a></p>
     <h2 id="podcasts-worth-your-commute">Podcasts Worth Your Commute</h2>
-    <h3 id="podcasts-worth-your-commute-0"><a href="https://thetwentyminutevc.libsyn.com/20vc-inside-accels-4bn-growth-investing-machine-cursor-is-dead-is-total-bs-here-is-why-what-missing-rippling-and-elevenlabs-taught-us-are-2bn-10bn-ipos-dead-why-now-is-a-great-time-to-be-thoma-bravo-with-miles-clements">20VC with Harry Stebbings — 20VC: Inside Accel's $4BN Growth Investing Machine | Cursor is Dead is Total BS: Here is Why | What Missing Rippling and ElevenLabs Taught Us | Are $2BN-$10BN IPOs Dead | Why Now is a Great Time to be Thoma Bravo with Miles Clements</a></h3>
-    <p class="source-label">Source: <a href="https://thetwentyminutevc.libsyn.com/20vc-inside-accels-4bn-growth-investing-machine-cursor-is-dead-is-total-bs-here-is-why-what-missing-rippling-and-elevenlabs-taught-us-are-2bn-10bn-ipos-dead-why-now-is-a-great-time-to-be-thoma-bravo-with-miles-clements">Listen</a></p>
+    <h3 id="podcasts-worth-your-commute-0"><a href="https://allinchamathjason.libsyn.com/graham-allison-on-the-global-realignment-iran-china-israel-greenland">All-In Podcast — Graham Allison on the Global Realignment: Iran, China, Israel, Greenland</a></h3>
+    <p class="source-label">Source: <a href="https://allinchamathjason.libsyn.com/graham-allison-on-the-global-realignment-iran-china-israel-greenland">Listen</a></p>
+    <h3 id="podcasts-worth-your-commute-1"><a href="https://share.transistor.fm/s/1923dca1">Practical AI — AI policy and the battle for computing power</a></h3>
+    <p class="source-label">Source: <a href="https://share.transistor.fm/s/1923dca1">Listen</a></p>
     <h2 id="events-near-you-london-oxford">Events Near You (London &amp; Oxford)</h2>
-    <h3 id="events-near-you-london-oxford-0"><a href="https://lu.ma/tpt48xa9">ISTConversations: From STEM Classrooms to Career Pathways</a></h3>
-    <p>Luma (Chicago)</p>
-    <p class="source-label">Source: <a href="https://lu.ma/tpt48xa9">RSVP</a></p>
-    <h3 id="events-near-you-london-oxford-1"><a href="https://lu.ma/whzknv9q">Sentrock Print Release + Closing Reception</a></h3>
-    <p>Luma (Chicago)</p>
-    <p class="source-label">Source: <a href="https://lu.ma/whzknv9q">RSVP</a></p>
+    <h3 id="events-near-you-london-oxford-0"><a href="https://lu.ma/5yi9cbxp">Agents World: Visual AI Hackathon at ASU - March 21, 2026</a></h3>
+    <p>Luma (Tempe)</p>
+    <p class="source-label">Source: <a href="https://lu.ma/5yi9cbxp">RSVP</a></p>
+    <h3 id="events-near-you-london-oxford-1"><a href="https://lu.ma/2wchg093">Capital Raising Series: Late-Stage Equity: Series A and Beyond - Running a Disciplined Capital Raise with the 12/6/3 Process</a></h3>
+    <p>Luma (Tempe)</p>
+    <p class="source-label">Source: <a href="https://lu.ma/2wchg093">RSVP</a></p>
+    <h3 id="events-near-you-london-oxford-2"><a href="https://lu.ma/vpd6q18r">Workshop: Building the Plane While Flying It in Student Union</a></h3>
+    <p>Luma (Glendale)</p>
+    <p class="source-label">Source: <a href="https://lu.ma/vpd6q18r">RSVP</a></p>
+    <h3 id="events-near-you-london-oxford-3"><a href="https://lu.ma/p0i7dad1">Barefoot &amp; In Love- A Couples Dance Pop-Up Experience</a></h3>
+    <p>Luma (Phoenix)</p>
+    <p class="source-label">Source: <a href="https://lu.ma/p0i7dad1">RSVP</a></p>
     <h2 id="videos-going-viral">Videos Going Viral</h2>
-    <h3 id="videos-going-viral-0"><a href="https://www.youtube.com/watch?v=qF_tfIieeE0">Most People Miss What Makes This Impossible</a></h3>
-    <p>Two Minute Papers</p>
-    <p class="source-label">Source: <a href="https://www.youtube.com/watch?v=qF_tfIieeE0">Watch</a></p>
-    <h3 id="videos-going-viral-1"><a href="https://www.youtube.com/watch?v=65O6pHDOu6Y">Is AI destroying music? | Rick Beato and Lex Fridman</a></h3>
+    <h3 id="videos-going-viral-0"><a href="https://www.youtube.com/watch?v=x36UmiSiEzc">The greatest unsolved problem in computer science...</a></h3>
+    <p>Fireship</p>
+    <p class="source-label">Source: <a href="https://www.youtube.com/watch?v=x36UmiSiEzc">Watch</a></p>
+    <h3 id="videos-going-viral-1"><a href="https://www.youtube.com/watch?v=12YktUSaXoo">Lex Fridman on Mark Knopfler and Dire Straits</a></h3>
     <p>Matt Wolfe</p>
-    <p class="source-label">Source: <a href="https://www.youtube.com/watch?v=65O6pHDOu6Y">Watch</a></p>
-    <h3 id="videos-going-viral-2"><a href="https://www.youtube.com/watch?v=hzjw-yPKCd8">The 27 Club: Why so many rock stars died at 27 | Rick Beato and Lex Fridman</a></h3>
+    <p class="source-label">Source: <a href="https://www.youtube.com/watch?v=12YktUSaXoo">Watch</a></p>
+    <h3 id="videos-going-viral-2"><a href="https://www.youtube.com/watch?v=ryf6etZ8rfU">How The Beatles had so many | Rick Beato and Lex Fridman</a></h3>
     <p>Matt Wolfe</p>
-    <p class="source-label">Source: <a href="https://www.youtube.com/watch?v=hzjw-yPKCd8">Watch</a></p>
+    <p class="source-label">Source: <a href="https://www.youtube.com/watch?v=ryf6etZ8rfU">Watch</a></p>
     </div>
   </div>
   <div class="issue-nav"><a href="2026-03-08.html">&larr; Mar 8, 2026</a><span class="nav-placeholder">&rarr;</span></div>
@@ -142,6 +299,163 @@ if (filterInput) {
     });
   });
 }
+
+// ── Preference engine ──────────────────────────────────────────────────────
+
+var PREFS_KEY = 'aibrief_prefs';
+
+function defaultPrefs() {
+  return {
+    topics: [],
+    sections: {
+      news:    { on: true, pri: 1 },
+      funding: { on: true, pri: 2 },
+      podcast: { on: true, pri: 3 },
+      event:   { on: true, pri: 4 },
+      video:   { on: true, pri: 5 }
+    }
+  };
+}
+
+function loadPrefs() {
+  try {
+    var raw = localStorage.getItem(PREFS_KEY);
+    if (raw) return JSON.parse(raw);
+  } catch(e) {}
+  return defaultPrefs();
+}
+
+function savePrefs(prefs) {
+  try { localStorage.setItem(PREFS_KEY, JSON.stringify(prefs)); } catch(e) {}
+}
+
+function applyPrefs() {
+  var prefs = loadPrefs();
+  var hasTopics = prefs.topics.length > 0;
+
+  // Apply to timeline entries
+  document.querySelectorAll('li.tl-entry[data-section]').forEach(function(li) {
+    var section = li.getAttribute('data-section');
+    var tags = (li.getAttribute('data-tags') || '').split(',').filter(Boolean);
+
+    li.classList.remove('preferred', 'dimmed', 'section-hidden');
+
+    // Check if section is disabled
+    if (prefs.sections[section] && !prefs.sections[section].on) {
+      li.classList.add('section-hidden');
+      return;
+    }
+
+    if (!hasTopics) return; // no topic prefs = show all equally
+
+    // Check tag match
+    var matched = false;
+    for (var i = 0; i < tags.length; i++) {
+      if (prefs.topics.indexOf(tags[i]) !== -1) { matched = true; break; }
+    }
+
+    if (matched) {
+      li.classList.add('preferred');
+    } else {
+      li.classList.add('dimmed');
+    }
+  });
+
+  // Apply to section headers
+  document.querySelectorAll('li.tl-section[data-section]').forEach(function(li) {
+    var section = li.getAttribute('data-section');
+    li.classList.remove('collapsed');
+    if (prefs.sections[section] && !prefs.sections[section].on) {
+      li.classList.add('collapsed');
+    }
+  });
+
+  // Sync panel UI
+  syncPanelUI(prefs);
+}
+
+function syncPanelUI(prefs) {
+  // Sync topic pills
+  document.querySelectorAll('.pref-pill[data-topic]').forEach(function(pill) {
+    var topic = pill.getAttribute('data-topic');
+    if (prefs.topics.indexOf(topic) !== -1) {
+      pill.classList.add('active');
+    } else {
+      pill.classList.remove('active');
+    }
+  });
+
+  // Sync content rows
+  document.querySelectorAll('.pref-content-row[data-section]').forEach(function(row) {
+    var section = row.getAttribute('data-section');
+    var cfg = prefs.sections[section];
+    if (!cfg) return;
+    var cb = row.querySelector('input[type="checkbox"]');
+    var sel = row.querySelector('select');
+    if (cb) cb.checked = cfg.on;
+    if (sel) sel.value = cfg.pri;
+  });
+}
+
+// Panel open/close
+function togglePrefsPanel() {
+  var panel = document.querySelector('.prefs-panel');
+  var overlay = document.querySelector('.prefs-overlay');
+  if (panel && overlay) {
+    panel.classList.toggle('open');
+    overlay.classList.toggle('open');
+  }
+}
+
+// Reset handler
+function resetPrefs() {
+  localStorage.removeItem(PREFS_KEY);
+  applyPrefs();
+}
+
+// Pill click handlers
+document.querySelectorAll('.pref-pill[data-topic]').forEach(function(pill) {
+  pill.addEventListener('click', function() {
+    var prefs = loadPrefs();
+    var topic = this.getAttribute('data-topic');
+    var idx = prefs.topics.indexOf(topic);
+    if (idx === -1) {
+      prefs.topics.push(topic);
+    } else {
+      prefs.topics.splice(idx, 1);
+    }
+    savePrefs(prefs);
+    applyPrefs();
+  });
+});
+
+// Content toggle + priority handlers
+document.querySelectorAll('.pref-content-row[data-section]').forEach(function(row) {
+  var section = row.getAttribute('data-section');
+
+  var cb = row.querySelector('input[type="checkbox"]');
+  if (cb) {
+    cb.addEventListener('change', function() {
+      var prefs = loadPrefs();
+      if (prefs.sections[section]) prefs.sections[section].on = this.checked;
+      savePrefs(prefs);
+      applyPrefs();
+    });
+  }
+
+  var sel = row.querySelector('select');
+  if (sel) {
+    sel.addEventListener('change', function() {
+      var prefs = loadPrefs();
+      if (prefs.sections[section]) prefs.sections[section].pri = parseInt(this.value);
+      savePrefs(prefs);
+      applyPrefs();
+    });
+  }
+});
+
+// Apply on page load
+applyPrefs();
 </script>
 </body>
 </html>
