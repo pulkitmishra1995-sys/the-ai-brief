@@ -5,20 +5,24 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>The AI Brief — AI & Tech Digest</title>
   <link rel="stylesheet" href="style.css">
+  <meta name="robots" content="noindex, nofollow">
 </head>
 <body>
-  <div class="site-header">
+  <header class="site-header">
     <a class="logo" href="index.html">The AI Brief</a>
     <nav>
       <a href="#subscribe">subscribe</a>
-      <span class="sep">/</span>
       <a href="archive.html">issues</a>
-      <span class="sep">/</span>
       <a href="archive.html#tags">tags</a>
-      <span class="sep">/</span>
+      <button class="search-trigger" onclick="openSearch()">Search <kbd>&#8984;K</kbd></button>
       <button class="prefs-btn" onclick="togglePrefsPanel()" title="Preferences">&#9881;</button>
     </nav>
-  </div>
+    <div class="theme-buttons">
+      <button class="theme-btn" data-theme="light" onclick="setTheme('light')" title="Light">&#9788;</button>
+      <button class="theme-btn" data-theme="dark" onclick="setTheme('dark')" title="Dark">&#9790;</button>
+      <button class="theme-btn" data-theme="system" onclick="setTheme('system')" title="System">&#9881;</button>
+    </div>
+  </header>
   <div class="prefs-overlay" onclick="togglePrefsPanel()"></div>
   <div class="prefs-panel">
     <div class="prefs-panel-header">
@@ -119,412 +123,542 @@
     </div>
     <button class="prefs-reset-btn" onclick="resetPrefs()">Reset preferences</button>
   </div>
-  <div class="date-picker">
-  <div class="dp-months"><span class="dp-month-tab active" data-month="2026-03">Mar 2026</span><span class="dp-month-tab" data-month="2026-02">Feb 2026</span></div>
-  <div class="dp-dates-row active" data-month="2026-03"><a class="dp-date" href="issues/2026-03-01.html">1</a><a class="dp-date" href="issues/2026-03-02.html">2</a><span class="dp-date empty">3</span><span class="dp-date empty">4</span><a class="dp-date" href="issues/2026-03-05.html">5</a><span class="dp-date empty">6</span><a class="dp-date" href="issues/2026-03-07.html">7</a><a class="dp-date" href="issues/2026-03-08.html">8</a><a class="dp-date current" href="issues/2026-03-09.html">9</a><span class="dp-date empty">10</span><span class="dp-date empty">11</span><span class="dp-date empty">12</span><span class="dp-date empty">13</span><span class="dp-date empty">14</span><span class="dp-date empty">15</span><span class="dp-date empty">16</span><span class="dp-date empty">17</span><span class="dp-date empty">18</span><span class="dp-date empty">19</span><span class="dp-date empty">20</span><span class="dp-date empty">21</span><span class="dp-date empty">22</span><span class="dp-date empty">23</span><span class="dp-date empty">24</span><span class="dp-date empty">25</span><span class="dp-date empty">26</span><span class="dp-date empty">27</span><span class="dp-date empty">28</span><span class="dp-date empty">29</span><span class="dp-date empty">30</span><span class="dp-date empty">31</span></div><div class="dp-dates-row" data-month="2026-02"><span class="dp-date empty">1</span><span class="dp-date empty">2</span><span class="dp-date empty">3</span><span class="dp-date empty">4</span><span class="dp-date empty">5</span><span class="dp-date empty">6</span><span class="dp-date empty">7</span><span class="dp-date empty">8</span><span class="dp-date empty">9</span><span class="dp-date empty">10</span><span class="dp-date empty">11</span><span class="dp-date empty">12</span><span class="dp-date empty">13</span><span class="dp-date empty">14</span><span class="dp-date empty">15</span><a class="dp-date" href="issues/2026-02-16.html">16</a><a class="dp-date" href="issues/2026-02-17.html">17</a><a class="dp-date" href="issues/2026-02-18.html">18</a><a class="dp-date" href="issues/2026-02-19.html">19</a><a class="dp-date" href="issues/2026-02-20.html">20</a><a class="dp-date" href="issues/2026-02-21.html">21</a><a class="dp-date" href="issues/2026-02-22.html">22</a><a class="dp-date" href="issues/2026-02-23.html">23</a><a class="dp-date" href="issues/2026-02-24.html">24</a><a class="dp-date" href="issues/2026-02-25.html">25</a><a class="dp-date" href="issues/2026-02-26.html">26</a><a class="dp-date" href="issues/2026-02-27.html">27</a><a class="dp-date" href="issues/2026-02-28.html">28</a></div>
-</div>
-<script>
-document.querySelectorAll('.dp-month-tab').forEach(function(tab) {
-  tab.addEventListener('click', function() {
-    var m = this.dataset.month;
-    var picker = this.closest('.date-picker');
-    picker.querySelectorAll('.dp-month-tab').forEach(function(t) { t.classList.remove('active'); });
-    picker.querySelectorAll('.dp-dates-row').forEach(function(r) { r.classList.remove('active'); });
-    this.classList.add('active');
-    picker.querySelector('.dp-dates-row[data-month="'+m+'"]').classList.add('active');
-  });
-});
-</script>
-
-  <div class="subscribe-inline" id="subscribe">
-    <span class="subscribe-label">Get the daily AI & tech digest in your inbox</span>
-    <a class="subscribe-btn" href="mailto:pulkitmishra1995@gmail.com?subject=Subscribe%20to%20The%20AI%20Brief&body=Please%20add%20me%20to%20the%20newsletter.%0A%0AName%3A%20%0A" target="_blank">Subscribe via Email</a>
+  <section class="hero" id="subscribe">
+    <h1 class="hero-title">The AI Brief</h1>
+    <p class="hero-subtitle">Your daily AI &amp; tech digest.</p>
+    <p class="hero-description">We curate the top AI stories, funding rounds, podcasts, events &amp; videos, and send you a roundup each day.</p>
+    <div class="hero-subscribe">
+      <iframe src="https://yourname.substack.com/embed" width="100%" height="150" style="border:none;background:transparent;" frameborder="0" scrolling="no"></iframe>
+    </div>
+    <div class="hero-quotes">
+      <blockquote>&ldquo;The best way to keep up with AI without doom-scrolling&rdquo;</blockquote>
+    </div>
+  </section>
+  <div class="search-overlay" id="search-overlay" onclick="closeSearch()"></div>
+  <div class="search-modal" id="search-modal">
+    <div class="search-modal-header">
+      <input type="text" id="search-input" placeholder="Search issues, tags, topics..." autocomplete="off">
+      <button class="search-close" onclick="closeSearch()">&times;</button>
+    </div>
+    <div class="search-results" id="search-results"></div>
+    <script type="application/json" id="search-data">[{"date": "2026-03-09", "dateDisplay": "March 9, 2026", "title": "Ring\u2019s Jamie Siminoff has been trying to calm privacy fears since the Super Bowl, but his answers may not help", "tags": [], "summary": "The facial recognition question is where things get more tangled", "url": "issues/2026-03-09.html"}, {"date": "2026-03-08", "dateDisplay": "March 8, 2026", "title": "Will the Pentagon\u2019s Anthropic controversy scare startups away from defense work?", "tags": ["anthropic", "google", "startup"], "summary": "On the latest episode of TechCrunch\u2019s Equity podcast, we discussed what the controversy means for other startups seeking to work with the federal g", "url": "issues/2026-03-08.html"}, {"date": "2026-03-07", "dateDisplay": "March 7, 2026", "title": "OpenAI robotics lead Caitlin Kalinowski quits in response to Pentagon deal", "tags": ["deepmind", "google", "gpt", "openai", "robotics"], "summary": "Hardware executive Caitlin Kalinowski announced today that in response to OpenAI's controversial agreement with the Department of Defense, she\u2019s re", "url": "issues/2026-03-07.html"}, {"date": "2026-03-05", "dateDisplay": "March 5, 2026", "title": "Import AI 447: The AGI economy; testing AIs with generated games; and agent ecologies", "tags": ["agents"], "summary": "What might a superintelligence arcology be like?", "url": "issues/2026-03-05.html"}, {"date": "2026-03-02", "dateDisplay": "March 2, 2026", "title": "Import AI 447: The AGI economy; testing AIs with generated games; and agent ecologies", "tags": ["agents"], "summary": "What might a superintelligence arcology be like?", "url": "issues/2026-03-02.html"}, {"date": "2026-03-01", "dateDisplay": "March 1, 2026", "title": "AI Brief", "tags": [], "summary": "", "url": "issues/2026-03-01.html"}, {"date": "2026-02-28", "dateDisplay": "February 28, 2026", "title": "AI Brief", "tags": [], "summary": "", "url": "issues/2026-02-28.html"}, {"date": "2026-02-27", "dateDisplay": "February 27, 2026", "title": "AI Brief", "tags": [], "summary": "", "url": "issues/2026-02-27.html"}, {"date": "2026-02-26", "dateDisplay": "February 26, 2026", "title": "AI Brief", "tags": [], "summary": "", "url": "issues/2026-02-26.html"}, {"date": "2026-02-25", "dateDisplay": "February 25, 2026", "title": "AI Brief", "tags": [], "summary": "", "url": "issues/2026-02-25.html"}, {"date": "2026-02-24", "dateDisplay": "February 24, 2026", "title": "AI Brief", "tags": [], "summary": "", "url": "issues/2026-02-24.html"}, {"date": "2026-02-23", "dateDisplay": "February 23, 2026", "title": "AI Brief", "tags": [], "summary": "", "url": "issues/2026-02-23.html"}, {"date": "2026-02-22", "dateDisplay": "February 22, 2026", "title": "AI Brief", "tags": [], "summary": "", "url": "issues/2026-02-22.html"}, {"date": "2026-02-21", "dateDisplay": "February 21, 2026", "title": "AI Brief", "tags": [], "summary": "", "url": "issues/2026-02-21.html"}, {"date": "2026-02-20", "dateDisplay": "February 20, 2026", "title": "AI Brief", "tags": [], "summary": "", "url": "issues/2026-02-20.html"}, {"date": "2026-02-19", "dateDisplay": "February 19, 2026", "title": "AI Brief", "tags": [], "summary": "", "url": "issues/2026-02-19.html"}, {"date": "2026-02-18", "dateDisplay": "February 18, 2026", "title": "AI Brief", "tags": [], "summary": "", "url": "issues/2026-02-18.html"}, {"date": "2026-02-17", "dateDisplay": "February 17, 2026", "title": "AI Brief", "tags": [], "summary": "", "url": "issues/2026-02-17.html"}, {"date": "2026-02-16", "dateDisplay": "February 16, 2026", "title": "AI Brief", "tags": [], "summary": "", "url": "issues/2026-02-16.html"}]</script>
   </div>
 
   <div class="title-bar">
-    <h2>Last 30 days in AI & Tech</h2>
-    <div class="filter-group">
-      <label>Filter titles:</label>
-      <input type="text" id="regex-filter" placeholder="regex...">
+    <h2>Last 30 days in AI &amp; Tech</h2>
+    <a class="see-all" href="archive.html">See all issues &rarr;</a>
+  </div>
+
+  <div class="filter-bar">
+    <input type="text" id="regex-filter" placeholder="Filter titles...">
+    <div id="regex-filter-error" class="filter-error hidden">Invalid regex</div>
+    <div class="filter-checkboxes">
+      <label><input type="checkbox" id="filter-by-title" checked> title</label>
+      <label><input type="checkbox" id="filter-by-description"> description</label>
+      <label><input type="checkbox" id="filter-by-tags"> tags</label>
     </div>
-    <a class="see-all" href="archive.html">See all issues</a>
   </div>
 
   <div class="timeline-container">
-    <ol class="timeline">
-  <li class="tl-section" data-section="news">Top AI Stories</li>
-  <li class="tl-entry has-content" data-tags="openai,anthropic,google,deepmind" data-section="news">
-    <div class="tl-header" onclick="this.parentElement.classList.toggle('expanded')">
-      <span class="tl-date">Mar 09</span>
-      <span class="tl-title"><a href="https://techcrunch.com/2026/03/09/openai-and-google-employees-rush-to-anthropics-defense-in-dod-lawsuit/">OpenAI and Google employees rush to Anthropic’s defense in DOD lawsuit</a></span>
-      <span class="tl-arrow">&rarr;</span>
-    </div>
-    <div class="tl-body">
-      <button class="close-btn" onclick="this.closest('.tl-entry').classList.remove('expanded')">&times;</button>
-      <div class="tags-cloud"><span class="tag-pill gray">openai</span><span class="tag-pill gray">anthropic</span><span class="tag-pill gray">google</span><span class="tag-pill gray">deepmind</span><span class="tag-pill blue">news</span></div>
-      <div class="detail-text"><p>More than 30 OpenAI and Google DeepMind employees signed onto a statement supporting Anthropic's lawsuit against the Defense Department after the a</p></div>
-      <div class="source-label">Source: <a href="https://techcrunch.com/2026/03/09/openai-and-google-employees-rush-to-anthropics-defense-in-dod-lawsuit/">TechCrunch AI</a></div>
-    </div>
-  </li>
-  <li class="tl-entry has-content" data-tags="anthropic,claude,agents" data-section="news">
-    <div class="tl-header" onclick="this.parentElement.classList.toggle('expanded')">
-      <span class="tl-date">Mar 09</span>
-      <span class="tl-title"><a href="https://techcrunch.com/2026/03/09/anthropic-launches-code-review-tool-to-check-flood-of-ai-generated-code/">Anthropic launches code review tool to check flood of AI-generated code</a></span>
-      <span class="tl-arrow">&rarr;</span>
-    </div>
-    <div class="tl-body">
-      <button class="close-btn" onclick="this.closest('.tl-entry').classList.remove('expanded')">&times;</button>
-      <div class="tags-cloud"><span class="tag-pill gray">anthropic</span><span class="tag-pill green">claude</span><span class="tag-pill purple">agents</span><span class="tag-pill blue">news</span></div>
-      <div class="detail-text"><p>Anthropic launched Code Review in Claude Code, a multi-agent system that automatically analyzes AI-generated code, flags logic errors, and helps en</p></div>
-      <div class="source-label">Source: <a href="https://techcrunch.com/2026/03/09/anthropic-launches-code-review-tool-to-check-flood-of-ai-generated-code/">TechCrunch AI</a></div>
-    </div>
-  </li>
-  <li class="tl-entry has-content" data-tags="anthropic" data-section="news">
-    <div class="tl-header" onclick="this.parentElement.classList.toggle('expanded')">
-      <span class="tl-date">Mar 09</span>
-      <span class="tl-title"><a href="https://techcrunch.com/2026/03/09/anthropic-sues-defense-department-over-supply-chain-risk-designation/">Anthropic sues Defense Department over supply-chain risk designation</a></span>
-      <span class="tl-arrow">&rarr;</span>
-    </div>
-    <div class="tl-body">
-      <button class="close-btn" onclick="this.closest('.tl-entry').classList.remove('expanded')">&times;</button>
-      <div class="tags-cloud"><span class="tag-pill gray">anthropic</span><span class="tag-pill blue">news</span></div>
-      <div class="detail-text"><p>Anthropic filed suit against the Department of Defense on Monday after the agency labeled it a supply-chain risk</p></div>
-      <div class="source-label">Source: <a href="https://techcrunch.com/2026/03/09/anthropic-sues-defense-department-over-supply-chain-risk-designation/">TechCrunch AI</a></div>
-    </div>
-  </li>
-  <li class="tl-entry has-content" data-tags="robotics" data-section="news">
-    <div class="tl-header" onclick="this.parentElement.classList.toggle('expanded')">
-      <span class="tl-date">Mar 09</span>
-      <span class="tl-title"><a href="https://techcrunch.com/2026/03/09/qualcomms-partnership-with-neura-robotics-is-just-the-beginning/">Qualcomm’s partnership with Neura Robotics is just the beginning</a></span>
-      <span class="tl-arrow">&rarr;</span>
-    </div>
-    <div class="tl-body">
-      <button class="close-btn" onclick="this.closest('.tl-entry').classList.remove('expanded')">&times;</button>
-      <div class="tags-cloud"><span class="tag-pill purple">robotics</span><span class="tag-pill blue">news</span></div>
-      <div class="detail-text"><p>Neura Robotics is going to build new robots on top of Qualcomm's new IQ10 processors that were released at CES</p></div>
-      <div class="source-label">Source: <a href="https://techcrunch.com/2026/03/09/qualcomms-partnership-with-neura-robotics-is-just-the-beginning/">TechCrunch AI</a></div>
-    </div>
-  </li>
-  <li class="tl-entry has-content" data-tags="apple" data-section="news">
-    <div class="tl-header" onclick="this.parentElement.classList.toggle('expanded')">
-      <span class="tl-date">Mar 09</span>
-      <span class="tl-title"><a href="https://www.theverge.com/ai-artificial-intelligence/891723/apple-homepad-delay-rumor">Apple smart home display rumors now point to a fall launch with iOS 27</a></span>
-      <span class="tl-arrow">&rarr;</span>
-    </div>
-    <div class="tl-body">
-      <button class="close-btn" onclick="this.closest('.tl-entry').classList.remove('expanded')">&times;</button>
-      <div class="tags-cloud"><span class="tag-pill gray">apple</span><span class="tag-pill blue">news</span></div>
-      <div class="detail-text"><p>The rumored "HomePod with a screen" we've heard so much about was reportedly lined up for launch in 2025, and then this spring, and now, according</p></div>
-      <div class="source-label">Source: <a href="https://www.theverge.com/ai-artificial-intelligence/891723/apple-homepad-delay-rumor">The Verge AI</a></div>
-    </div>
-  </li>
-  <li class="tl-entry has-content" data-tags="openai,anthropic,google" data-section="news">
-    <div class="tl-header" onclick="this.parentElement.classList.toggle('expanded')">
-      <span class="tl-date">Mar 09</span>
-      <span class="tl-title"><a href="https://www.theverge.com/ai-artificial-intelligence/891514/anthropic-pentagon-lawsuit-amicus-brief-openai-google">Employees across OpenAI and Google support Anthropic’s lawsuit against the Pentagon</a></span>
-      <span class="tl-arrow">&rarr;</span>
-    </div>
-    <div class="tl-body">
-      <button class="close-btn" onclick="this.closest('.tl-entry').classList.remove('expanded')">&times;</button>
-      <div class="tags-cloud"><span class="tag-pill gray">openai</span><span class="tag-pill gray">anthropic</span><span class="tag-pill gray">google</span><span class="tag-pill blue">news</span></div>
-      <div class="detail-text"><p>On Monday, Anthropic filed its lawsuit against the Department of Defense over being designated as a supply chain risk</p></div>
-      <div class="source-label">Source: <a href="https://www.theverge.com/ai-artificial-intelligence/891514/anthropic-pentagon-lawsuit-amicus-brief-openai-google">The Verge AI</a></div>
-    </div>
-  </li>
-  <li class="tl-entry has-content" data-tags="anthropic" data-section="news">
-    <div class="tl-header" onclick="this.parentElement.classList.toggle('expanded')">
-      <span class="tl-date">Mar 09</span>
-      <span class="tl-title"><a href="https://www.theverge.com/ai-artificial-intelligence/891377/anthropic-dod-lawsuit">Anthropic is suing the Department of Defense</a></span>
-      <span class="tl-arrow">&rarr;</span>
-    </div>
-    <div class="tl-body">
-      <button class="close-btn" onclick="this.closest('.tl-entry').classList.remove('expanded')">&times;</button>
-      <div class="tags-cloud"><span class="tag-pill gray">anthropic</span><span class="tag-pill blue">news</span></div>
-      <div class="detail-text"><p>Anthropic has sued the US government over its designation as a supply-chain risk, the latest move in a weekslong battle between it and the Pentagon</p></div>
-      <div class="source-label">Source: <a href="https://www.theverge.com/ai-artificial-intelligence/891377/anthropic-dod-lawsuit">The Verge AI</a></div>
-    </div>
-  </li>
-  <li class="tl-section" data-section="funding">Funding &amp; Deals</li>
-  <li class="tl-entry has-content" data-tags="openai,agents" data-section="funding">
-    <div class="tl-header" onclick="this.parentElement.classList.toggle('expanded')">
-      <span class="tl-date">Mar 09</span>
-      <span class="tl-title"><a href="https://techcrunch.com/2026/03/09/openai-acquires-promptfoo-to-secure-its-ai-agents/">OpenAI acquires Promptfoo to secure its AI agents</a></span>
-      <span class="tl-arrow">&rarr;</span>
-    </div>
-    <div class="tl-body">
-      <button class="close-btn" onclick="this.closest('.tl-entry').classList.remove('expanded')">&times;</button>
-      <div class="tags-cloud"><span class="tag-pill gray">openai</span><span class="tag-pill purple">agents</span><span class="tag-pill green">funding</span></div>
-      <div class="detail-text"><p>This deal underscores how frontier labs are scrambling to prove their technology can be used safely in critical business operations</p></div>
-      <div class="source-label">Source: <a href="https://techcrunch.com/2026/03/09/openai-acquires-promptfoo-to-secure-its-ai-agents/">TechCrunch AI</a></div>
-    </div>
-  </li>
-  <li class="tl-entry has-content" data-tags="nvidia,valuation,startup" data-section="funding">
-    <div class="tl-header" onclick="this.parentElement.classList.toggle('expanded')">
-      <span class="tl-date">Mar 09</span>
-      <span class="tl-title"><a href="https://techcrunch.com/2026/03/09/sandberg-clegg-join-nscale-board-as-this-stargate-norway-startup-hits-14-6b-valuation/">Sandberg, Clegg join Nscale board as this ‘Stargate Norway’ startup hits $14.6B  valuation</a></span>
-      <span class="tl-arrow">&rarr;</span>
-    </div>
-    <div class="tl-body">
-      <button class="close-btn" onclick="this.closest('.tl-entry').classList.remove('expanded')">&times;</button>
-      <div class="tags-cloud"><span class="tag-pill gray">nvidia</span><span class="tag-pill blue">valuation</span><span class="tag-pill blue">startup</span><span class="tag-pill green">funding</span></div>
-      <div class="detail-text"><p>Nvidia-backed British AI infrastructure startup Nscale has raised another megaround of $2 billion</p></div>
-      <div class="source-label">Source: <a href="https://techcrunch.com/2026/03/09/sandberg-clegg-join-nscale-board-as-this-stargate-norway-startup-hits-14-6b-valuation/">TechCrunch AI</a></div>
-    </div>
-  </li>
-  <li class="tl-entry has-content" data-tags="funding,series-round" data-section="funding">
-    <div class="tl-header" onclick="this.parentElement.classList.toggle('expanded')">
-      <span class="tl-date">Mar 09</span>
-      <span class="tl-title"><a href="https://news.crunchbase.com/venture/data-series-b-startup-funding-ai-defense-health/">The Series B Pipeline Looks Refreshingly Diversified</a></span>
-      <span class="tl-arrow">&rarr;</span>
-    </div>
-    <div class="tl-body">
-      <button class="close-btn" onclick="this.closest('.tl-entry').classList.remove('expanded')">&times;</button>
-      <div class="tags-cloud"><span class="tag-pill blue">funding</span><span class="tag-pill blue">series-round</span><span class="tag-pill green">funding</span></div>
-      <div class="detail-text"><p>Annual Series B funding is moving steadily higher after hitting a low in 2023, Crunchbase data shows, and this year is off to a strong start as well</p></div>
-      <div class="source-label">Source: <a href="https://news.crunchbase.com/venture/data-series-b-startup-funding-ai-defense-health/">Crunchbase AI Funding</a></div>
-    </div>
-  </li>
-  <li class="tl-entry has-content" data-tags="google" data-section="funding">
-    <div class="tl-header" onclick="this.parentElement.classList.toggle('expanded')">
-      <span class="tl-date">Mar 09</span>
-      <span class="tl-title"><a href="https://techcrunch.com/2026/03/09/xprize-founder-peter-diamandis-launches-new-contest-to-manifest-a-new-star-trek/">Xprize founder Peter Diamandis launches new contest to manifest a new ‘Star Trek’</a></span>
-      <span class="tl-arrow">&rarr;</span>
-    </div>
-    <div class="tl-body">
-      <button class="close-btn" onclick="this.closest('.tl-entry').classList.remove('expanded')">&times;</button>
-      <div class="tags-cloud"><span class="tag-pill gray">google</span><span class="tag-pill green">funding</span></div>
-      <div class="detail-text"><p>The famed author and investor has launched the Future Vision Xprize with sponsors like Google, Marc Benioff, and Ben Horowitz to fund optimistic sc</p></div>
-      <div class="source-label">Source: <a href="https://techcrunch.com/2026/03/09/xprize-founder-peter-diamandis-launches-new-contest-to-manifest-a-new-star-trek/">TechCrunch Venture</a></div>
-    </div>
-  </li>
-  <li class="tl-section" data-section="podcast">Podcasts Worth Your Commute</li>
-  <li class="tl-entry has-content" data-tags="" data-section="podcast">
-    <div class="tl-header" onclick="this.parentElement.classList.toggle('expanded')">
-      <span class="tl-date">Mar 09</span>
-      <span class="tl-title"><a href="https://allinchamathjason.libsyn.com/graham-allison-on-the-global-realignment-iran-china-israel-greenland">All-In Podcast — Graham Allison on the Global Realignment: Iran, China, Israel, Greenland</a></span>
-      <span class="tl-arrow">&rarr;</span>
-    </div>
-    <div class="tl-body">
-      <button class="close-btn" onclick="this.closest('.tl-entry').classList.remove('expanded')">&times;</button>
-      <div class="tags-cloud"><span class="tag-pill purple">podcast</span></div>
+    <ul class="issue-list">
+  <li class="issue-row" data-post-title="Ring’s Jamie Siminoff has been trying to calm privacy fears since the Super Bowl, but his answers may not help" data-post-description="The facial recognition question is where things get more tangled" data-post-all-tags="">
+    <a href="issues/2026-03-09.html" class="issue-link">
+      <span class="issue-date">Mar 09</span>
+      <span class="issue-title">Ring’s Jamie Siminoff has been trying to calm privacy fears since the Super B...</span>
+      <span class="issue-arrow">&rarr;</span>
+    </a>
+    <div class="card-details">
+      <span class="card-caret"></span>
+      <button class="card-close" onclick="event.stopPropagation();this.closest('.issue-row').classList.remove('open')">&times;</button>
       
-      <div class="source-label">Source: <a href="https://allinchamathjason.libsyn.com/graham-allison-on-the-global-realignment-iran-china-israel-greenland">Listen</a></div>
+      <p class="issue-summary"><strong>Ring’s Jamie Siminoff has been trying to calm privacy fears since the Super Bowl, but his answers may not help</strong> The facial recognition question is where things get more tangled</p>
+      <a class="read-full-link" href="issues/2026-03-09.html">Read full issue &rarr;</a>
     </div>
   </li>
-  <li class="tl-entry has-content" data-tags="" data-section="podcast">
-    <div class="tl-header" onclick="this.parentElement.classList.toggle('expanded')">
-      <span class="tl-date">Mar 09</span>
-      <span class="tl-title"><a href="https://share.transistor.fm/s/1923dca1">Practical AI — AI policy and the battle for computing power</a></span>
-      <span class="tl-arrow">&rarr;</span>
+  <li class="issue-row" data-post-title="Will the Pentagon’s Anthropic controversy scare startups away from defense work?" data-post-description="On the latest episode of TechCrunch’s Equity podcast, we discussed what the controversy means for other startups seeking to work with the federal g" data-post-all-tags="anthropic,google,startup">
+    <a href="issues/2026-03-08.html" class="issue-link">
+      <span class="issue-date">Mar 08</span>
+      <span class="issue-title">Will the Pentagon’s Anthropic controversy scare startups away from defense work?</span>
+      <span class="issue-arrow">&rarr;</span>
+    </a>
+    <div class="card-details">
+      <span class="card-caret"></span>
+      <button class="card-close" onclick="event.stopPropagation();this.closest('.issue-row').classList.remove('open')">&times;</button>
+      <div class="tags-cloud"><span class="tag-pill gray">anthropic</span> <span class="tag-pill gray">google</span> <span class="tag-pill blue">startup</span></div>
+      <p class="issue-summary"><strong>Will the Pentagon’s Anthropic controversy scare startups away from defense work?</strong> On the latest episode of TechCrunch’s Equity podcast, we discussed what the controversy means for other startups seeking to work with the federal g <strong>Owner of ICE detention facility sees big opportunity in AI man camps</strong> AI data center developers are increasingly relying on a style of camp popularized as housing for men working in remote oil fields <strong>A roadmap for AI, if anyone will listen</strong> The Pro-Human Declaration was finalized before last week's Pentagon-Anthropic sta...</p>
+      <a class="read-full-link" href="issues/2026-03-08.html">Read full issue &rarr;</a>
     </div>
-    <div class="tl-body">
-      <button class="close-btn" onclick="this.closest('.tl-entry').classList.remove('expanded')">&times;</button>
-      <div class="tags-cloud"><span class="tag-pill purple">podcast</span></div>
+  </li>
+  <li class="issue-row" data-post-title="OpenAI robotics lead Caitlin Kalinowski quits in response to Pentagon deal" data-post-description="Hardware executive Caitlin Kalinowski announced today that in response to OpenAI's controversial agreement with the Department of Defense, she’s re" data-post-all-tags="deepmind,google,gpt,openai,robotics">
+    <a href="issues/2026-03-07.html" class="issue-link">
+      <span class="issue-date">Mar 07</span>
+      <span class="issue-title">OpenAI robotics lead Caitlin Kalinowski quits in response to Pentagon deal</span>
+      <span class="issue-arrow">&rarr;</span>
+    </a>
+    <div class="card-details">
+      <span class="card-caret"></span>
+      <button class="card-close" onclick="event.stopPropagation();this.closest('.issue-row').classList.remove('open')">&times;</button>
+      <div class="tags-cloud"><span class="tag-pill gray">deepmind</span> <span class="tag-pill gray">google</span> <span class="tag-pill green">gpt</span> <span class="tag-pill gray">openai</span> <span class="tag-pill purple">robotics</span></div>
+      <p class="issue-summary"><strong>OpenAI robotics lead Caitlin Kalinowski quits in response to Pentagon deal</strong> Hardware executive Caitlin Kalinowski announced today that in response to OpenAI's controversial agreement with the Department of Defense, she’s re <strong>OpenAI delays ChatGPT’s ‘adult mode’ again</strong> The feature, which will give verified adult users access to erotica and other adult content, had already been delayed from December <strong>The OpenClaw superfan meetup serves optimism and lobster</strong> The woman at the door wore a plush lobster headdress</p>
+      <a class="read-full-link" href="issues/2026-03-07.html">Read full issue &rarr;</a>
+    </div>
+  </li>
+  <li class="issue-row" data-post-title="Import AI 447: The AGI economy; testing AIs with generated games; and agent ecologies" data-post-description="What might a superintelligence arcology be like?" data-post-all-tags="agents">
+    <a href="issues/2026-03-05.html" class="issue-link">
+      <span class="issue-date">Mar 05</span>
+      <span class="issue-title">Import AI 447: The AGI economy; testing AIs with generated games; and agent e...</span>
+      <span class="issue-arrow">&rarr;</span>
+    </a>
+    <div class="card-details">
+      <span class="card-caret"></span>
+      <button class="card-close" onclick="event.stopPropagation();this.closest('.issue-row').classList.remove('open')">&times;</button>
+      <div class="tags-cloud"><span class="tag-pill purple">agents</span></div>
+      <p class="issue-summary"><strong>Import AI 447: The AGI economy; testing AIs with generated games; and agent ecologies</strong> What might a superintelligence arcology be like? <strong>Import AI 446: Nuclear LLMs; China's big AI benchmark; measurement and AI policy</strong> Will AIs be jealous of one another? <strong>Import AI 445: Timing superintelligence; AIs solve frontier math proofs; a new ML research benchmark</strong> Will 2026 be looked back on as the pivotal year for making decisions about the singularity? <strong>Import AI 444: LLM societies; Huawei makes kernels with AI; ChipBench</strong> How can you quant...</p>
+      <a class="read-full-link" href="issues/2026-03-05.html">Read full issue &rarr;</a>
+    </div>
+  </li>
+  <li class="issue-row" data-post-title="Import AI 447: The AGI economy; testing AIs with generated games; and agent ecologies" data-post-description="What might a superintelligence arcology be like?" data-post-all-tags="agents">
+    <a href="issues/2026-03-02.html" class="issue-link">
+      <span class="issue-date">Mar 02</span>
+      <span class="issue-title">Import AI 447: The AGI economy; testing AIs with generated games; and agent e...</span>
+      <span class="issue-arrow">&rarr;</span>
+    </a>
+    <div class="card-details">
+      <span class="card-caret"></span>
+      <button class="card-close" onclick="event.stopPropagation();this.closest('.issue-row').classList.remove('open')">&times;</button>
+      <div class="tags-cloud"><span class="tag-pill purple">agents</span></div>
+      <p class="issue-summary"><strong>Import AI 447: The AGI economy; testing AIs with generated games; and agent ecologies</strong> What might a superintelligence arcology be like? <strong>Import AI 446: Nuclear LLMs; China's big AI benchmark; measurement and AI policy</strong> Will AIs be jealous of one another? <strong>Import AI 445: Timing superintelligence; AIs solve frontier math proofs; a new ML research benchmark</strong> Will 2026 be looked back on as the pivotal year for making decisions about the singularity? <strong>Import AI 444: LLM societies; Huawei makes kernels with AI; ChipBench</strong> How can you quant...</p>
+      <a class="read-full-link" href="issues/2026-03-02.html">Read full issue &rarr;</a>
+    </div>
+  </li>
+  <li class="issue-row" data-post-title="AI Brief" data-post-description="" data-post-all-tags="">
+    <a href="issues/2026-03-01.html" class="issue-link">
+      <span class="issue-date">Mar 01</span>
+      <span class="issue-title">AI Brief</span>
+      <span class="issue-arrow">&rarr;</span>
+    </a>
+    <div class="card-details">
+      <span class="card-caret"></span>
+      <button class="card-close" onclick="event.stopPropagation();this.closest('.issue-row').classList.remove('open')">&times;</button>
       
-      <div class="source-label">Source: <a href="https://share.transistor.fm/s/1923dca1">Listen</a></div>
+      
+      <a class="read-full-link" href="issues/2026-03-01.html">Read full issue &rarr;</a>
     </div>
   </li>
-  <li class="tl-section" data-section="news">Events Near You (London &amp; Oxford)</li>
-  <li class="tl-entry has-content" data-tags="agents" data-section="news">
-    <div class="tl-header" onclick="this.parentElement.classList.toggle('expanded')">
-      <span class="tl-date">Mar 09</span>
-      <span class="tl-title"><a href="https://lu.ma/5yi9cbxp">Agents World: Visual AI Hackathon at ASU - March 21, 2026</a></span>
-      <span class="tl-arrow">&rarr;</span>
-    </div>
-    <div class="tl-body">
-      <button class="close-btn" onclick="this.closest('.tl-entry').classList.remove('expanded')">&times;</button>
-      <div class="tags-cloud"><span class="tag-pill purple">agents</span><span class="tag-pill gray">news</span></div>
-      <div class="detail-text"><p>Luma (Tempe)</p></div>
-      <div class="source-label">Source: <a href="https://lu.ma/5yi9cbxp">RSVP</a></div>
-    </div>
-  </li>
-  <li class="tl-entry has-content" data-tags="series-round" data-section="news">
-    <div class="tl-header" onclick="this.parentElement.classList.toggle('expanded')">
-      <span class="tl-date">Mar 09</span>
-      <span class="tl-title"><a href="https://lu.ma/2wchg093">Capital Raising Series: Late-Stage Equity: Series A and Beyond - Running a Disciplined Capital Raise with the 12/6/3 Process</a></span>
-      <span class="tl-arrow">&rarr;</span>
-    </div>
-    <div class="tl-body">
-      <button class="close-btn" onclick="this.closest('.tl-entry').classList.remove('expanded')">&times;</button>
-      <div class="tags-cloud"><span class="tag-pill blue">series-round</span><span class="tag-pill gray">news</span></div>
-      <div class="detail-text"><p>Luma (Tempe)</p></div>
-      <div class="source-label">Source: <a href="https://lu.ma/2wchg093">RSVP</a></div>
+  <li class="issue-row" data-post-title="AI Brief" data-post-description="" data-post-all-tags="">
+    <a href="issues/2026-02-28.html" class="issue-link">
+      <span class="issue-date">Feb 28</span>
+      <span class="issue-title">AI Brief</span>
+      <span class="issue-arrow">&rarr;</span>
+    </a>
+    <div class="card-details">
+      <span class="card-caret"></span>
+      <button class="card-close" onclick="event.stopPropagation();this.closest('.issue-row').classList.remove('open')">&times;</button>
+      
+      
+      <a class="read-full-link" href="issues/2026-02-28.html">Read full issue &rarr;</a>
     </div>
   </li>
-  <li class="tl-entry has-content" data-tags="" data-section="news">
-    <div class="tl-header" onclick="this.parentElement.classList.toggle('expanded')">
-      <span class="tl-date">Mar 09</span>
-      <span class="tl-title"><a href="https://lu.ma/vpd6q18r">Workshop: Building the Plane While Flying It in Student Union</a></span>
-      <span class="tl-arrow">&rarr;</span>
-    </div>
-    <div class="tl-body">
-      <button class="close-btn" onclick="this.closest('.tl-entry').classList.remove('expanded')">&times;</button>
-      <div class="tags-cloud"><span class="tag-pill gray">news</span></div>
-      <div class="detail-text"><p>Luma (Glendale)</p></div>
-      <div class="source-label">Source: <a href="https://lu.ma/vpd6q18r">RSVP</a></div>
-    </div>
-  </li>
-  <li class="tl-entry has-content" data-tags="" data-section="news">
-    <div class="tl-header" onclick="this.parentElement.classList.toggle('expanded')">
-      <span class="tl-date">Mar 09</span>
-      <span class="tl-title"><a href="https://lu.ma/p0i7dad1">Barefoot &amp; In Love- A Couples Dance Pop-Up Experience</a></span>
-      <span class="tl-arrow">&rarr;</span>
-    </div>
-    <div class="tl-body">
-      <button class="close-btn" onclick="this.closest('.tl-entry').classList.remove('expanded')">&times;</button>
-      <div class="tags-cloud"><span class="tag-pill gray">news</span></div>
-      <div class="detail-text"><p>Luma (Phoenix)</p></div>
-      <div class="source-label">Source: <a href="https://lu.ma/p0i7dad1">RSVP</a></div>
+  <li class="issue-row" data-post-title="AI Brief" data-post-description="" data-post-all-tags="">
+    <a href="issues/2026-02-27.html" class="issue-link">
+      <span class="issue-date">Feb 27</span>
+      <span class="issue-title">AI Brief</span>
+      <span class="issue-arrow">&rarr;</span>
+    </a>
+    <div class="card-details">
+      <span class="card-caret"></span>
+      <button class="card-close" onclick="event.stopPropagation();this.closest('.issue-row').classList.remove('open')">&times;</button>
+      
+      
+      <a class="read-full-link" href="issues/2026-02-27.html">Read full issue &rarr;</a>
     </div>
   </li>
-  <li class="tl-section" data-section="video">Videos Going Viral</li>
-  <li class="tl-entry has-content" data-tags="" data-section="video">
-    <div class="tl-header" onclick="this.parentElement.classList.toggle('expanded')">
-      <span class="tl-date">Mar 09</span>
-      <span class="tl-title"><a href="https://www.youtube.com/watch?v=x36UmiSiEzc">The greatest unsolved problem in computer science...</a></span>
-      <span class="tl-arrow">&rarr;</span>
-    </div>
-    <div class="tl-body">
-      <button class="close-btn" onclick="this.closest('.tl-entry').classList.remove('expanded')">&times;</button>
-      <div class="tags-cloud"><span class="tag-pill red">video</span></div>
-      <div class="detail-text"><p>Fireship</p></div>
-      <div class="source-label">Source: <a href="https://www.youtube.com/watch?v=x36UmiSiEzc">Watch</a></div>
-    </div>
-  </li>
-  <li class="tl-entry has-content" data-tags="" data-section="video">
-    <div class="tl-header" onclick="this.parentElement.classList.toggle('expanded')">
-      <span class="tl-date">Mar 09</span>
-      <span class="tl-title"><a href="https://www.youtube.com/watch?v=12YktUSaXoo">Lex Fridman on Mark Knopfler and Dire Straits</a></span>
-      <span class="tl-arrow">&rarr;</span>
-    </div>
-    <div class="tl-body">
-      <button class="close-btn" onclick="this.closest('.tl-entry').classList.remove('expanded')">&times;</button>
-      <div class="tags-cloud"><span class="tag-pill red">video</span></div>
-      <div class="detail-text"><p>Matt Wolfe</p></div>
-      <div class="source-label">Source: <a href="https://www.youtube.com/watch?v=12YktUSaXoo">Watch</a></div>
+  <li class="issue-row" data-post-title="AI Brief" data-post-description="" data-post-all-tags="">
+    <a href="issues/2026-02-26.html" class="issue-link">
+      <span class="issue-date">Feb 26</span>
+      <span class="issue-title">AI Brief</span>
+      <span class="issue-arrow">&rarr;</span>
+    </a>
+    <div class="card-details">
+      <span class="card-caret"></span>
+      <button class="card-close" onclick="event.stopPropagation();this.closest('.issue-row').classList.remove('open')">&times;</button>
+      
+      
+      <a class="read-full-link" href="issues/2026-02-26.html">Read full issue &rarr;</a>
     </div>
   </li>
-  <li class="tl-entry has-content" data-tags="" data-section="video">
-    <div class="tl-header" onclick="this.parentElement.classList.toggle('expanded')">
-      <span class="tl-date">Mar 09</span>
-      <span class="tl-title"><a href="https://www.youtube.com/watch?v=ryf6etZ8rfU">How The Beatles had so many | Rick Beato and Lex Fridman</a></span>
-      <span class="tl-arrow">&rarr;</span>
-    </div>
-    <div class="tl-body">
-      <button class="close-btn" onclick="this.closest('.tl-entry').classList.remove('expanded')">&times;</button>
-      <div class="tags-cloud"><span class="tag-pill red">video</span></div>
-      <div class="detail-text"><p>Matt Wolfe</p></div>
-      <div class="source-label">Source: <a href="https://www.youtube.com/watch?v=ryf6etZ8rfU">Watch</a></div>
-    </div>
-  </li>
-</ol>
-    <ol class="timeline" style="margin-top:0;">
-  <li class="tl-entry">
-    <div class="tl-header" onclick="window.location.href='issues/2026-03-08.html'">
-      <span class="tl-date">Mar 08</span>
-      <span class="tl-title"><a href="issues/2026-03-08.html">March 8, 2026</a></span>
-      <span class="tl-arrow">&rarr;</span>
+  <li class="issue-row" data-post-title="AI Brief" data-post-description="" data-post-all-tags="">
+    <a href="issues/2026-02-25.html" class="issue-link">
+      <span class="issue-date">Feb 25</span>
+      <span class="issue-title">AI Brief</span>
+      <span class="issue-arrow">&rarr;</span>
+    </a>
+    <div class="card-details">
+      <span class="card-caret"></span>
+      <button class="card-close" onclick="event.stopPropagation();this.closest('.issue-row').classList.remove('open')">&times;</button>
+      
+      
+      <a class="read-full-link" href="issues/2026-02-25.html">Read full issue &rarr;</a>
     </div>
   </li>
-  <li class="tl-entry">
-    <div class="tl-header" onclick="window.location.href='issues/2026-03-07.html'">
-      <span class="tl-date">Mar 07</span>
-      <span class="tl-title"><a href="issues/2026-03-07.html">March 7, 2026</a></span>
-      <span class="tl-arrow">&rarr;</span>
+  <li class="issue-row" data-post-title="AI Brief" data-post-description="" data-post-all-tags="">
+    <a href="issues/2026-02-24.html" class="issue-link">
+      <span class="issue-date">Feb 24</span>
+      <span class="issue-title">AI Brief</span>
+      <span class="issue-arrow">&rarr;</span>
+    </a>
+    <div class="card-details">
+      <span class="card-caret"></span>
+      <button class="card-close" onclick="event.stopPropagation();this.closest('.issue-row').classList.remove('open')">&times;</button>
+      
+      
+      <a class="read-full-link" href="issues/2026-02-24.html">Read full issue &rarr;</a>
     </div>
   </li>
-  <li class="tl-entry">
-    <div class="tl-header" onclick="window.location.href='issues/2026-03-05.html'">
-      <span class="tl-date">Mar 05</span>
-      <span class="tl-title"><a href="issues/2026-03-05.html">March 5, 2026</a></span>
-      <span class="tl-arrow">&rarr;</span>
+  <li class="issue-row" data-post-title="AI Brief" data-post-description="" data-post-all-tags="">
+    <a href="issues/2026-02-23.html" class="issue-link">
+      <span class="issue-date">Feb 23</span>
+      <span class="issue-title">AI Brief</span>
+      <span class="issue-arrow">&rarr;</span>
+    </a>
+    <div class="card-details">
+      <span class="card-caret"></span>
+      <button class="card-close" onclick="event.stopPropagation();this.closest('.issue-row').classList.remove('open')">&times;</button>
+      
+      
+      <a class="read-full-link" href="issues/2026-02-23.html">Read full issue &rarr;</a>
     </div>
   </li>
-  <li class="tl-entry">
-    <div class="tl-header" onclick="window.location.href='issues/2026-03-02.html'">
-      <span class="tl-date">Mar 02</span>
-      <span class="tl-title"><a href="issues/2026-03-02.html">March 2, 2026</a></span>
-      <span class="tl-arrow">&rarr;</span>
+  <li class="issue-row" data-post-title="AI Brief" data-post-description="" data-post-all-tags="">
+    <a href="issues/2026-02-22.html" class="issue-link">
+      <span class="issue-date">Feb 22</span>
+      <span class="issue-title">AI Brief</span>
+      <span class="issue-arrow">&rarr;</span>
+    </a>
+    <div class="card-details">
+      <span class="card-caret"></span>
+      <button class="card-close" onclick="event.stopPropagation();this.closest('.issue-row').classList.remove('open')">&times;</button>
+      
+      
+      <a class="read-full-link" href="issues/2026-02-22.html">Read full issue &rarr;</a>
     </div>
   </li>
-  <li class="tl-entry">
-    <div class="tl-header" onclick="window.location.href='issues/2026-03-01.html'">
-      <span class="tl-date">Mar 01</span>
-      <span class="tl-title"><a href="issues/2026-03-01.html">March 1, 2026</a></span>
-      <span class="tl-arrow">&rarr;</span>
+  <li class="issue-row" data-post-title="AI Brief" data-post-description="" data-post-all-tags="">
+    <a href="issues/2026-02-21.html" class="issue-link">
+      <span class="issue-date">Feb 21</span>
+      <span class="issue-title">AI Brief</span>
+      <span class="issue-arrow">&rarr;</span>
+    </a>
+    <div class="card-details">
+      <span class="card-caret"></span>
+      <button class="card-close" onclick="event.stopPropagation();this.closest('.issue-row').classList.remove('open')">&times;</button>
+      
+      
+      <a class="read-full-link" href="issues/2026-02-21.html">Read full issue &rarr;</a>
     </div>
   </li>
-  <li class="tl-entry">
-    <div class="tl-header" onclick="window.location.href='issues/2026-02-28.html'">
-      <span class="tl-date">Feb 28</span>
-      <span class="tl-title"><a href="issues/2026-02-28.html">February 28, 2026</a></span>
-      <span class="tl-arrow">&rarr;</span>
+  <li class="issue-row" data-post-title="AI Brief" data-post-description="" data-post-all-tags="">
+    <a href="issues/2026-02-20.html" class="issue-link">
+      <span class="issue-date">Feb 20</span>
+      <span class="issue-title">AI Brief</span>
+      <span class="issue-arrow">&rarr;</span>
+    </a>
+    <div class="card-details">
+      <span class="card-caret"></span>
+      <button class="card-close" onclick="event.stopPropagation();this.closest('.issue-row').classList.remove('open')">&times;</button>
+      
+      
+      <a class="read-full-link" href="issues/2026-02-20.html">Read full issue &rarr;</a>
     </div>
   </li>
-  <li class="tl-entry">
-    <div class="tl-header" onclick="window.location.href='issues/2026-02-27.html'">
-      <span class="tl-date">Feb 27</span>
-      <span class="tl-title"><a href="issues/2026-02-27.html">February 27, 2026</a></span>
-      <span class="tl-arrow">&rarr;</span>
+  <li class="issue-row" data-post-title="AI Brief" data-post-description="" data-post-all-tags="">
+    <a href="issues/2026-02-19.html" class="issue-link">
+      <span class="issue-date">Feb 19</span>
+      <span class="issue-title">AI Brief</span>
+      <span class="issue-arrow">&rarr;</span>
+    </a>
+    <div class="card-details">
+      <span class="card-caret"></span>
+      <button class="card-close" onclick="event.stopPropagation();this.closest('.issue-row').classList.remove('open')">&times;</button>
+      
+      
+      <a class="read-full-link" href="issues/2026-02-19.html">Read full issue &rarr;</a>
     </div>
   </li>
-  <li class="tl-entry">
-    <div class="tl-header" onclick="window.location.href='issues/2026-02-26.html'">
-      <span class="tl-date">Feb 26</span>
-      <span class="tl-title"><a href="issues/2026-02-26.html">February 26, 2026</a></span>
-      <span class="tl-arrow">&rarr;</span>
+  <li class="issue-row" data-post-title="AI Brief" data-post-description="" data-post-all-tags="">
+    <a href="issues/2026-02-18.html" class="issue-link">
+      <span class="issue-date">Feb 18</span>
+      <span class="issue-title">AI Brief</span>
+      <span class="issue-arrow">&rarr;</span>
+    </a>
+    <div class="card-details">
+      <span class="card-caret"></span>
+      <button class="card-close" onclick="event.stopPropagation();this.closest('.issue-row').classList.remove('open')">&times;</button>
+      
+      
+      <a class="read-full-link" href="issues/2026-02-18.html">Read full issue &rarr;</a>
     </div>
   </li>
-  <li class="tl-entry">
-    <div class="tl-header" onclick="window.location.href='issues/2026-02-25.html'">
-      <span class="tl-date">Feb 25</span>
-      <span class="tl-title"><a href="issues/2026-02-25.html">February 25, 2026</a></span>
-      <span class="tl-arrow">&rarr;</span>
+  <li class="issue-row" data-post-title="AI Brief" data-post-description="" data-post-all-tags="">
+    <a href="issues/2026-02-17.html" class="issue-link">
+      <span class="issue-date">Feb 17</span>
+      <span class="issue-title">AI Brief</span>
+      <span class="issue-arrow">&rarr;</span>
+    </a>
+    <div class="card-details">
+      <span class="card-caret"></span>
+      <button class="card-close" onclick="event.stopPropagation();this.closest('.issue-row').classList.remove('open')">&times;</button>
+      
+      
+      <a class="read-full-link" href="issues/2026-02-17.html">Read full issue &rarr;</a>
     </div>
   </li>
-  <li class="tl-entry">
-    <div class="tl-header" onclick="window.location.href='issues/2026-02-24.html'">
-      <span class="tl-date">Feb 24</span>
-      <span class="tl-title"><a href="issues/2026-02-24.html">February 24, 2026</a></span>
-      <span class="tl-arrow">&rarr;</span>
+  <li class="issue-row" data-post-title="AI Brief" data-post-description="" data-post-all-tags="">
+    <a href="issues/2026-02-16.html" class="issue-link">
+      <span class="issue-date">Feb 16</span>
+      <span class="issue-title">AI Brief</span>
+      <span class="issue-arrow">&rarr;</span>
+    </a>
+    <div class="card-details">
+      <span class="card-caret"></span>
+      <button class="card-close" onclick="event.stopPropagation();this.closest('.issue-row').classList.remove('open')">&times;</button>
+      
+      
+      <a class="read-full-link" href="issues/2026-02-16.html">Read full issue &rarr;</a>
     </div>
   </li>
-  <li class="tl-entry">
-    <div class="tl-header" onclick="window.location.href='issues/2026-02-23.html'">
-      <span class="tl-date">Feb 23</span>
-      <span class="tl-title"><a href="issues/2026-02-23.html">February 23, 2026</a></span>
-      <span class="tl-arrow">&rarr;</span>
-    </div>
-  </li>
-  <li class="tl-entry">
-    <div class="tl-header" onclick="window.location.href='issues/2026-02-22.html'">
-      <span class="tl-date">Feb 22</span>
-      <span class="tl-title"><a href="issues/2026-02-22.html">February 22, 2026</a></span>
-      <span class="tl-arrow">&rarr;</span>
-    </div>
-  </li>
-  <li class="tl-entry">
-    <div class="tl-header" onclick="window.location.href='issues/2026-02-21.html'">
-      <span class="tl-date">Feb 21</span>
-      <span class="tl-title"><a href="issues/2026-02-21.html">February 21, 2026</a></span>
-      <span class="tl-arrow">&rarr;</span>
-    </div>
-  </li>
-  <li class="tl-entry">
-    <div class="tl-header" onclick="window.location.href='issues/2026-02-20.html'">
-      <span class="tl-date">Feb 20</span>
-      <span class="tl-title"><a href="issues/2026-02-20.html">February 20, 2026</a></span>
-      <span class="tl-arrow">&rarr;</span>
-    </div>
-  </li>
-    </ol>
+    </ul>
   </div>
 
+  <section class="content-section" id="podcasts">
+    <div class="section-header">
+      <h2>Trending Podcasts</h2>
+      <span class="section-count">11 episodes</span>
+    </div>
+    <ul class="content-grid podcast-grid">
+      <li class="content-card podcast-card">
+          <a href="https://lexfridman.com/rick-beato/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=rick-beato" target="_blank" rel="noopener">
+            <span class="content-card-source">Lex Fridman Podcast</span>
+            <span class="content-card-title">#492 – Rick Beato: Greatest Guitarists of All Time, History &amp; Future of Music</span>
+            <span class="content-card-meta">Mar 01</span>
+          </a>
+        </li><li class="content-card podcast-card">
+          <a href="https://lexfridman.com/peter-steinberger/?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=peter-steinberger" target="_blank" rel="noopener">
+            <span class="content-card-source">Lex Fridman Podcast</span>
+            <span class="content-card-title">#491 – OpenClaw: The Viral AI Agent that Broke the Internet – Peter Steinberger</span>
+            <span class="content-card-meta">Feb 12</span>
+          </a>
+        </li><li class="content-card podcast-card">
+          <a href="https://allinchamathjason.libsyn.com/ray-dalio-our-system-is-in-jeopardy-debt-ai-the-cycle-that-destroyed-rome" target="_blank" rel="noopener">
+            <span class="content-card-source">All-In Podcast</span>
+            <span class="content-card-title">Ray Dalio: Our System Is in Jeopardy - Debt, AI &amp; the Cycle That Destroyed Rome</span>
+            <span class="content-card-meta">Mar 03</span>
+          </a>
+        </li><li class="content-card podcast-card">
+          <a href="https://allinchamathjason.libsyn.com/software-stocks-implode-claudes-hit-list-state-of-the-union-reactions-trumps-tariff-pivot" target="_blank" rel="noopener">
+            <span class="content-card-source">All-In Podcast</span>
+            <span class="content-card-title">Software Stocks Implode, Claude's Hit List, State of the Union Reactions, Trump's Tariff Pivot</span>
+            <span class="content-card-meta">Feb 28</span>
+          </a>
+        </li><li class="content-card podcast-card">
+          <a href="https://www.nytimes.com/column/hard-fork" target="_blank" rel="noopener">
+            <span class="content-card-source">Hard Fork (NYT)</span>
+            <span class="content-card-title">At the Pentagon, OpenAI is In and Anthropic Is Out</span>
+            <span class="content-card-meta">Mar 01</span>
+          </a>
+        </li><li class="content-card podcast-card">
+          <a href="https://share.transistor.fm/s/4aaf31b4" target="_blank" rel="noopener">
+            <span class="content-card-source">Practical AI</span>
+            <span class="content-card-title">Cognitive Synthesis and Neural Athletes</span>
+            <span class="content-card-meta">Feb 18</span>
+          </a>
+        </li><li class="content-card podcast-card">
+          <a href="https://share.transistor.fm/s/1b8e65f4" target="_blank" rel="noopener">
+            <span class="content-card-source">Practical AI</span>
+            <span class="content-card-title">AI incidents, audits, and the limits of benchmarks</span>
+            <span class="content-card-meta">Feb 13</span>
+          </a>
+        </li><li class="content-card podcast-card">
+          <a href="https://share.transistor.fm/s/27d57b05" target="_blank" rel="noopener">
+            <span class="content-card-source">Acquired</span>
+            <span class="content-card-title">The Insane Productivity of Andrew Ross Sorkin</span>
+            <span class="content-card-meta">Dec 07</span>
+          </a>
+        </li>
+    </ul>
+  </section>
+
+<section class="content-section" id="videos">
+    <div class="section-header">
+      <h2>Videos Going Viral</h2>
+      <span class="section-count">16 videos</span>
+    </div>
+    <ul class="content-grid video-grid">
+      <li class="content-card video-card">
+          <a href="https://www.youtube.com/watch?v=j-B8ymGWlIE" target="_blank" rel="noopener">
+            <img class="video-thumb" src="https://img.youtube.com/vi/j-B8ymGWlIE/mqdefault.jpg" alt="" loading="lazy">
+            <div class="video-info">
+              <span class="content-card-source">Two Minute Papers</span>
+              <span class="content-card-title">Adobe &amp; NVIDIA’s New Tech Shouldn’t Be Real Time. But It Is.</span>
+              <span class="content-card-meta">Feb 23</span>
+            </div>
+          </a>
+        </li><li class="content-card video-card">
+          <a href="https://www.youtube.com/watch?v=B6GJjvR6txg" target="_blank" rel="noopener">
+            <img class="video-thumb" src="https://img.youtube.com/vi/B6GJjvR6txg/mqdefault.jpg" alt="" loading="lazy">
+            <div class="video-info">
+              <span class="content-card-source">Two Minute Papers</span>
+              <span class="content-card-title">The Most Realistic Fire Simulation Ever</span>
+              <span class="content-card-meta">Feb 24</span>
+            </div>
+          </a>
+        </li><li class="content-card video-card">
+          <a href="https://www.youtube.com/watch?v=Cru804JMjPI" target="_blank" rel="noopener">
+            <img class="video-thumb" src="https://img.youtube.com/vi/Cru804JMjPI/mqdefault.jpg" alt="" loading="lazy">
+            <div class="video-info">
+              <span class="content-card-source">AI Explained</span>
+              <span class="content-card-title">Deadline Day for Autonomous AI Weapons &amp; Mass Surveillance</span>
+              <span class="content-card-meta">Mar 04</span>
+            </div>
+          </a>
+        </li><li class="content-card video-card">
+          <a href="https://www.youtube.com/watch?v=2_DPnzoiHaY" target="_blank" rel="noopener">
+            <img class="video-thumb" src="https://img.youtube.com/vi/2_DPnzoiHaY/mqdefault.jpg" alt="" loading="lazy">
+            <div class="video-info">
+              <span class="content-card-source">AI Explained</span>
+              <span class="content-card-title">Gemini 3.1 Pro and the Downfall of Benchmarks: Welcome to the Vibe Era of AI</span>
+              <span class="content-card-meta">Feb 28</span>
+            </div>
+          </a>
+        </li><li class="content-card video-card">
+          <a href="https://www.youtube.com/watch?v=abbeIUOCzmw" target="_blank" rel="noopener">
+            <img class="video-thumb" src="https://img.youtube.com/vi/abbeIUOCzmw/mqdefault.jpg" alt="" loading="lazy">
+            <div class="video-info">
+              <span class="content-card-source">Fireship</span>
+              <span class="content-card-title">Cloudflare just slop forked Next.js…</span>
+              <span class="content-card-meta">Mar 03</span>
+            </div>
+          </a>
+        </li><li class="content-card video-card">
+          <a href="https://www.youtube.com/watch?v=wzzh7Not8XE" target="_blank" rel="noopener">
+            <img class="video-thumb" src="https://img.youtube.com/vi/wzzh7Not8XE/mqdefault.jpg" alt="" loading="lazy">
+            <div class="video-info">
+              <span class="content-card-source">Fireship</span>
+              <span class="content-card-title">When open-sourcing your code goes wrong...</span>
+              <span class="content-card-meta">Mar 02</span>
+            </div>
+          </a>
+        </li><li class="content-card video-card">
+          <a href="https://www.youtube.com/watch?v=EWvNQjAaOHw" target="_blank" rel="noopener">
+            <img class="video-thumb" src="https://img.youtube.com/vi/EWvNQjAaOHw/mqdefault.jpg" alt="" loading="lazy">
+            <div class="video-info">
+              <span class="content-card-source">Andrej Karpathy</span>
+              <span class="content-card-title">How I use LLMs</span>
+              <span class="content-card-meta">Feb 27</span>
+            </div>
+          </a>
+        </li><li class="content-card video-card">
+          <a href="https://www.youtube.com/watch?v=7xTGNNLPyMI" target="_blank" rel="noopener">
+            <img class="video-thumb" src="https://img.youtube.com/vi/7xTGNNLPyMI/mqdefault.jpg" alt="" loading="lazy">
+            <div class="video-info">
+              <span class="content-card-source">Andrej Karpathy</span>
+              <span class="content-card-title">Deep Dive into LLMs like ChatGPT</span>
+              <span class="content-card-meta">Feb 27</span>
+            </div>
+          </a>
+        </li>
+    </ul>
+  </section>
+
+<section class="content-section" id="events">
+    <div class="section-header">
+      <h2>Upcoming Events</h2>
+      <span class="section-subtitle">London &amp; Oxford</span>
+    </div>
+    <ul class="content-grid event-grid">
+      <li class="content-card event-card">
+          <a href="https://lu.ma/kpicdog1" target="_blank" rel="noopener">
+            <span class="event-date-badge">Wed, Mar 11</span>
+            <span class="content-card-title">LLM London Sessions #10</span>
+            <span class="content-card-source">Luma (London)</span>
+          </a>
+        </li><li class="content-card event-card">
+          <a href="https://lu.ma/4hs6hs36" target="_blank" rel="noopener">
+            <span class="event-date-badge">Wed, Mar 11</span>
+            <span class="content-card-title">Coding Agents and ACP with JetBrains</span>
+            <span class="content-card-source">Luma (London)</span>
+          </a>
+        </li><li class="content-card event-card">
+          <a href="https://lu.ma/claude-code-curious-3" target="_blank" rel="noopener">
+            <span class="event-date-badge">Wed, Mar 11</span>
+            <span class="content-card-title">London | Claude Code Curious #3</span>
+            <span class="content-card-source">Luma (London)</span>
+          </a>
+        </li><li class="content-card event-card">
+          <a href="https://lu.ma/secure-software" target="_blank" rel="noopener">
+            <span class="event-date-badge">Tue, Mar 17</span>
+            <span class="content-card-title">Building Secure Software at Scale</span>
+            <span class="content-card-source">Luma (London)</span>
+          </a>
+        </li><li class="content-card event-card">
+          <a href="https://lu.ma/FreepikXBytePlusMeetup" target="_blank" rel="noopener">
+            <span class="event-date-badge">Wed, Mar 18</span>
+            <span class="content-card-title">AI Creative Minds: Freepik x BytePlus Meetup</span>
+            <span class="content-card-source">Luma (London)</span>
+          </a>
+        </li>
+    </ul>
+  </section>
+
   <footer>
-    <p>The AI Brief &middot; Oxford MBA 2025</p>
+    <h3>Let&rsquo;s Connect</h3>
+    <p>Built with care by an Oxford MBA nerd who loves AI.</p>
+    <nav class="footer-links">
+      <a href="archive.html">Archive</a>
+      <a href="#subscribe">Subscribe</a>
+    </nav>
+    <p class="footer-copy">&copy; 2026 &middot; The AI Brief</p>
   </footer>
   <script>
-// Toggle timeline card expansion
+// ── Theme toggle ────────────────────────────────────────────────────────
+function setTheme(theme) {
+  if (theme === 'system') {
+    localStorage.removeItem('theme');
+    var isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    document.documentElement.classList.toggle('dark', isDark);
+  } else if (theme === 'dark') {
+    localStorage.setItem('theme', 'dark');
+    document.documentElement.classList.add('dark');
+  } else {
+    localStorage.setItem('theme', 'light');
+    document.documentElement.classList.remove('dark');
+  }
+  syncThemeButtons();
+}
+
+function syncThemeButtons() {
+  var stored = localStorage.getItem('theme');
+  var active = stored || 'system';
+  document.querySelectorAll('.theme-btn').forEach(function(btn) {
+    btn.classList.toggle('active', btn.getAttribute('data-theme') === active);
+  });
+}
+
+// Apply saved theme on load
+(function() {
+  var stored = localStorage.getItem('theme');
+  if (stored === 'dark') {
+    document.documentElement.classList.add('dark');
+  } else if (stored === 'light') {
+    document.documentElement.classList.remove('dark');
+  } else {
+    var isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    document.documentElement.classList.toggle('dark', isDark);
+  }
+  syncThemeButtons();
+})();
+
+// Toggle timeline card expansion (issue pages)
 document.querySelectorAll('.tl-entry .tl-header').forEach(function(el) {
   el.addEventListener('click', function(e) {
     if (e.target.tagName === 'A') return;
@@ -544,17 +678,46 @@ document.querySelectorAll('.toc-list a').forEach(function(a) {
   });
 });
 
-// Filter titles on index
+// ── Filter (smol.ai-style with checkboxes) ──────────────────────────────
 var filterInput = document.getElementById('regex-filter');
 if (filterInput) {
+  var filterError = document.getElementById('regex-filter-error');
   filterInput.addEventListener('input', function() {
+    var val = this.value;
     var pattern;
-    try { pattern = new RegExp(this.value, 'i'); } catch(e) { return; }
-    document.querySelectorAll('.tl-entry').forEach(function(li) {
-      var title = li.querySelector('.tl-title');
-      if (title) {
-        li.style.display = pattern.test(title.textContent) ? '' : 'none';
-      }
+    try {
+      pattern = new RegExp(val, 'i');
+      if (filterError) filterError.classList.add('hidden');
+    } catch(e) {
+      if (filterError) filterError.classList.remove('hidden');
+      return;
+    }
+
+    var byTitle = document.getElementById('filter-by-title');
+    var byDesc = document.getElementById('filter-by-description');
+    var byTags = document.getElementById('filter-by-tags');
+    var checkTitle = byTitle ? byTitle.checked : true;
+    var checkDesc = byDesc ? byDesc.checked : false;
+    var checkTags = byTags ? byTags.checked : false;
+
+    document.querySelectorAll('.issue-row').forEach(function(li) {
+      if (!val) { li.classList.remove('hidden'); return; }
+      var title = li.getAttribute('data-post-title') || '';
+      var desc = li.getAttribute('data-post-description') || '';
+      var tags = li.getAttribute('data-post-all-tags') || '';
+      var match = false;
+      if (checkTitle && pattern.test(title)) match = true;
+      if (checkDesc && pattern.test(desc)) match = true;
+      if (checkTags && pattern.test(tags)) match = true;
+      li.classList.toggle('hidden', !match);
+    });
+  });
+
+  // Re-filter when checkboxes change
+  ['filter-by-title', 'filter-by-description', 'filter-by-tags'].forEach(function(id) {
+    var cb = document.getElementById(id);
+    if (cb) cb.addEventListener('change', function() {
+      filterInput.dispatchEvent(new Event('input'));
     });
   });
 }
@@ -715,6 +878,88 @@ document.querySelectorAll('.pref-content-row[data-section]').forEach(function(ro
 
 // Apply on page load
 applyPrefs();
+
+// ── Search modal ────────────────────────────────────────────────────────
+function openSearch() {
+  var overlay = document.getElementById('search-overlay');
+  var modal = document.getElementById('search-modal');
+  if (!overlay || !modal) return;
+  overlay.classList.add('open');
+  modal.classList.add('open');
+  var input = document.getElementById('search-input');
+  if (input) { input.value = ''; input.focus(); }
+  renderSearchResults('');
+}
+
+function closeSearch() {
+  var overlay = document.getElementById('search-overlay');
+  var modal = document.getElementById('search-modal');
+  if (overlay) overlay.classList.remove('open');
+  if (modal) modal.classList.remove('open');
+}
+
+// Cmd+K / Ctrl+K to open, Escape to close
+document.addEventListener('keydown', function(e) {
+  if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+    e.preventDefault();
+    openSearch();
+  }
+  if (e.key === 'Escape') {
+    closeSearch();
+  }
+});
+
+// Search input handler
+var searchInput = document.getElementById('search-input');
+if (searchInput) {
+  searchInput.addEventListener('input', function() {
+    renderSearchResults(this.value);
+  });
+}
+
+function getSearchData() {
+  var el = document.getElementById('search-data');
+  if (!el) return [];
+  try { return JSON.parse(el.textContent); } catch(e) { return []; }
+}
+
+function renderSearchResults(query) {
+  var container = document.getElementById('search-results');
+  if (!container) return;
+  var data = getSearchData();
+  if (!query.trim()) {
+    // Show recent issues
+    var recent = data.slice(0, 10);
+    container.innerHTML = recent.map(function(item) {
+      return '<a class="search-result-item" href="' + item.url + '">' +
+        '<span class="sr-date">' + item.dateDisplay + '</span>' +
+        '<span class="sr-title">' + item.title + '</span>' +
+        '</a>';
+    }).join('');
+    return;
+  }
+  var q = query.toLowerCase();
+  var matches = data.filter(function(item) {
+    return item.title.toLowerCase().indexOf(q) !== -1 ||
+           item.summary.toLowerCase().indexOf(q) !== -1 ||
+           item.tags.join(' ').toLowerCase().indexOf(q) !== -1 ||
+           item.dateDisplay.toLowerCase().indexOf(q) !== -1;
+  });
+  if (matches.length === 0) {
+    container.innerHTML = '<div class="search-empty">No results found</div>';
+    return;
+  }
+  container.innerHTML = matches.slice(0, 15).map(function(item) {
+    var tagHtml = item.tags.slice(0, 4).map(function(t) {
+      return '<span class="tag-pill gray" style="font-size:0.7rem;padding:1px 6px;">' + t + '</span>';
+    }).join(' ');
+    return '<a class="search-result-item" href="' + item.url + '">' +
+      '<span class="sr-date">' + item.dateDisplay + '</span>' +
+      '<span class="sr-title">' + item.title + '</span>' +
+      (tagHtml ? '<span class="sr-tags">' + tagHtml + '</span>' : '') +
+      '</a>';
+  }).join('');
+}
 </script>
 </body>
 </html>

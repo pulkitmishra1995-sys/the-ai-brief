@@ -223,6 +223,14 @@ FORMSPREE_ENDPOINT = os.getenv("FORMSPREE_ENDPOINT", "")
 
 NEWSLETTER_NAME = "The AI Brief"
 OXFORD_BLUE = "#002147"
+SUBSTACK_URL = os.getenv("SUBSTACK_URL", "https://yourname.substack.com")
+
+# ── Analytics & Beta ─────────────────────────────────────────────────────────
+
+# Google Analytics 4 measurement ID (e.g. "G-XXXXXXXXXX"). Leave empty to disable.
+GA_MEASUREMENT_ID = os.getenv("GA_MEASUREMENT_ID", "")
+# Set to True during beta to prevent search engine indexing
+BETA_NOINDEX = True
 
 # ── Scraper settings ─────────────────────────────────────────────────────────
 

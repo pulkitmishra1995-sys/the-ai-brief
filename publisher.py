@@ -21,9 +21,12 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from pathlib import Path
 
+import json
+
 from config import (
     DRAFTS_DIR, SITE_DIR, ISSUES_DIR, EMAIL,
-    NEWSLETTER_NAME, OXFORD_BLUE,
+    NEWSLETTER_NAME, OXFORD_BLUE, SUBSTACK_URL, COLLECTED_DIR,
+    GA_MEASUREMENT_ID, BETA_NOINDEX,
 )
 from subscribe import get_active_emails
 
@@ -246,21 +249,40 @@ def _esc(text):
 
 # ── Site page builders ───────────────────────────────────────────────────────
 
+def build_head_extras():
+    """Return noindex meta tag + analytics script for <head>."""
+    parts = []
+    if BETA_NOINDEX:
+        parts.append('  <meta name="robots" content="noindex, nofollow">')
+    if GA_MEASUREMENT_ID:
+        parts.append(f"""  <script async src="https://www.googletagmanager.com/gtag/js?id={GA_MEASUREMENT_ID}"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){{dataLayer.push(arguments);}}
+    gtag('js', new Date());
+    gtag('config', '{GA_MEASUREMENT_ID}');
+  </script>""")
+    return "\n".join(parts)
+
+
 def build_header(home_prefix=""):
-    """smol.ai-style header: logo box left, nav links right + gear icon."""
+    """smol.ai-style header: plain text logo, nav links, search trigger, theme toggle, prefs gear."""
     subscribe_href = f"{home_prefix}index.html#subscribe" if home_prefix else "#subscribe"
-    return f"""<div class="site-header">
+    return f"""<header class="site-header">
     <a class="logo" href="{home_prefix}index.html">{NEWSLETTER_NAME}</a>
     <nav>
       <a href="{subscribe_href}">subscribe</a>
-      <span class="sep">/</span>
       <a href="{home_prefix}archive.html">issues</a>
-      <span class="sep">/</span>
       <a href="{home_prefix}archive.html#tags">tags</a>
-      <span class="sep">/</span>
+      <button class="search-trigger" onclick="openSearch()">Search <kbd>&#8984;K</kbd></button>
       <button class="prefs-btn" onclick="togglePrefsPanel()" title="Preferences">&#9881;</button>
     </nav>
-  </div>
+    <div class="theme-buttons">
+      <button class="theme-btn" data-theme="light" onclick="setTheme('light')" title="Light">&#9788;</button>
+      <button class="theme-btn" data-theme="dark" onclick="setTheme('dark')" title="Dark">&#9790;</button>
+      <button class="theme-btn" data-theme="system" onclick="setTheme('system')" title="System">&#9881;</button>
+    </div>
+  </header>
   {build_prefs_panel()}"""
 
 
@@ -679,7 +701,45 @@ def build_issue_nav(target_date):
 # ── Page JS ──────────────────────────────────────────────────────────────────
 
 SITE_JS = """<script>
-// Toggle timeline card expansion
+// ── Theme toggle ────────────────────────────────────────────────────────
+function setTheme(theme) {
+  if (theme === 'system') {
+    localStorage.removeItem('theme');
+    var isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    document.documentElement.classList.toggle('dark', isDark);
+  } else if (theme === 'dark') {
+    localStorage.setItem('theme', 'dark');
+    document.documentElement.classList.add('dark');
+  } else {
+    localStorage.setItem('theme', 'light');
+    document.documentElement.classList.remove('dark');
+  }
+  syncThemeButtons();
+}
+
+function syncThemeButtons() {
+  var stored = localStorage.getItem('theme');
+  var active = stored || 'system';
+  document.querySelectorAll('.theme-btn').forEach(function(btn) {
+    btn.classList.toggle('active', btn.getAttribute('data-theme') === active);
+  });
+}
+
+// Apply saved theme on load
+(function() {
+  var stored = localStorage.getItem('theme');
+  if (stored === 'dark') {
+    document.documentElement.classList.add('dark');
+  } else if (stored === 'light') {
+    document.documentElement.classList.remove('dark');
+  } else {
+    var isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    document.documentElement.classList.toggle('dark', isDark);
+  }
+  syncThemeButtons();
+})();
+
+// Toggle timeline card expansion (issue pages)
 document.querySelectorAll('.tl-entry .tl-header').forEach(function(el) {
   el.addEventListener('click', function(e) {
     if (e.target.tagName === 'A') return;
@@ -699,17 +759,46 @@ document.querySelectorAll('.toc-list a').forEach(function(a) {
   });
 });
 
-// Filter titles on index
+// ── Filter (smol.ai-style with checkboxes) ──────────────────────────────
 var filterInput = document.getElementById('regex-filter');
 if (filterInput) {
+  var filterError = document.getElementById('regex-filter-error');
   filterInput.addEventListener('input', function() {
+    var val = this.value;
     var pattern;
-    try { pattern = new RegExp(this.value, 'i'); } catch(e) { return; }
-    document.querySelectorAll('.tl-entry').forEach(function(li) {
-      var title = li.querySelector('.tl-title');
-      if (title) {
-        li.style.display = pattern.test(title.textContent) ? '' : 'none';
-      }
+    try {
+      pattern = new RegExp(val, 'i');
+      if (filterError) filterError.classList.add('hidden');
+    } catch(e) {
+      if (filterError) filterError.classList.remove('hidden');
+      return;
+    }
+
+    var byTitle = document.getElementById('filter-by-title');
+    var byDesc = document.getElementById('filter-by-description');
+    var byTags = document.getElementById('filter-by-tags');
+    var checkTitle = byTitle ? byTitle.checked : true;
+    var checkDesc = byDesc ? byDesc.checked : false;
+    var checkTags = byTags ? byTags.checked : false;
+
+    document.querySelectorAll('.issue-row').forEach(function(li) {
+      if (!val) { li.classList.remove('hidden'); return; }
+      var title = li.getAttribute('data-post-title') || '';
+      var desc = li.getAttribute('data-post-description') || '';
+      var tags = li.getAttribute('data-post-all-tags') || '';
+      var match = false;
+      if (checkTitle && pattern.test(title)) match = true;
+      if (checkDesc && pattern.test(desc)) match = true;
+      if (checkTags && pattern.test(tags)) match = true;
+      li.classList.toggle('hidden', !match);
+    });
+  });
+
+  // Re-filter when checkboxes change
+  ['filter-by-title', 'filter-by-description', 'filter-by-tags'].forEach(function(id) {
+    var cb = document.getElementById(id);
+    if (cb) cb.addEventListener('change', function() {
+      filterInput.dispatchEvent(new Event('input'));
     });
   });
 }
@@ -870,6 +959,88 @@ document.querySelectorAll('.pref-content-row[data-section]').forEach(function(ro
 
 // Apply on page load
 applyPrefs();
+
+// ── Search modal ────────────────────────────────────────────────────────
+function openSearch() {
+  var overlay = document.getElementById('search-overlay');
+  var modal = document.getElementById('search-modal');
+  if (!overlay || !modal) return;
+  overlay.classList.add('open');
+  modal.classList.add('open');
+  var input = document.getElementById('search-input');
+  if (input) { input.value = ''; input.focus(); }
+  renderSearchResults('');
+}
+
+function closeSearch() {
+  var overlay = document.getElementById('search-overlay');
+  var modal = document.getElementById('search-modal');
+  if (overlay) overlay.classList.remove('open');
+  if (modal) modal.classList.remove('open');
+}
+
+// Cmd+K / Ctrl+K to open, Escape to close
+document.addEventListener('keydown', function(e) {
+  if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+    e.preventDefault();
+    openSearch();
+  }
+  if (e.key === 'Escape') {
+    closeSearch();
+  }
+});
+
+// Search input handler
+var searchInput = document.getElementById('search-input');
+if (searchInput) {
+  searchInput.addEventListener('input', function() {
+    renderSearchResults(this.value);
+  });
+}
+
+function getSearchData() {
+  var el = document.getElementById('search-data');
+  if (!el) return [];
+  try { return JSON.parse(el.textContent); } catch(e) { return []; }
+}
+
+function renderSearchResults(query) {
+  var container = document.getElementById('search-results');
+  if (!container) return;
+  var data = getSearchData();
+  if (!query.trim()) {
+    // Show recent issues
+    var recent = data.slice(0, 10);
+    container.innerHTML = recent.map(function(item) {
+      return '<a class="search-result-item" href="' + item.url + '">' +
+        '<span class="sr-date">' + item.dateDisplay + '</span>' +
+        '<span class="sr-title">' + item.title + '</span>' +
+        '</a>';
+    }).join('');
+    return;
+  }
+  var q = query.toLowerCase();
+  var matches = data.filter(function(item) {
+    return item.title.toLowerCase().indexOf(q) !== -1 ||
+           item.summary.toLowerCase().indexOf(q) !== -1 ||
+           item.tags.join(' ').toLowerCase().indexOf(q) !== -1 ||
+           item.dateDisplay.toLowerCase().indexOf(q) !== -1;
+  });
+  if (matches.length === 0) {
+    container.innerHTML = '<div class="search-empty">No results found</div>';
+    return;
+  }
+  container.innerHTML = matches.slice(0, 15).map(function(item) {
+    var tagHtml = item.tags.slice(0, 4).map(function(t) {
+      return '<span class="tag-pill gray" style="font-size:0.7rem;padding:1px 6px;">' + t + '</span>';
+    }).join(' ');
+    return '<a class="search-result-item" href="' + item.url + '">' +
+      '<span class="sr-date">' + item.dateDisplay + '</span>' +
+      '<span class="sr-title">' + item.title + '</span>' +
+      (tagHtml ? '<span class="sr-tags">' + tagHtml + '</span>' : '') +
+      '</a>';
+  }).join('');
+}
 </script>"""
 
 
@@ -899,6 +1070,7 @@ def build_site_page(content_html, target_date, md_content=None):
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{NEWSLETTER_NAME} — {date_display}</title>
   <link rel="stylesheet" href="../style.css">
+{build_head_extras()}
 </head>
 <body>
   {header}
@@ -936,6 +1108,7 @@ def build_placeholder_page(target_date):
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{NEWSLETTER_NAME} — {date_display}</title>
   <link rel="stylesheet" href="../style.css">
+{build_head_extras()}
 </head>
 <body>
   {header}
@@ -979,48 +1152,255 @@ def get_all_issue_dates():
     )
 
 
-def update_index_page(timeline_html, target_date, md_content=None):
-    """Regenerate index with smol.ai-style: title bar, filter, timeline, subscribe."""
-    try:
-        dt = datetime.strptime(target_date, "%Y-%m-%d")
-        date_display = dt.strftime("%A, %B %d, %Y")
-    except ValueError:
-        date_display = target_date
+def build_hero_section():
+    """Build smol.ai-style stacked hero: title, subtitle, description, social proof, subscribe embed."""
+    return f"""<section class="hero" id="subscribe">
+    <h1 class="hero-title">{NEWSLETTER_NAME}</h1>
+    <p class="hero-subtitle">Your daily AI &amp; tech digest.</p>
+    <p class="hero-description">We curate the top AI stories, funding rounds, podcasts, events &amp; videos, and send you a roundup each day.</p>
+    <div class="hero-subscribe">
+      <iframe src="{SUBSTACK_URL}/embed" width="100%" height="150" style="border:none;background:transparent;" frameborder="0" scrolling="no"></iframe>
+    </div>
+    <div class="hero-quotes">
+      <blockquote>&ldquo;The best way to keep up with AI without doom-scrolling&rdquo;</blockquote>
+    </div>
+  </section>"""
 
-    header = build_header()
-    date_picker = build_date_picker(current_date=target_date, link_prefix="")
 
-    # Build a combined timeline: latest issue + recent dates with "show details" links
+def build_search_modal(search_data_json):
+    """Build search overlay modal with embedded search data."""
+    return f"""<div class="search-overlay" id="search-overlay" onclick="closeSearch()"></div>
+  <div class="search-modal" id="search-modal">
+    <div class="search-modal-header">
+      <input type="text" id="search-input" placeholder="Search issues, tags, topics..." autocomplete="off">
+      <button class="search-close" onclick="closeSearch()">&times;</button>
+    </div>
+    <div class="search-results" id="search-results"></div>
+    <script type="application/json" id="search-data">{search_data_json}</script>
+  </div>"""
+
+
+def build_search_data():
+    """Build JSON array of all issues for client-side search."""
     all_dates = get_all_issue_dates()
-
-    # Monthly summary section
-    months = OrderedDict()
+    data = []
     for d in all_dates:
-        ym = d[:7]
-        if ym not in months:
-            months[ym] = []
-        months[ym].append(d)
+        filepath = ISSUES_DIR / f"{d}.html"
+        if not filepath.exists():
+            continue
+        meta = extract_issue_metadata(filepath)
+        try:
+            dt = datetime.strptime(d, "%Y-%m-%d")
+            date_display = dt.strftime("%B %-d, %Y")
+        except ValueError:
+            date_display = d
+        data.append({
+            "date": d,
+            "dateDisplay": date_display,
+            "title": meta["title"],
+            "tags": [t["name"] for t in meta["tags"]],
+            "summary": meta["summary"],
+            "url": f"issues/{d}.html",
+        })
+    return json.dumps(data)
 
-    recent_timeline_parts = []
+
+def _get_latest_collected_json():
+    """Find and load the most recent collected JSON file."""
+    json_files = sorted(COLLECTED_DIR.glob("*.json"), reverse=True)
+    if not json_files:
+        return []
+    with open(json_files[0], "r", encoding="utf-8") as f:
+        return json.load(f)
+
+
+def _youtube_thumbnail(url):
+    """Extract YouTube video ID and return thumbnail URL."""
+    m = re.search(r'(?:v=|youtu\.be/)([A-Za-z0-9_-]{11})', url)
+    if m:
+        return f"https://img.youtube.com/vi/{m.group(1)}/mqdefault.jpg"
+    return ""
+
+
+def build_content_sections():
+    """Build trending podcasts, videos, and upcoming events sections from collected data."""
+    items = _get_latest_collected_json()
+    if not items:
+        return ""
+
+    podcasts = [i for i in items if i.get("type") == "podcast"]
+    videos = [i for i in items if i.get("type") == "video"]
+    events = sorted(
+        [i for i in items if i.get("type") == "event"],
+        key=lambda x: x.get("date", ""),
+    )
+
+    sections = []
+
+    # ── Trending Podcasts ──
+    if podcasts:
+        pod_items = []
+        for p in podcasts[:8]:
+            source = _esc(p.get("source", ""))
+            title = _esc(p.get("title", ""))
+            url = _esc(p.get("url", "#"))
+            date_str = p.get("date", "")
+            try:
+                dt = datetime.strptime(date_str, "%Y-%m-%d")
+                date_display = dt.strftime("%b %d")
+            except ValueError:
+                date_display = date_str
+            summary = _esc(p.get("summary", "")[:120])
+            if len(p.get("summary", "")) > 120:
+                summary += "..."
+            pod_items.append(f"""<li class="content-card podcast-card">
+          <a href="{url}" target="_blank" rel="noopener">
+            <span class="content-card-source">{source}</span>
+            <span class="content-card-title">{title}</span>
+            <span class="content-card-meta">{date_display}</span>
+          </a>
+        </li>""")
+        sections.append(f"""<section class="content-section" id="podcasts">
+    <div class="section-header">
+      <h2>Trending Podcasts</h2>
+      <span class="section-count">{len(podcasts)} episodes</span>
+    </div>
+    <ul class="content-grid podcast-grid">
+      {"".join(pod_items)}
+    </ul>
+  </section>""")
+
+    # ── Videos Going Viral ──
+    if videos:
+        vid_items = []
+        for v in videos[:8]:
+            source = _esc(v.get("source", ""))
+            title = _esc(v.get("title", ""))
+            url = _esc(v.get("url", "#"))
+            thumb = _youtube_thumbnail(v.get("url", ""))
+            date_str = v.get("date", "")
+            try:
+                dt = datetime.strptime(date_str, "%Y-%m-%d")
+                date_display = dt.strftime("%b %d")
+            except ValueError:
+                date_display = date_str
+            thumb_html = f'<img class="video-thumb" src="{thumb}" alt="" loading="lazy">' if thumb else ""
+            vid_items.append(f"""<li class="content-card video-card">
+          <a href="{url}" target="_blank" rel="noopener">
+            {thumb_html}
+            <div class="video-info">
+              <span class="content-card-source">{source}</span>
+              <span class="content-card-title">{title}</span>
+              <span class="content-card-meta">{date_display}</span>
+            </div>
+          </a>
+        </li>""")
+        sections.append(f"""<section class="content-section" id="videos">
+    <div class="section-header">
+      <h2>Videos Going Viral</h2>
+      <span class="section-count">{len(videos)} videos</span>
+    </div>
+    <ul class="content-grid video-grid">
+      {"".join(vid_items)}
+    </ul>
+  </section>""")
+
+    # ── Upcoming Events (London & Oxford) ──
+    if events:
+        # Only show future or recent events
+        today_str = date.today().strftime("%Y-%m-%d")
+        upcoming = [e for e in events if e.get("date", "") >= today_str]
+        if not upcoming:
+            upcoming = events[:6]  # fallback to most recent
+
+        evt_items = []
+        for e in upcoming[:8]:
+            title = _esc(e.get("title", ""))
+            url = _esc(e.get("url", "#"))
+            source = _esc(e.get("source", ""))
+            date_str = e.get("date", "")
+            try:
+                dt = datetime.strptime(date_str, "%Y-%m-%d")
+                date_display = dt.strftime("%a, %b %d")
+            except ValueError:
+                date_display = date_str
+            evt_items.append(f"""<li class="content-card event-card">
+          <a href="{url}" target="_blank" rel="noopener">
+            <span class="event-date-badge">{date_display}</span>
+            <span class="content-card-title">{title}</span>
+            <span class="content-card-source">{source}</span>
+          </a>
+        </li>""")
+        sections.append(f"""<section class="content-section" id="events">
+    <div class="section-header">
+      <h2>Upcoming Events</h2>
+      <span class="section-subtitle">London &amp; Oxford</span>
+    </div>
+    <ul class="content-grid event-grid">
+      {"".join(evt_items)}
+    </ul>
+  </section>""")
+
+    return "\n\n".join(sections)
+
+
+def update_index_page(timeline_html, target_date, md_content=None):
+    """Regenerate index with hero, per-issue timeline, search modal."""
+    header = build_header()
+    hero = build_hero_section()
+    search_data_json = build_search_data()
+    search_modal = build_search_modal(search_data_json)
+    content_sections = build_content_sections()
+
+    all_dates = get_all_issue_dates()[:30]  # Last 30 issues
+
+    # Build per-issue-date timeline
+    issue_entries = []
     for d in all_dates:
-        if d == target_date:
-            continue  # already shown as main timeline
+        filepath = ISSUES_DIR / f"{d}.html"
+        meta = extract_issue_metadata(filepath) if filepath.exists() else {"title": "AI Brief", "tags": [], "summary": "", "rich_summary": ""}
         try:
             d_dt = datetime.strptime(d, "%Y-%m-%d")
             d_short = d_dt.strftime("%b %d")
-            d_display = d_dt.strftime("%B %-d, %Y")
         except ValueError:
             d_short = d
-            d_display = d
-        recent_timeline_parts.append(f"""  <li class="tl-entry">
-    <div class="tl-header" onclick="window.location.href='issues/{d}.html'">
-      <span class="tl-date">{d_short}</span>
-      <span class="tl-title"><a href="issues/{d}.html">{d_display}</a></span>
-      <span class="tl-arrow">&rarr;</span>
+
+        # Tag pills
+        tag_pills = ""
+        if meta["tags"]:
+            pills = " ".join(
+                f'<span class="tag-pill {_esc(t["color"])}">{_esc(t["name"])}</span>'
+                for t in meta["tags"]
+            )
+            tag_pills = f'<div class="tags-cloud">{pills}</div>'
+
+        # Rich summary (HTML with bold keywords)
+        rich_summary_html = ""
+        if meta.get("rich_summary"):
+            rich_summary_html = f'<p class="issue-summary">{meta["rich_summary"]}</p>'
+        elif meta["summary"]:
+            rich_summary_html = f'<p class="issue-summary">{_esc(meta["summary"])}</p>'
+
+        title_display = _esc(meta["title"])
+        if len(title_display) > 80:
+            title_display = title_display[:77] + "..."
+
+        issue_entries.append(f"""  <li class="issue-row" data-post-title="{_esc(meta["title"])}" data-post-description="{_esc(meta["summary"])}" data-post-all-tags="{_esc(",".join(t["name"] for t in meta["tags"]))}">
+    <a href="issues/{d}.html" class="issue-link">
+      <span class="issue-date">{d_short}</span>
+      <span class="issue-title">{title_display}</span>
+      <span class="issue-arrow">&rarr;</span>
+    </a>
+    <div class="card-details">
+      <span class="card-caret"></span>
+      <button class="card-close" onclick="event.stopPropagation();this.closest('.issue-row').classList.remove('open')">&times;</button>
+      {tag_pills}
+      {rich_summary_html}
+      <a class="read-full-link" href="issues/{d}.html">Read full issue &rarr;</a>
     </div>
   </li>""")
 
-    recent_timeline = "\n".join(recent_timeline_parts[:14])  # Show last 2 weeks
+    issue_timeline = "\n".join(issue_entries)
 
     index_html = f"""<!DOCTYPE html>
 <html lang="en">
@@ -1029,34 +1409,44 @@ def update_index_page(timeline_html, target_date, md_content=None):
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{NEWSLETTER_NAME} — AI & Tech Digest</title>
   <link rel="stylesheet" href="style.css">
+{build_head_extras()}
 </head>
 <body>
   {header}
-  {date_picker}
-
-  <div class="subscribe-inline" id="subscribe">
-    <span class="subscribe-label">Get the daily AI & tech digest in your inbox</span>
-    <a class="subscribe-btn" href="mailto:pulkitmishra1995@gmail.com?subject=Subscribe%20to%20The%20AI%20Brief&body=Please%20add%20me%20to%20the%20newsletter.%0A%0AName%3A%20%0A" target="_blank">Subscribe via Email</a>
-  </div>
+  {hero}
+  {search_modal}
 
   <div class="title-bar">
-    <h2>Last 30 days in AI & Tech</h2>
-    <div class="filter-group">
-      <label>Filter titles:</label>
-      <input type="text" id="regex-filter" placeholder="regex...">
+    <h2>Last 30 days in AI &amp; Tech</h2>
+    <a class="see-all" href="archive.html">See all issues &rarr;</a>
+  </div>
+
+  <div class="filter-bar">
+    <input type="text" id="regex-filter" placeholder="Filter titles...">
+    <div id="regex-filter-error" class="filter-error hidden">Invalid regex</div>
+    <div class="filter-checkboxes">
+      <label><input type="checkbox" id="filter-by-title" checked> title</label>
+      <label><input type="checkbox" id="filter-by-description"> description</label>
+      <label><input type="checkbox" id="filter-by-tags"> tags</label>
     </div>
-    <a class="see-all" href="archive.html">See all issues</a>
   </div>
 
   <div class="timeline-container">
-    {timeline_html}
-    <ol class="timeline" style="margin-top:0;">
-{recent_timeline}
-    </ol>
+    <ul class="issue-list">
+{issue_timeline}
+    </ul>
   </div>
 
+  {content_sections}
+
   <footer>
-    <p>{NEWSLETTER_NAME} &middot; Oxford MBA 2025</p>
+    <h3>Let&rsquo;s Connect</h3>
+    <p>Built with care by an Oxford MBA nerd who loves AI.</p>
+    <nav class="footer-links">
+      <a href="archive.html">Archive</a>
+      <a href="#subscribe">Subscribe</a>
+    </nav>
+    <p class="footer-copy">&copy; 2026 &middot; {NEWSLETTER_NAME}</p>
   </footer>
   {SITE_JS}
 </body>
@@ -1083,6 +1473,105 @@ def extract_headlines_from_issue(filepath):
         return good[:3]
     except Exception:
         return []
+
+
+def extract_issue_metadata(filepath):
+    """Extract title, tags, and summary from an issue HTML file for index timeline."""
+    try:
+        with open(filepath, "r", encoding="utf-8") as f:
+            html = f.read()
+
+        # Title: first content headline (with id attribute, to skip prefs panel h3)
+        headlines = re.findall(r'<h3 id="[^"]*">(?:<a[^>]*>)?(.+?)(?:</a>)?</h3>', html)
+        if not headlines:
+            headlines = re.findall(r'class="tl-title"[^>]*>(?:<a[^>]*>)?(.+?)(?:</a>)?</span>', html)
+        title = headlines[0] if headlines else "AI Brief"
+
+        # Tags: from data-tags attributes or by keyword extraction from title
+        raw_tags = re.findall(r'data-tags="([^"]*)"', html)
+        tag_set = set()
+        for chunk in raw_tags:
+            for t in chunk.split(","):
+                t = t.strip()
+                if t:
+                    tag_set.add(t)
+
+        # If no data-tags, extract from headlines
+        if not tag_set:
+            all_headlines = " ".join(headlines[:5])
+            for tag_info in _extract_tags(all_headlines):
+                tag_set.add(tag_info["name"])
+
+        tags = []
+        for name in sorted(tag_set):
+            tags.append({"name": name, "color": _get_tag_color_for_name(name)})
+
+        # Summary (plain text): first paragraph
+        summaries = re.findall(r'<div class="detail-text"><p>(.*?)</p>', html)
+        if not summaries:
+            summaries = re.findall(r'<div class="issue-content">\s*(?:<h2[^>]*>.*?</h2>\s*)?(?:<h3[^>]*>.*?</h3>\s*)?<p>(.*?)</p>', html, re.DOTALL)
+        summary = ""
+        if summaries:
+            summary = re.sub(r'<[^>]+>', '', summaries[0]).strip()[:200]
+
+        # Rich summary (HTML with bold keywords): collect first few article summaries
+        # from the Top AI Stories section only (first h2 section)
+        rich_parts = []
+        content_match = re.search(r'<div class="issue-content">(.*?)</div>\s*</div>', html, re.DOTALL)
+        if content_match:
+            content_block = content_match.group(1)
+            # Split on h2 to only take the first section (Top AI Stories)
+            h2_sections = re.split(r'<h2[^>]*>', content_block)
+            first_section = h2_sections[1] if len(h2_sections) > 1 else content_block
+            # Cut at next section boundary
+            next_h2 = first_section.find('</h2>')
+            if next_h2 != -1:
+                first_section = first_section[next_h2 + 5:]
+
+            # Extract h3 + following p pairs
+            items = re.findall(r'<h3[^>]*>(?:<a[^>]*>)?(.+?)(?:</a>)?</h3>\s*<p>(.*?)</p>', first_section, re.DOTALL)
+            for h3_title, para in items[:4]:
+                clean_title = re.sub(r'<[^>]+>', '', h3_title).strip()
+                # Strip all HTML except bold
+                clean_para = re.sub(r'<a[^>]*>(.*?)</a>', r'\1', para)
+                clean_para = re.sub(r'<(?!/?(?:strong|b)\b)[^>]+>', '', clean_para).strip()
+                # Truncate individual summary
+                if len(clean_para) > 150:
+                    dot = clean_para[:150].rfind('. ')
+                    clean_para = clean_para[:dot + 1] if dot > 50 else clean_para[:150] + "..."
+                if clean_title and clean_para:
+                    rich_parts.append(f"<strong>{_esc(clean_title)}</strong> {clean_para}")
+
+        rich_summary = " ".join(rich_parts)
+        if len(rich_summary) > 600:
+            truncated = rich_summary[:600]
+            last_period = truncated.rfind('. ')
+            if last_period > 300:
+                rich_summary = truncated[:last_period + 1]
+            else:
+                rich_summary = truncated + "..."
+
+        return {"title": title, "tags": tags[:8], "summary": summary, "rich_summary": rich_summary}
+    except Exception:
+        return {"title": "AI Brief", "tags": [], "summary": "", "rich_summary": ""}
+
+
+def _get_tag_color_for_name(tag_name):
+    """Map a tag name to its color class."""
+    color_map = {
+        "openai": "gray", "anthropic": "gray", "google": "gray",
+        "meta": "gray", "microsoft": "gray", "nvidia": "gray",
+        "deepmind": "gray", "amazon": "gray", "apple": "gray",
+        "softbank": "gray",
+        "gpt": "green", "claude": "green", "gemini": "green",
+        "llama": "green", "codex": "green",
+        "funding": "blue", "investment": "blue", "series-round": "blue",
+        "valuation": "blue", "startup": "blue", "acquisition": "blue",
+        "ai-safety": "orange", "regulation": "orange",
+        "robotics": "purple", "autonomous": "purple",
+        "agents": "purple", "multimodal": "purple",
+    }
+    return color_map.get(tag_name, "gray")
 
 
 def update_archive_page():
@@ -1186,6 +1675,7 @@ def update_archive_page():
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{NEWSLETTER_NAME} — Archive</title>
   <link rel="stylesheet" href="style.css">
+{build_head_extras()}
 </head>
 <body>
   {header}

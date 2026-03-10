@@ -5,20 +5,24 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>The AI Brief — Archive</title>
   <link rel="stylesheet" href="style.css">
+  <meta name="robots" content="noindex, nofollow">
 </head>
 <body>
-  <div class="site-header">
+  <header class="site-header">
     <a class="logo" href="index.html">The AI Brief</a>
     <nav>
       <a href="#subscribe">subscribe</a>
-      <span class="sep">/</span>
       <a href="archive.html">issues</a>
-      <span class="sep">/</span>
       <a href="archive.html#tags">tags</a>
-      <span class="sep">/</span>
+      <button class="search-trigger" onclick="openSearch()">Search <kbd>&#8984;K</kbd></button>
       <button class="prefs-btn" onclick="togglePrefsPanel()" title="Preferences">&#9881;</button>
     </nav>
-  </div>
+    <div class="theme-buttons">
+      <button class="theme-btn" data-theme="light" onclick="setTheme('light')" title="Light">&#9788;</button>
+      <button class="theme-btn" data-theme="dark" onclick="setTheme('dark')" title="Dark">&#9790;</button>
+      <button class="theme-btn" data-theme="system" onclick="setTheme('system')" title="System">&#9881;</button>
+    </div>
+  </header>
   <div class="prefs-overlay" onclick="togglePrefsPanel()"></div>
   <div class="prefs-panel">
     <div class="prefs-panel-header">
