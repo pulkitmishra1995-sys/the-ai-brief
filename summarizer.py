@@ -12,7 +12,7 @@ import json
 import sys
 import urllib.request
 import urllib.error
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 
 from config import (
     CLAUDE_API_KEY, CLAUDE_MODEL, CLAUDE_MAX_TOKENS,
@@ -282,6 +282,47 @@ def build_local_draft(items, target_date):
     return "\n".join(lines)
 
 
+def load_recent_items_by_type(target_date, item_type, lookback_days=7):
+    """Load items of a given type from recent collected JSON files.
+
+    The collector deduplicates by URL across runs, so podcasts and videos
+    that were fetched on previous days may not appear in today's collected
+    file.  This function scans the last ``lookback_days`` collected files
+    (including today's) and returns all items matching ``item_type``,
+    deduplicated by URL with the most recent occurrence kept.
+    """
+    try:
+        base = datetime.strptime(target_date, "%Y-%m-%d").date()
+    except ValueError:
+        base = date.today()
+
+    seen_urls = set()
+    items = []
+
+    # Walk backwards from target_date so newer items take priority
+    for offset in range(lookback_days):
+        day = base - timedelta(days=offset)
+        path = COLLECTED_DIR / f"{day.isoformat()}.json"
+        if not path.exists():
+            continue
+        try:
+            with open(path, "r", encoding="utf-8") as f:
+                day_items = json.load(f)
+        except (json.JSONDecodeError, OSError):
+            continue
+        for item in day_items:
+            if item.get("type") != item_type:
+                continue
+            url = item.get("url", "")
+            if url and url in seen_urls:
+                continue
+            if url:
+                seen_urls.add(url)
+            items.append(item)
+
+    return items
+
+
 def summarize(target_date=None, local_mode=False):
     """Load collected data, generate draft (via Claude or locally), save it."""
     if target_date is None:
@@ -295,6 +336,36 @@ def summarize(target_date=None, local_mode=False):
 
     with open(collected_file, "r", encoding="utf-8") as f:
         items = json.load(f)
+
+    # The collector deduplicates all items by URL using seen_articles.json,
+    # which means podcasts and videos fetched on earlier days won't appear
+    # in today's collected file even though their episodes are still recent.
+    # Supplement today's items with podcast/video data from recent days.
+    today_podcasts = [i for i in items if i.get("type") == "podcast"]
+    today_videos = [i for i in items if i.get("type") == "video"]
+
+    if len(today_podcasts) < 3:
+        recent_podcasts = load_recent_items_by_type(target_date, "podcast")
+        # Merge: keep today's items, add recent ones that aren't duplicates
+        existing_urls = {i.get("url") for i in items if i.get("type") == "podcast"}
+        for p in recent_podcasts:
+            if p.get("url") not in existing_urls:
+                items.append(p)
+                existing_urls.add(p.get("url"))
+        added_podcasts = len([i for i in items if i.get("type") == "podcast"]) - len(today_podcasts)
+        if added_podcasts > 0:
+            print(f"  Supplemented with {added_podcasts} podcast(s) from recent days")
+
+    if len(today_videos) < 3:
+        recent_videos = load_recent_items_by_type(target_date, "video")
+        existing_urls = {i.get("url") for i in items if i.get("type") == "video"}
+        for v in recent_videos:
+            if v.get("url") not in existing_urls:
+                items.append(v)
+                existing_urls.add(v.get("url"))
+        added_videos = len([i for i in items if i.get("type") == "video"]) - len(today_videos)
+        if added_videos > 0:
+            print(f"  Supplemented with {added_videos} video(s) from recent days")
 
     print(f"\nThe AI Brief — Summarizer — {target_date}")
     print("=" * 50)
