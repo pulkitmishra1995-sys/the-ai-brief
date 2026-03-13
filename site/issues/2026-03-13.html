@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Oxford AI Pulse — Friday, March 13, 2026</title>
+  <link rel="stylesheet" href="../style.css">
+  <meta name="robots" content="noindex, nofollow">
+</head>
+<body>
+  <header class="site-header">
+    <a class="logo" href="../index.html">Oxford AI Pulse</a>
+    <nav>
+      <a href="../index.html#subscribe">subscribe</a>
+      <a href="../archive.html">issues</a>
+      <a href="../archive.html#tags">tags</a>
+      <button class="search-trigger" onclick="openSearch()">Search <kbd>&#8984;K</kbd></button>
+      <button class="prefs-btn" onclick="togglePrefsPanel()" title="Preferences">&#9881;</button>
+    </nav>
+    <div class="theme-buttons">
+      <button class="theme-btn" data-theme="light" onclick="setTheme('light')" title="Light">&#9788;</button>
+      <button class="theme-btn" data-theme="dark" onclick="setTheme('dark')" title="Dark">&#9790;</button>
+      <button class="theme-btn" data-theme="system" onclick="setTheme('system')" title="System">&#9881;</button>
+    </div>
+  </header>
+  <div class="prefs-overlay" onclick="togglePrefsPanel()"></div>
+  <div class="prefs-panel">
+    <div class="prefs-panel-header">
+      <h3>Preferences</h3>
+      <button class="prefs-close-btn" onclick="togglePrefsPanel()">&times;</button>
+    </div>
+    <div class="prefs-section">
+      <div class="prefs-section-title">Topics I Care About</div>
+      <div class="prefs-section-title" style="font-size:0.7rem;margin-bottom:6px;margin-top:0;">Companies</div>
+      <div class="pref-pills">
+        <span class="pref-pill" data-topic="openai">OpenAI</span>
+        <span class="pref-pill" data-topic="anthropic">Anthropic</span>
+        <span class="pref-pill" data-topic="google">Google</span>
+        <span class="pref-pill" data-topic="meta">Meta</span>
+        <span class="pref-pill" data-topic="microsoft">Microsoft</span>
+        <span class="pref-pill" data-topic="nvidia">Nvidia</span>
+        <span class="pref-pill" data-topic="deepmind">DeepMind</span>
+        <span class="pref-pill" data-topic="apple">Apple</span>
+        <span class="pref-pill" data-topic="amazon">Amazon</span>
+      </div>
+      <div class="prefs-section-title" style="margin-top:12px;font-size:0.7rem;margin-bottom:6px;">Models</div>
+      <div class="pref-pills">
+        <span class="pref-pill" data-topic="gpt">GPT</span>
+        <span class="pref-pill" data-topic="claude">Claude</span>
+        <span class="pref-pill" data-topic="gemini">Gemini</span>
+        <span class="pref-pill" data-topic="llama">LLaMA</span>
+        <span class="pref-pill" data-topic="codex">Codex</span>
+      </div>
+      <div class="prefs-section-title" style="margin-top:12px;font-size:0.7rem;margin-bottom:6px;">Topics</div>
+      <div class="pref-pills">
+        <span class="pref-pill" data-topic="ai-safety">AI Safety</span>
+        <span class="pref-pill" data-topic="regulation">Regulation</span>
+        <span class="pref-pill" data-topic="robotics">Robotics</span>
+        <span class="pref-pill" data-topic="agents">Agents</span>
+        <span class="pref-pill" data-topic="multimodal">Multimodal</span>
+        <span class="pref-pill" data-topic="funding">Funding</span>
+        <span class="pref-pill" data-topic="startups">Startups</span>
+        <span class="pref-pill" data-topic="autonomous">Autonomous</span>
+      </div>
+    </div>
+    <div class="prefs-section">
+      <div class="prefs-section-title">Content I Want Most</div>
+      <div class="pref-content-row" data-section="news">
+        <label class="pref-toggle">
+          <input type="checkbox" checked>
+          <span class="pref-toggle-slider"></span>
+        </label>
+        <span class="pref-content-label">News Articles</span>
+        <div class="pref-priority">
+          <span>Pri</span>
+          <select><option value="1" selected>1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select>
+        </div>
+      </div>
+      <div class="pref-content-row" data-section="funding">
+        <label class="pref-toggle">
+          <input type="checkbox" checked>
+          <span class="pref-toggle-slider"></span>
+        </label>
+        <span class="pref-content-label">Funding &amp; Deals</span>
+        <div class="pref-priority">
+          <span>Pri</span>
+          <select><option value="1">1</option><option value="2" selected>2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select>
+        </div>
+      </div>
+      <div class="pref-content-row" data-section="podcast">
+        <label class="pref-toggle">
+          <input type="checkbox" checked>
+          <span class="pref-toggle-slider"></span>
+        </label>
+        <span class="pref-content-label">Podcasts</span>
+        <div class="pref-priority">
+          <span>Pri</span>
+          <select><option value="1">1</option><option value="2">2</option><option value="3" selected>3</option><option value="4">4</option><option value="5">5</option></select>
+        </div>
+      </div>
+      <div class="pref-content-row" data-section="event">
+        <label class="pref-toggle">
+          <input type="checkbox" checked>
+          <span class="pref-toggle-slider"></span>
+        </label>
+        <span class="pref-content-label">Events</span>
+        <div class="pref-priority">
+          <span>Pri</span>
+          <select><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4" selected>4</option><option value="5">5</option></select>
+        </div>
+      </div>
+      <div class="pref-content-row" data-section="video">
+        <label class="pref-toggle">
+          <input type="checkbox" checked>
+          <span class="pref-toggle-slider"></span>
+        </label>
+        <span class="pref-content-label">Videos</span>
+        <div class="pref-priority">
+          <span>Pri</span>
+          <select><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5" selected>5</option></select>
+        </div>
+      </div>
+    </div>
+    <button class="prefs-reset-btn" onclick="resetPrefs()">Reset preferences</button>
+  </div>
+  <div class="date-picker">
+  <div class="dp-months"><span class="dp-month-tab active" data-month="2026-03">Mar 2026</span></div>
+  <div class="dp-dates-row active" data-month="2026-03"><span class="dp-date empty">1</span><a class="dp-date" href="2026-03-02.html">2</a><span class="dp-date empty">3</span><span class="dp-date empty">4</span><a class="dp-date" href="2026-03-05.html">5</a><span class="dp-date empty">6</span><a class="dp-date" href="2026-03-07.html">7</a><a class="dp-date" href="2026-03-08.html">8</a><a class="dp-date" href="2026-03-09.html">9</a><a class="dp-date" href="2026-03-10.html">10</a><a class="dp-date" href="2026-03-11.html">11</a><span class="dp-date empty">12</span><a class="dp-date current" href="2026-03-13.html">13</a><span class="dp-date empty">14</span><span class="dp-date empty">15</span><span class="dp-date empty">16</span><span class="dp-date empty">17</span><span class="dp-date empty">18</span><span class="dp-date empty">19</span><span class="dp-date empty">20</span><span class="dp-date empty">21</span><span class="dp-date empty">22</span><span class="dp-date empty">23</span><span class="dp-date empty">24</span><span class="dp-date empty">25</span><span class="dp-date empty">26</span><span class="dp-date empty">27</span><span class="dp-date empty">28</span><span class="dp-date empty">29</span><span class="dp-date empty">30</span><span class="dp-date empty">31</span></div>
+</div>
+<script>
+document.querySelectorAll('.dp-month-tab').forEach(function(tab) {
+  tab.addEventListener('click', function() {
+    var m = this.dataset.month;
+    var picker = this.closest('.date-picker');
+    picker.querySelectorAll('.dp-month-tab').forEach(function(t) { t.classList.remove('active'); });
+    picker.querySelectorAll('.dp-dates-row').forEach(function(r) { r.classList.remove('active'); });
+    this.classList.add('active');
+    picker.querySelector('.dp-dates-row[data-month="'+m+'"]').classList.add('active');
+  });
+});
+</script>
+  <div class="issue-nav"><a href="2026-03-11.html">&larr; Mar 11, 2026</a><span class="nav-placeholder">&rarr;</span></div>
+  <div style="max-width:960px;margin:0 auto;padding:0 32px;">
+    <h1 style="font-size:1.1rem;color:#888;font-weight:400;margin:20px 0 4px;">Friday, March 13, 2026</h1>
+  </div>
+  <div class="issue-tags" id="tags">
+    <div class="issue-tags-header">
+      <div></div>
+      <button class="tags-toggle-btn" onclick="this.closest('.issue-tags').classList.toggle('hidden-tags')">show/hide tags</button>
+    </div>
+    <div class="tag-group"><div class="tag-category">SECTIONS</div><span class="tag-pill blue">news</span> <span class="tag-pill green">funding</span> <span class="tag-pill purple">podcast</span> <span class="tag-pill gray">news</span> <span class="tag-pill red">video</span></div>
+    <div class="tag-group"><div class="tag-category">SOURCES</div><span class="tag-pill gray">techcrunch-ai</span> <span class="tag-pill gray">the-verge-ai</span> <span class="tag-pill gray">ars-technica-ai</span> <span class="tag-pill gray">ben's-bites</span> <span class="tag-pill gray">crunchbase-ai-funding</span> <span class="tag-pill gray">listen</span> <span class="tag-pill gray">rsvp</span> <span class="tag-pill gray">watch</span></div>
+    <div class="tag-group"><div class="tag-category">TOPICS</div><span class="tag-pill gray">microsoft</span> <span class="tag-pill blue">funding</span> <span class="tag-pill blue">startup</span> <span class="tag-pill purple">agents</span> <span class="tag-pill blue">acquisition</span> <span class="tag-pill gray">google</span> <span class="tag-pill purple">robotics</span></div>
+  </div>
+
+  <div class="issue-layout">
+    <aside class="toc-sidebar">
+      <div class="toc-toggle" onclick="this.parentElement.classList.toggle('collapsed')">TABLE OF CONTENTS</div>
+      <ul class="toc-list">
+    <li><a href="#top-ai-stories">Top AI Stories</a>
+      <div class="toc-sub">
+        <a href="#top-ai-stories-0">Steven Spielberg says he’s ‘never used AI’ in...</a>
+        <a href="#top-ai-stories-1">The wild six weeks for NanoClaw’s creator tha...</a>
+        <a href="#top-ai-stories-2">Spotify will let you edit your Taste Profile ...</a>
+        <a href="#top-ai-stories-3">Microsoft’s Copilot AI assistant is coming to...</a>
+        <a href="#top-ai-stories-4">M5 MacBook Air review: Still the best MacBook...</a>
+      </div>
+    </li>
+    <li><a href="#funding-deals">Funding &amp; Deals</a>
+      <div class="toc-sub">
+        <a href="#funding-deals-0">Nyne, founded by a father-son duo, gives AI a...</a>
+        <a href="#funding-deals-1">The biggest AI stories of the year (so far)</a>
+        <a href="#funding-deals-2">The $32B acquisition that one VC is calling t...</a>
+        <a href="#funding-deals-3">The Week’s 10 Biggest Funding Rounds: AI, Rob...</a>
+      </div>
+    </li>
+    <li><a href="#podcasts-worth-your-commute">Podcasts Worth Your Commute</a>
+      <div class="toc-sub">
+        <a href="#podcasts-worth-your-commute-0">All-In Podcast — Iran War, Oil Shock, Off Ram...</a>
+      </div>
+    </li>
+    <li><a href="#events-near-you-london-oxford">Events Near You (London &amp; Oxford)</a>
+      <div class="toc-sub">
+        <a href="#events-near-you-london-oxford-0">the residency - demo day</a>
+        <a href="#events-near-you-london-oxford-1">Taiwan Demo Day 2026 | Spring</a>
+        <a href="#events-near-you-london-oxford-2">Prime Intellect Day</a>
+        <a href="#events-near-you-london-oxford-3">AI Builders Welcome Party</a>
+        <a href="#events-near-you-london-oxford-4">GTC 2026 Happy Hours: SGLang x RadixArk</a>
+      </div>
+    </li>
+    <li><a href="#videos-going-viral">Videos Going Viral</a>
+      <div class="toc-sub">
+        <a href="#videos-going-viral-0">Overwatch 2 was a big mistake - Overwatch cre...</a>
+      </div>
+    </li>
+      </ul>
+    </aside>
+
+    <div class="issue-content">
+    <h2 id="top-ai-stories">Top AI Stories</h2>
+    <h3 id="top-ai-stories-0"><a href="https://techcrunch.com/2026/03/13/steven-spielberg-says-hes-never-used-ai-in-any-of-his-films/">Steven Spielberg says he’s ‘never used AI’ in any of his films</a></h3>
+    <p>At SXSW, Steven Spielberg said AI has uses in many fields, but not when it comes to replacing creative people in film and TV writing</p>
+    <p class="source-label">Source: <a href="https://techcrunch.com/2026/03/13/steven-spielberg-says-hes-never-used-ai-in-any-of-his-films/">TechCrunch AI</a></p>
+    <h3 id="top-ai-stories-1"><a href="https://techcrunch.com/2026/03/13/the-wild-six-weeks-for-nanoclaws-creator-that-led-to-a-deal-with-docker/">The wild six weeks for NanoClaw’s creator that led to a deal with Docker</a></h3>
+    <p>Gavriel Cohen is living an open source developer's dream as his project has achieved acclaim and a partnership with Docker in a matter of weeks</p>
+    <p class="source-label">Source: <a href="https://techcrunch.com/2026/03/13/the-wild-six-weeks-for-nanoclaws-creator-that-led-to-a-deal-with-docker/">TechCrunch AI</a></p>
+    <h3 id="top-ai-stories-2"><a href="https://techcrunch.com/2026/03/13/spotify-will-let-you-edit-your-taste-profile-to-control-your-recommendations/">Spotify will let you edit your Taste Profile to control your recommendations</a></h3>
+    <p>When you edit your Taste Profile, you'll impact your personalized playlists like Discover Weekly, recommendations, and Wrapped</p>
+    <p class="source-label">Source: <a href="https://techcrunch.com/2026/03/13/spotify-will-let-you-edit-your-taste-profile-to-control-your-recommendations/">TechCrunch AI</a></p>
+    <h3 id="top-ai-stories-3"><a href="https://www.theverge.com/games/894799/microsoft-gaming-copilot-ai-xbox-consoles">Microsoft’s Copilot AI assistant is coming to current-gen Xbox consoles this year</a></h3>
+    <p>Xbox is getting ready to launch its Gaming Copilot AI assistant on "current-generation consoles" this year, according to a report from GamesRadar. Sonali Yadav, Xbox's product manager for gaming AI, revealed the news during a panel at the Game Developers Conference (GDC), adding that the company wil</p>
+    <p class="source-label">Source: <a href="https://www.theverge.com/games/894799/microsoft-gaming-copilot-ai-xbox-consoles">The Verge AI</a></p>
+    <h3 id="top-ai-stories-4"><a href="https://arstechnica.com/gadgets/2026/03/m5-macbook-air-review-still-the-best-macbook-for-almost-everybody/">M5 MacBook Air review: Still the best MacBook for almost everybody</a></h3>
+    <p>The M5 MacBook Air is a minor upgrade, but minor upgrades add up over time</p>
+    <p class="source-label">Source: <a href="https://arstechnica.com/gadgets/2026/03/m5-macbook-air-review-still-the-best-macbook-for-almost-everybody/">Ars Technica AI</a></p>
+    <h3 id="top-ai-stories-5"><a href="https://www.bensbites.com/p/how-and-what-im-building-this-week">How (and what) I'm building this week</a></h3>
+    <p>my stack, instructions, tools and skills</p>
+    <p class="source-label">Source: <a href="https://www.bensbites.com/p/how-and-what-im-building-this-week">Ben's Bites</a></p>
+    <h2 id="funding-deals">Funding &amp; Deals</h2>
+    <h3 id="funding-deals-0"><a href="https://techcrunch.com/2026/03/13/nyne-founded-by-a-father-son-duo-gives-ai-agents-the-human-context-theyre-missing/">Nyne, founded by a father-son duo, gives AI agents the human context they’re missing</a></h3>
+    <p>The data infrastructure startup raised $5.3 million in seed funding led by Wischoff Ventures and South Park Commons</p>
+    <p class="source-label">Source: <a href="https://techcrunch.com/2026/03/13/nyne-founded-by-a-father-son-duo-gives-ai-agents-the-human-context-theyre-missing/">TechCrunch AI</a></p>
+    <h3 id="funding-deals-1"><a href="https://techcrunch.com/2026/03/13/the-biggest-ai-stories-of-the-year-so-far/">The biggest AI stories of the year (so far)</a></h3>
+    <p>The AI industry is constantly churning out news, like major acquisitions, indie developer successes, public outcry, and existentially dangerous contract negotiations</p>
+    <p class="source-label">Source: <a href="https://techcrunch.com/2026/03/13/the-biggest-ai-stories-of-the-year-so-far/">TechCrunch AI</a></p>
+    <h3 id="funding-deals-2"><a href="https://techcrunch.com/video/the-32b-acquisition-that-one-vc-is-calling-the-deal-of-the-decade/">The $32B acquisition that one VC is calling the ‘Deal of the Decade’</a></h3>
+    <p>According to Index Ventures Partner Shardul Shah, cybersecurity startup Wiz sits “at the center of three tailwinds: AI, cloud, and security spend.” Those tailwinds powered what just became the largest venture-backed acquisition in history — Google’s $32 billion deal, finalized after a declined 2024</p>
+    <p class="source-label">Source: <a href="https://techcrunch.com/video/the-32b-acquisition-that-one-vc-is-calling-the-deal-of-the-decade/">TechCrunch AI</a></p>
+    <h3 id="funding-deals-3"><a href="https://news.crunchbase.com/venture/biggest-funding-rounds-ai-robotics-ecommerce-quince/">The Week’s 10 Biggest Funding Rounds: AI, Robotics And E-Commerce Top The Ranks</a></h3>
+    <p>Busy week, big checks, lots of AI and robotics. That, in ultra-brief synopsis form, characterized the general startup fundraising environment this week. Notably, the two largest global rounds were U.K.- and Paris-based</p>
+    <p class="source-label">Source: <a href="https://news.crunchbase.com/venture/biggest-funding-rounds-ai-robotics-ecommerce-quince/">Crunchbase AI Funding</a></p>
+    <h2 id="podcasts-worth-your-commute">Podcasts Worth Your Commute</h2>
+    <h3 id="podcasts-worth-your-commute-0"><a href="https://allinchamathjason.libsyn.com/iran-war-oil-shock-off-ramps-ais-revenue-explosion-and-pr-nightmare">All-In Podcast — Iran War, Oil Shock, Off Ramps, AI's Revenue Explosion and PR Nightmare</a></h3>
+    <p class="source-label">Source: <a href="https://allinchamathjason.libsyn.com/iran-war-oil-shock-off-ramps-ais-revenue-explosion-and-pr-nightmare">Listen</a></p>
+    <h2 id="events-near-you-london-oxford">Events Near You (London &amp; Oxford)</h2>
+    <h3 id="events-near-you-london-oxford-0"><a href="https://lu.ma/rt39ip3d">the residency - demo day</a></h3>
+    <p>Luma (San Francisco)</p>
+    <p class="source-label">Source: <a href="https://lu.ma/rt39ip3d">RSVP</a></p>
+    <h3 id="events-near-you-london-oxford-1"><a href="https://lu.ma/1xmjyrk2">Taiwan Demo Day 2026 | Spring</a></h3>
+    <p>Luma (Mountain View)</p>
+    <p class="source-label">Source: <a href="https://lu.ma/1xmjyrk2">RSVP</a></p>
+    <h3 id="events-near-you-london-oxford-2"><a href="https://lu.ma/zjpepfzn">Prime Intellect Day</a></h3>
+    <p>Luma (San Francisco)</p>
+    <p class="source-label">Source: <a href="https://lu.ma/zjpepfzn">RSVP</a></p>
+    <h3 id="events-near-you-london-oxford-3"><a href="https://lu.ma/gtcsj-builderswelcome">AI Builders Welcome Party</a></h3>
+    <p>Luma (San Jose)</p>
+    <p class="source-label">Source: <a href="https://lu.ma/gtcsj-builderswelcome">RSVP</a></p>
+    <h3 id="events-near-you-london-oxford-4"><a href="https://lu.ma/hgj595as">GTC 2026 Happy Hours: SGLang x RadixArk</a></h3>
+    <p>Luma (San Jose)</p>
+    <p class="source-label">Source: <a href="https://lu.ma/hgj595as">RSVP</a></p>
+    <h3 id="events-near-you-london-oxford-5"><a href="https://lu.ma/agents_after_hours">Agents After Hours</a></h3>
+    <p>Luma (Santa Clara)</p>
+    <p class="source-label">Source: <a href="https://lu.ma/agents_after_hours">RSVP</a></p>
+    <h3 id="events-near-you-london-oxford-6"><a href="https://lu.ma/spc-fei-fei">-1 to World Labs with Dr. Fei-Fei Li</a></h3>
+    <p>Luma (San Francisco)</p>
+    <p class="source-label">Source: <a href="https://lu.ma/spc-fei-fei">RSVP</a></p>
+    <h3 id="events-near-you-london-oxford-7"><a href="https://lu.ma/gtc-2026">GTC 2026 After Hours: From Models to Agents to Infra</a></h3>
+    <p>Luma (Sunnyvale)</p>
+    <p class="source-label">Source: <a href="https://lu.ma/gtc-2026">RSVP</a></p>
+    <h2 id="videos-going-viral">Videos Going Viral</h2>
+    <h3 id="videos-going-viral-0"><a href="https://www.youtube.com/watch?v=5imgkwupzAQ">Overwatch 2 was a big mistake - Overwatch creator explains | Jeff Kaplan and Lex Fridman</a></h3>
+    <p>Matt Wolfe</p>
+    <p class="source-label">Source: <a href="https://www.youtube.com/watch?v=5imgkwupzAQ">Watch</a></p>
+    </div>
+  </div>
+  <div class="issue-nav"><a href="2026-03-11.html">&larr; Mar 11, 2026</a><span class="nav-placeholder">&rarr;</span></div>
+  <footer>
+    <a href="../index.html">Home</a> &middot; <a href="../archive.html">All Issues</a>
+  </footer>
+  <script>
+// ── Theme toggle ────────────────────────────────────────────────────────
+function setTheme(theme) {
+  if (theme === 'system') {
+    localStorage.removeItem('theme');
+    var isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    document.documentElement.classList.toggle('dark', isDark);
+  } else if (theme === 'dark') {
+    localStorage.setItem('theme', 'dark');
+    document.documentElement.classList.add('dark');
+  } else {
+    localStorage.setItem('theme', 'light');
+    document.documentElement.classList.remove('dark');
+  }
+  syncThemeButtons();
+}
+
+function syncThemeButtons() {
+  var stored = localStorage.getItem('theme');
+  var active = stored || 'system';
+  document.querySelectorAll('.theme-btn').forEach(function(btn) {
+    btn.classList.toggle('active', btn.getAttribute('data-theme') === active);
+  });
+}
+
+// Apply saved theme on load
+(function() {
+  var stored = localStorage.getItem('theme');
+  if (stored === 'dark') {
+    document.documentElement.classList.add('dark');
+  } else if (stored === 'light') {
+    document.documentElement.classList.remove('dark');
+  } else {
+    var isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    document.documentElement.classList.toggle('dark', isDark);
+  }
+  syncThemeButtons();
+})();
+
+// Toggle timeline card expansion (issue pages)
+document.querySelectorAll('.tl-entry .tl-header').forEach(function(el) {
+  el.addEventListener('click', function(e) {
+    if (e.target.tagName === 'A') return;
+    this.parentElement.classList.toggle('expanded');
+  });
+});
+
+// Smooth TOC scroll
+document.querySelectorAll('.toc-list a').forEach(function(a) {
+  a.addEventListener('click', function(e) {
+    var target = document.querySelector(this.getAttribute('href'));
+    if (target) {
+      e.preventDefault();
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      history.replaceState(null, '', this.getAttribute('href'));
+    }
+  });
+});
+
+// ── Filter (smol.ai-style with checkboxes) ──────────────────────────────
+var filterInput = document.getElementById('regex-filter');
+if (filterInput) {
+  var filterError = document.getElementById('regex-filter-error');
+  filterInput.addEventListener('input', function() {
+    var val = this.value;
+    var pattern;
+    try {
+      pattern = new RegExp(val, 'i');
+      if (filterError) filterError.classList.add('hidden');
+    } catch(e) {
+      if (filterError) filterError.classList.remove('hidden');
+      return;
+    }
+
+    var byTitle = document.getElementById('filter-by-title');
+    var byDesc = document.getElementById('filter-by-description');
+    var byTags = document.getElementById('filter-by-tags');
+    var checkTitle = byTitle ? byTitle.checked : true;
+    var checkDesc = byDesc ? byDesc.checked : false;
+    var checkTags = byTags ? byTags.checked : false;
+
+    document.querySelectorAll('.issue-row').forEach(function(li) {
+      if (!val) { li.classList.remove('hidden'); return; }
+      var title = li.getAttribute('data-post-title') || '';
+      var desc = li.getAttribute('data-post-description') || '';
+      var tags = li.getAttribute('data-post-all-tags') || '';
+      var match = false;
+      if (checkTitle && pattern.test(title)) match = true;
+      if (checkDesc && pattern.test(desc)) match = true;
+      if (checkTags && pattern.test(tags)) match = true;
+      li.classList.toggle('hidden', !match);
+    });
+  });
+
+  // Re-filter when checkboxes change
+  ['filter-by-title', 'filter-by-description', 'filter-by-tags'].forEach(function(id) {
+    var cb = document.getElementById(id);
+    if (cb) cb.addEventListener('change', function() {
+      filterInput.dispatchEvent(new Event('input'));
+    });
+  });
+}
+
+// ── Preference engine ──────────────────────────────────────────────────────
+
+var PREFS_KEY = 'aibrief_prefs';
+
+function defaultPrefs() {
+  return {
+    topics: [],
+    sections: {
+      news:    { on: true, pri: 1 },
+      funding: { on: true, pri: 2 },
+      podcast: { on: true, pri: 3 },
+      event:   { on: true, pri: 4 },
+      video:   { on: true, pri: 5 }
+    }
+  };
+}
+
+function loadPrefs() {
+  try {
+    var raw = localStorage.getItem(PREFS_KEY);
+    if (raw) return JSON.parse(raw);
+  } catch(e) {}
+  return defaultPrefs();
+}
+
+function savePrefs(prefs) {
+  try { localStorage.setItem(PREFS_KEY, JSON.stringify(prefs)); } catch(e) {}
+}
+
+function applyPrefs() {
+  var prefs = loadPrefs();
+  var hasTopics = prefs.topics.length > 0;
+
+  // Apply to timeline entries
+  document.querySelectorAll('li.tl-entry[data-section]').forEach(function(li) {
+    var section = li.getAttribute('data-section');
+    var tags = (li.getAttribute('data-tags') || '').split(',').filter(Boolean);
+
+    li.classList.remove('preferred', 'dimmed', 'section-hidden');
+
+    // Check if section is disabled
+    if (prefs.sections[section] && !prefs.sections[section].on) {
+      li.classList.add('section-hidden');
+      return;
+    }
+
+    if (!hasTopics) return; // no topic prefs = show all equally
+
+    // Check tag match
+    var matched = false;
+    for (var i = 0; i < tags.length; i++) {
+      if (prefs.topics.indexOf(tags[i]) !== -1) { matched = true; break; }
+    }
+
+    if (matched) {
+      li.classList.add('preferred');
+    } else {
+      li.classList.add('dimmed');
+    }
+  });
+
+  // Apply to section headers
+  document.querySelectorAll('li.tl-section[data-section]').forEach(function(li) {
+    var section = li.getAttribute('data-section');
+    li.classList.remove('collapsed');
+    if (prefs.sections[section] && !prefs.sections[section].on) {
+      li.classList.add('collapsed');
+    }
+  });
+
+  // Sync panel UI
+  syncPanelUI(prefs);
+}
+
+function syncPanelUI(prefs) {
+  // Sync topic pills
+  document.querySelectorAll('.pref-pill[data-topic]').forEach(function(pill) {
+    var topic = pill.getAttribute('data-topic');
+    if (prefs.topics.indexOf(topic) !== -1) {
+      pill.classList.add('active');
+    } else {
+      pill.classList.remove('active');
+    }
+  });
+
+  // Sync content rows
+  document.querySelectorAll('.pref-content-row[data-section]').forEach(function(row) {
+    var section = row.getAttribute('data-section');
+    var cfg = prefs.sections[section];
+    if (!cfg) return;
+    var cb = row.querySelector('input[type="checkbox"]');
+    var sel = row.querySelector('select');
+    if (cb) cb.checked = cfg.on;
+    if (sel) sel.value = cfg.pri;
+  });
+}
+
+// Panel open/close
+function togglePrefsPanel() {
+  var panel = document.querySelector('.prefs-panel');
+  var overlay = document.querySelector('.prefs-overlay');
+  if (panel && overlay) {
+    panel.classList.toggle('open');
+    overlay.classList.toggle('open');
+  }
+}
+
+// Reset handler
+function resetPrefs() {
+  localStorage.removeItem(PREFS_KEY);
+  applyPrefs();
+}
+
+// Pill click handlers
+document.querySelectorAll('.pref-pill[data-topic]').forEach(function(pill) {
+  pill.addEventListener('click', function() {
+    var prefs = loadPrefs();
+    var topic = this.getAttribute('data-topic');
+    var idx = prefs.topics.indexOf(topic);
+    if (idx === -1) {
+      prefs.topics.push(topic);
+    } else {
+      prefs.topics.splice(idx, 1);
+    }
+    savePrefs(prefs);
+    applyPrefs();
+  });
+});
+
+// Content toggle + priority handlers
+document.querySelectorAll('.pref-content-row[data-section]').forEach(function(row) {
+  var section = row.getAttribute('data-section');
+
+  var cb = row.querySelector('input[type="checkbox"]');
+  if (cb) {
+    cb.addEventListener('change', function() {
+      var prefs = loadPrefs();
+      if (prefs.sections[section]) prefs.sections[section].on = this.checked;
+      savePrefs(prefs);
+      applyPrefs();
+    });
+  }
+
+  var sel = row.querySelector('select');
+  if (sel) {
+    sel.addEventListener('change', function() {
+      var prefs = loadPrefs();
+      if (prefs.sections[section]) prefs.sections[section].pri = parseInt(this.value);
+      savePrefs(prefs);
+      applyPrefs();
+    });
+  }
+});
+
+// Apply on page load
+applyPrefs();
+
+// ── Search modal ────────────────────────────────────────────────────────
+function openSearch() {
+  var overlay = document.getElementById('search-overlay');
+  var modal = document.getElementById('search-modal');
+  if (!overlay || !modal) return;
+  overlay.classList.add('open');
+  modal.classList.add('open');
+  var input = document.getElementById('search-input');
+  if (input) { input.value = ''; input.focus(); }
+  renderSearchResults('');
+}
+
+function closeSearch() {
+  var overlay = document.getElementById('search-overlay');
+  var modal = document.getElementById('search-modal');
+  if (overlay) overlay.classList.remove('open');
+  if (modal) modal.classList.remove('open');
+}
+
+// Cmd+K / Ctrl+K to open, Escape to close
+document.addEventListener('keydown', function(e) {
+  if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+    e.preventDefault();
+    openSearch();
+  }
+  if (e.key === 'Escape') {
+    closeSearch();
+  }
+});
+
+// Search input handler
+var searchInput = document.getElementById('search-input');
+if (searchInput) {
+  searchInput.addEventListener('input', function() {
+    renderSearchResults(this.value);
+  });
+}
+
+function getSearchData() {
+  var el = document.getElementById('search-data');
+  if (!el) return [];
+  try { return JSON.parse(el.textContent); } catch(e) { return []; }
+}
+
+function renderSearchResults(query) {
+  var container = document.getElementById('search-results');
+  if (!container) return;
+  var data = getSearchData();
+  if (!query.trim()) {
+    // Show recent issues
+    var recent = data.slice(0, 10);
+    container.innerHTML = recent.map(function(item) {
+      return '<a class="search-result-item" href="' + item.url + '">' +
+        '<span class="sr-date">' + item.dateDisplay + '</span>' +
+        '<span class="sr-title">' + item.title + '</span>' +
+        '</a>';
+    }).join('');
+    return;
+  }
+  var q = query.toLowerCase();
+  var matches = data.filter(function(item) {
+    return item.title.toLowerCase().indexOf(q) !== -1 ||
+           item.summary.toLowerCase().indexOf(q) !== -1 ||
+           item.tags.join(' ').toLowerCase().indexOf(q) !== -1 ||
+           item.dateDisplay.toLowerCase().indexOf(q) !== -1;
+  });
+  if (matches.length === 0) {
+    container.innerHTML = '<div class="search-empty">No results found</div>';
+    return;
+  }
+  container.innerHTML = matches.slice(0, 15).map(function(item) {
+    var tagHtml = item.tags.slice(0, 4).map(function(t) {
+      return '<span class="tag-pill gray" style="font-size:0.7rem;padding:1px 6px;">' + t + '</span>';
+    }).join(' ');
+    return '<a class="search-result-item" href="' + item.url + '">' +
+      '<span class="sr-date">' + item.dateDisplay + '</span>' +
+      '<span class="sr-title">' + item.title + '</span>' +
+      (tagHtml ? '<span class="sr-tags">' + tagHtml + '</span>' : '') +
+      '</a>';
+  }).join('');
+}
+</script>
+</body>
+</html>
