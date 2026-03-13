@@ -221,9 +221,9 @@ FORMSPREE_ENDPOINT = os.getenv("FORMSPREE_ENDPOINT", "")
 
 # ── Branding ─────────────────────────────────────────────────────────────────
 
-NEWSLETTER_NAME = "The AI Brief"
+NEWSLETTER_NAME = "Oxford AI Pulse"
 OXFORD_BLUE = "#002147"
-SUBSTACK_URL = os.getenv("SUBSTACK_URL", "https://yourname.substack.com")
+SUBSTACK_URL = os.getenv("SUBSTACK_URL", "https://pulkitmishra13.substack.com")
 
 # ── Analytics & Beta ─────────────────────────────────────────────────────────
 
@@ -236,4 +236,4 @@ BETA_NOINDEX = True
 
 REQUEST_TIMEOUT = 15
 MAX_RETRIES = 2
-USER_AGENT = "TheAIBrief/1.0 (+https://github.com/pulkit)"
+USER_AGENT = "OxfordAIPulse/1.0 (+https://github.com/pulkitmishra1995-sys)"

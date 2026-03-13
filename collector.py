@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Content collector for The AI Brief — fetches articles, podcasts, videos,
+Content collector for Oxford AI Pulse — fetches articles, podcasts, videos,
 and events from configured sources.
 
 Usage:
@@ -460,7 +460,7 @@ def collect_all(target_date=None):
     if target_date is None:
         target_date = date.today().isoformat()
 
-    print(f"\nThe AI Brief — Collector — {target_date}")
+    print(f"\nOxford AI Pulse — Collector — {target_date}")
     print("=" * 50)
 
     seen = load_seen_articles()

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Summarizer for The AI Brief — sends collected content to Claude API
+Summarizer for Oxford AI Pulse — sends collected content to Claude API
 to generate a curated newsletter draft in markdown.
 
 Usage:
@@ -20,37 +20,45 @@ from config import (
 )
 
 
-SYSTEM_PROMPT = f"""You are the editor of "{NEWSLETTER_NAME}", a daily AI, tech, and startup newsletter for Oxford MBA students.
+SYSTEM_PROMPT = f"""You are the editor of "{NEWSLETTER_NAME}", a daily AI, tech, and startup newsletter for Oxford MBA students and the broader Oxford community.
 
-Write a sharp, concise, slightly witty digest. Your audience is smart, busy, and wants signal over noise. Cover AI, tech, startups, and venture capital.
+Write a sharp, insightful, slightly witty digest. Your audience is smart, ambitious, and wants signal over noise. They care about AI, tech, startups, venture capital, and how these trends reshape business and society.
 
 Output markdown with EXACTLY these sections:
 
 # {NEWSLETTER_NAME}
 
 ## Top AI Stories
-5-7 items. Each item: **Bold headline** — 1-2 sentence summary. [Source](url)
+5-7 items. For each item:
+- **Bold headline** — 2-3 sentence summary covering what happened and key details (funding amounts, user numbers, technical specs where relevant).
+- **Why it matters:** 1 sentence on the broader significance — what does this mean for the industry, for builders, or for business leaders?
+- [Source](url)
 
 ## Funding & Deals
-2-4 notable AI/tech startup funding rounds, acquisitions, or VC moves. Each: **Company — $Xm Series Y** — 1 sentence on what they do and why it matters. [Source](url)
+2-4 notable AI/tech startup funding rounds, acquisitions, or VC moves. For each:
+- **Company — $Xm Series Y** — 2 sentences: what the company does and what the funding signals about the market.
+- **Why it matters:** 1 sentence on the investment thesis or market trend.
+- [Source](url)
 If no funding news, skip this section entirely.
 
 ## Podcasts Worth Your Commute
-3-5 recent episodes. Each: **Show — Episode title** — 1 sentence on why it's worth listening. [Listen](url)
+3-5 recent episodes. Each: **Show — Episode title** — 1-2 sentences on the key takeaway and why it's worth listening. [Listen](url)
 
 ## Events Near You
 London/Oxford/Cambridge AI/tech/startup events this week. Each: **Event name** — date, location. [RSVP](url)
 If no events found, write "Nothing on the radar this week — but keep an eye on lu.ma and Eventbrite."
 
 ## Videos Going Viral
-3-5 notable AI/tech videos. Each: **Title** — 1 sentence summary. [Watch](url)
+3-5 notable AI/tech videos. Each: **Title** — 1-2 sentence summary of the key insight. [Watch](url)
 
 ---
 
 Rules:
 - Be opinionated. Skip boring press releases. Highlight what actually matters.
-- Keep each item to 1-2 sentences max. No filler.
-- Use conversational tone but respect your audience's intelligence.
+- Include specific numbers: funding amounts, user counts, market size, performance benchmarks.
+- Pull key quotes from articles when they're punchy and illuminating.
+- Use conversational tone but respect your audience's intelligence — these are MBAs and founders.
+- "Why it matters" should connect the news to broader trends (market shifts, competitive dynamics, regulatory impact, career implications).
 - If the source data is thin, say so briefly rather than padding.
 - End with a one-liner sign-off like "Stay curious." or similar."""
 
@@ -83,7 +91,7 @@ def build_prompt(items, target_date):
         for a in articles:
             prompt_parts.append(f"- [{a['source']}] {a['title']}")
             if a.get("summary"):
-                prompt_parts.append(f"  Summary: {a['summary'][:200]}")
+                prompt_parts.append(f"  Summary: {a['summary'][:500]}")
             if a.get("url"):
                 prompt_parts.append(f"  URL: {a['url']}")
             prompt_parts.append("")
@@ -92,6 +100,8 @@ def build_prompt(items, target_date):
         prompt_parts.append(f"=== PODCASTS ({len(podcasts)} items) ===")
         for p in podcasts:
             prompt_parts.append(f"- [{p['source']}] {p['title']}")
+            if p.get("summary"):
+                prompt_parts.append(f"  Summary: {p['summary'][:300]}")
             if p.get("url"):
                 prompt_parts.append(f"  URL: {p['url']}")
             prompt_parts.append("")
@@ -100,6 +110,8 @@ def build_prompt(items, target_date):
         prompt_parts.append(f"=== EVENTS ({len(events)} items) ===")
         for e in events:
             prompt_parts.append(f"- [{e['source']}] {e['title']}")
+            if e.get("date"):
+                prompt_parts.append(f"  Date: {e['date']}")
             if e.get("url"):
                 prompt_parts.append(f"  URL: {e['url']}")
             prompt_parts.append("")
@@ -108,6 +120,8 @@ def build_prompt(items, target_date):
         prompt_parts.append(f"=== VIDEOS ({len(videos)} items) ===")
         for v in videos:
             prompt_parts.append(f"- [{v['source']}] {v['title']}")
+            if v.get("summary"):
+                prompt_parts.append(f"  Summary: {v['summary'][:300]}")
             if v.get("url"):
                 prompt_parts.append(f"  URL: {v['url']}")
             prompt_parts.append("")
@@ -201,12 +215,13 @@ def build_local_draft(items, target_date):
         summary = (a.get("summary") or "").strip()
         url = a.get("url", "")
         source = a.get("source", "")
-        # Truncate summary to first sentence
         if summary:
-            first_sentence = summary.split(". ")[0].rstrip(".")
-            if len(first_sentence) > 150:
-                first_sentence = first_sentence[:147] + "..."
-            lines.append(f"- **{title}** — {first_sentence}. [{source}]({url})")
+            # Use up to 2-3 sentences for richer summaries
+            sentences = summary.split(". ")
+            rich_summary = ". ".join(sentences[:3]).rstrip(".")
+            if len(rich_summary) > 300:
+                rich_summary = rich_summary[:297] + "..."
+            lines.append(f"- **{title}** — {rich_summary}. [{source}]({url})")
         else:
             lines.append(f"- **{title}** [{source}]({url})")
         lines.append("")
@@ -224,10 +239,11 @@ def build_local_draft(items, target_date):
             url = a.get("url", "")
             source = a.get("source", "")
             if summary:
-                first_sentence = summary.split(". ")[0].rstrip(".")
-                if len(first_sentence) > 150:
-                    first_sentence = first_sentence[:147] + "..."
-                lines.append(f"- **{title}** — {first_sentence}. [{source}]({url})")
+                sentences = summary.split(". ")
+                rich_summary = ". ".join(sentences[:3]).rstrip(".")
+                if len(rich_summary) > 300:
+                    rich_summary = rich_summary[:297] + "..."
+                lines.append(f"- **{title}** — {rich_summary}. [{source}]({url})")
             else:
                 lines.append(f"- **{title}** [{source}]({url})")
             lines.append("")
@@ -367,7 +383,7 @@ def summarize(target_date=None, local_mode=False):
         if added_videos > 0:
             print(f"  Supplemented with {added_videos} video(s) from recent days")
 
-    print(f"\nThe AI Brief — Summarizer — {target_date}")
+    print(f"\n{NEWSLETTER_NAME} — Summarizer — {target_date}")
     print("=" * 50)
     print(f"  Loaded {len(items)} items from {collected_file.name}")
 

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Publisher for The AI Brief — converts markdown draft to HTML site page,
+Publisher for Oxford AI Pulse — converts markdown draft to HTML site page,
 sends email to subscribers, and updates site index/archive.
 
 Usage:
@@ -1156,8 +1156,8 @@ def build_hero_section():
     """Build smol.ai-style stacked hero: title, subtitle, description, social proof, subscribe embed."""
     return f"""<section class="hero" id="subscribe">
     <h1 class="hero-title">{NEWSLETTER_NAME}</h1>
-    <p class="hero-subtitle">Your daily AI &amp; tech digest.</p>
-    <p class="hero-description">We curate the top AI stories, funding rounds, podcasts, events &amp; videos, and send you a roundup each day.</p>
+    <p class="hero-subtitle">AI &amp; tech signal for Oxford MBAs &amp; founders.</p>
+    <p class="hero-description">Top AI stories, funding rounds, podcasts, London/Oxford events &amp; videos — curated daily so you don&rsquo;t have to doom-scroll.</p>
     <div class="hero-subscribe">
       <iframe src="{SUBSTACK_URL}/embed" width="100%" height="150" style="border:none;background:transparent;" frameborder="0" scrolling="no"></iframe>
     </div>
@@ -1441,7 +1441,7 @@ def update_index_page(timeline_html, target_date, md_content=None):
 
   <footer>
     <h3>Let&rsquo;s Connect</h3>
-    <p>Built with care by an Oxford MBA nerd who loves AI.</p>
+    <p>Built with care by an Oxford MBA who can&rsquo;t stop reading about AI.</p>
     <nav class="footer-links">
       <a href="archive.html">Archive</a>
       <a href="#subscribe">Subscribe</a>
@@ -1776,7 +1776,7 @@ def publish(target_date=None, email_only=False, site_only=False, dry_run=False):
     with open(draft_file, "r", encoding="utf-8") as f:
         md_content = f.read()
 
-    print(f"\nThe AI Brief — Publisher — {target_date}")
+    print(f"\n{NEWSLETTER_NAME} — Publisher — {target_date}")
     print("=" * 50)
 
     content_html = markdown_to_html(md_content)
