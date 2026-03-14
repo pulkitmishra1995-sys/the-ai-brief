@@ -1409,12 +1409,17 @@ def build_search_data():
 
 
 def _get_latest_collected_json():
-    """Find and load the most recent collected JSON file."""
+    """Find and load the most recent non-empty collected JSON file."""
     json_files = sorted(COLLECTED_DIR.glob("*.json"), reverse=True)
-    if not json_files:
-        return []
-    with open(json_files[0], "r", encoding="utf-8") as f:
-        return json.load(f)
+    for jf in json_files:
+        try:
+            with open(jf, "r", encoding="utf-8") as f:
+                data = json.load(f)
+            if data:
+                return data
+        except (json.JSONDecodeError, OSError):
+            continue
+    return []
 
 
 def _youtube_thumbnail(url):
