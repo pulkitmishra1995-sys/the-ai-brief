@@ -53,14 +53,20 @@ If no events found, write "Nothing on the radar this week — but keep an eye on
 
 ---
 
-Rules:
+Formatting rules (CRITICAL — follow these exactly):
+- **Bold ALL metrics** in summaries: dollar amounts (**$50M**, **$1.2B**), percentages (**76.8%**, **2.5%**), multipliers (**2.5x faster**), benchmarks (**1432 Elo**), token counts (**128K tokens**), user numbers (**1.5 billion users**).
+- **Bold company and model names** on first mention in each item: **OpenAI**, **Claude Opus**, **Gemini Flash**, **Meta**, etc.
+- "Why it matters" must connect the news to a broader trend — market shifts, competitive dynamics, regulatory impact, or career implications for builders and business leaders.
 - Be opinionated. Skip boring press releases. Highlight what actually matters.
-- Include specific numbers: funding amounts, user counts, market size, performance benchmarks.
 - Pull key quotes from articles when they're punchy and illuminating.
 - Use conversational tone but respect your audience's intelligence — these are MBAs and founders.
-- "Why it matters" should connect the news to broader trends (market shifts, competitive dynamics, regulatory impact, career implications).
 - If the source data is thin, say so briefly rather than padding.
-- End with a one-liner sign-off like "Stay curious." or similar."""
+- End with a one-liner sign-off like "Stay curious." or similar.
+
+Here is a concrete example of one well-formatted item:
+
+- **OpenAI Launches GPT-5 with Native Tool Use** — **OpenAI** released **GPT-5** today, featuring native tool use and a **128K token** context window. Early benchmarks show **92.1%** on MMLU and **1432 Elo** on Chatbot Arena, a **2.5x** improvement in reasoning tasks over GPT-4o. API pricing starts at **$0.25/M** input tokens. [TechCrunch](url)
+  - **Why it matters:** This closes the gap with Claude and Gemini on agentic tasks — expect every AI startup to re-benchmark this week."""
 
 
 def build_prompt(items, target_date):
@@ -172,6 +178,72 @@ def call_claude(system_prompt, user_prompt):
     return "\n".join(text_parts)
 
 
+def _bold_metrics_in_markdown(text):
+    """Bold metrics in markdown text using **X** syntax."""
+    import re as _re
+    # Dollar amounts: $50M, $1.2B, $500K, $2.5 billion, $100 million
+    text = _re.sub(
+        r'(\$[\d,.]+\s*(?:[BMKbmk]|billion|million|thousand)\b)',
+        r'**\1**', text
+    )
+    # Percentages: 76.8%, 2.5%
+    text = _re.sub(r'([\d,.]+%)', r'**\1**', text)
+    # Multipliers: 2.5x faster, 10x
+    text = _re.sub(
+        r'([\d,.]+x(?:\s+(?:faster|slower|cheaper|more|less|improvement|better|larger|smaller))?)',
+        r'**\1**', text, flags=_re.IGNORECASE
+    )
+    # Elo scores: 1432 Elo
+    text = _re.sub(r'([\d,]+\s+Elo)', r'**\1**', text)
+    # Token counts: 128K tokens, 1M tokens
+    text = _re.sub(
+        r'([\d,.]+[KMBkmb]\s+(?:tokens?|context|parameters?))',
+        r'**\1**', text, flags=_re.IGNORECASE
+    )
+    # Large numbers with units: 1.5 billion users, 100 million DAU
+    text = _re.sub(
+        r'([\d,.]+\s+(?:billion|million|thousand)\s+(?:users?|DAU|MAU|downloads?|parameters?))',
+        r'**\1**', text, flags=_re.IGNORECASE
+    )
+    # Avoid double-bolding: collapse **...**...**...** overlaps
+    text = _re.sub(r'\*\*\s*\*\*', '', text)
+    return text
+
+
+def _generate_why_it_matters(title, summary):
+    """Generate a heuristic 'Why it matters' line for a top AI story."""
+    text = (title + " " + summary).lower()
+    if any(w in text for w in ["open source", "open-source", "apache", "mit license"]):
+        return "Why it matters: Open-sourcing pushes the frontier accessible to all builders, not just big labs."
+    if any(w in text for w in ["benchmark", "elo", "mmlu", "state-of-the-art", "sota"]):
+        return "Why it matters: New benchmarks reset expectations for what AI models can do in production."
+    if any(w in text for w in ["regulation", "executive order", "eu ai act", "congress", "parliament"]):
+        return "Why it matters: Regulatory moves shape what companies can build and how fast they can ship."
+    if any(w in text for w in ["agent", "agentic", "autonomous"]):
+        return "Why it matters: Agentic AI is moving from demos to real workflows, changing how work gets done."
+    if any(w in text for w in ["safety", "alignment", "guardrail", "red team"]):
+        return "Why it matters: Safety progress determines how quickly frontier models reach mainstream users."
+    if any(w in text for w in ["partnership", "deal", "collaboration"]):
+        return "Why it matters: Strategic partnerships signal where the industry's center of gravity is shifting."
+    if any(w in text for w in ["launch", "release", "announce", "unveil", "introduce"]):
+        return "Why it matters: New releases force competitors to respond and give builders more options."
+    return ""
+
+
+def _generate_funding_why_it_matters(title, summary):
+    """Generate a heuristic 'Why it matters' line for a funding story."""
+    text = (title + " " + summary).lower()
+    if any(w in text for w in ["billion", "$1b", "$2b", "$5b", "$10b"]):
+        return "Why it matters: Mega-rounds signal investor conviction that AI infrastructure is a generational bet."
+    if any(w in text for w in ["seed", "pre-seed", "early"]):
+        return "Why it matters: Early-stage bets reveal where smart money sees the next breakout category."
+    if any(w in text for w in ["acquisition", "acquire", "acqui-hire"]):
+        return "Why it matters: Acqui-hires and acquisitions show which capabilities big tech can't build fast enough internally."
+    if any(w in text for w in ["ipo", "public", "listing"]):
+        return "Why it matters: IPO moves set the valuation benchmark for the entire AI startup ecosystem."
+    return "Why it matters: Where capital flows today shapes what products ship tomorrow."
+
+
 def build_local_draft(items, target_date):
     """Build a newsletter draft locally from collected data (no API needed).
     Groups items by type, picks the top ones, and formats as markdown."""
@@ -210,20 +282,27 @@ def build_local_draft(items, target_date):
     # Top AI Stories — pick up to 7
     lines.append("## Top AI Stories")
     lines.append("")
-    for a in general_articles[:7]:
+    for idx, a in enumerate(general_articles[:7]):
         title = a["title"].strip()
         summary = (a.get("summary") or "").strip()
         url = a.get("url", "")
         source = a.get("source", "")
         if summary:
-            # Use up to 2-3 sentences for richer summaries
+            # Use up to 3-4 sentences for richer summaries
             sentences = summary.split(". ")
-            rich_summary = ". ".join(sentences[:3]).rstrip(".")
-            if len(rich_summary) > 300:
-                rich_summary = rich_summary[:297] + "..."
+            rich_summary = ". ".join(sentences[:4]).rstrip(".")
+            if len(rich_summary) > 400:
+                rich_summary = rich_summary[:397] + "..."
+            # Bold metrics in the summary
+            rich_summary = _bold_metrics_in_markdown(rich_summary)
             lines.append(f"- **{title}** — {rich_summary}. [{source}]({url})")
         else:
             lines.append(f"- **{title}** [{source}]({url})")
+        # Add "Why it matters" for top 3 stories
+        if idx < 3:
+            why = _generate_why_it_matters(title, summary)
+            if why:
+                lines.append(f"  - {why}")
         lines.append("")
     if not general_articles:
         lines.append("Quiet day on the feeds. Check back tomorrow.")
@@ -233,19 +312,24 @@ def build_local_draft(items, target_date):
     if funding_articles:
         lines.append("## Funding & Deals")
         lines.append("")
-        for a in funding_articles[:4]:
+        for idx, a in enumerate(funding_articles[:4]):
             title = a["title"].strip()
             summary = (a.get("summary") or "").strip()
             url = a.get("url", "")
             source = a.get("source", "")
             if summary:
                 sentences = summary.split(". ")
-                rich_summary = ". ".join(sentences[:3]).rstrip(".")
-                if len(rich_summary) > 300:
-                    rich_summary = rich_summary[:297] + "..."
+                rich_summary = ". ".join(sentences[:4]).rstrip(".")
+                if len(rich_summary) > 400:
+                    rich_summary = rich_summary[:397] + "..."
+                rich_summary = _bold_metrics_in_markdown(rich_summary)
                 lines.append(f"- **{title}** — {rich_summary}. [{source}]({url})")
             else:
                 lines.append(f"- **{title}** [{source}]({url})")
+            # Add "Why it matters" for funding stories
+            why = _generate_funding_why_it_matters(title, summary)
+            if why:
+                lines.append(f"  - {why}")
             lines.append("")
 
     # Podcasts

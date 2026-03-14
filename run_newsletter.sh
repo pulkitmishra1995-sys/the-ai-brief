@@ -7,6 +7,14 @@ set -euo pipefail
 DIR="$(cd "$(dirname "$0")" && pwd)"
 LOG="$DIR/newsletter.log"
 
+# Log rotation: if > 1MB, keep one backup
+if [ -f "$LOG" ]; then
+    size=$(stat -f%z "$LOG" 2>/dev/null || stat -c%s "$LOG" 2>/dev/null || echo 0)
+    if [ "$size" -gt 1048576 ]; then
+        mv "$LOG" "$LOG.old"
+    fi
+fi
+
 echo "========================================" >> "$LOG"
 echo "$(date '+%Y-%m-%d %H:%M:%S') — Starting" >> "$LOG"
 

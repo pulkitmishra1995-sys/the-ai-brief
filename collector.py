@@ -22,9 +22,90 @@ from html.parser import HTMLParser
 from config import (
     RSS_FEEDS, PODCAST_FEEDS, YOUTUBE_CHANNELS, EVENTS_CONFIG,
     EVENTS_KEYWORDS_INCLUDE, EVENTS_KEYWORDS_EXCLUDE, EVENTS_SPEAKER_SIGNALS,
-    COLLECTED_DIR, SEEN_ARTICLES_FILE,
+    COLLECTED_DIR, SEEN_ARTICLES_FILE, FEED_HEALTH_FILE, LOG_FILE,
+    BACKUP_RETENTION_DAYS,
     REQUEST_TIMEOUT, MAX_RETRIES, USER_AGENT,
 )
+
+
+# ── Error logging ───────────────────────────────────────────────────────────
+
+def _log_error(source, message):
+    """Append a timestamped error entry to errors.log."""
+    ts = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    with open(LOG_FILE, "a", encoding="utf-8") as f:
+        f.write(f"[{ts}] [{source}] {message}\n")
+
+
+# ── Feed health tracking ───────────────────────────────────────────────────
+
+def _load_feed_health():
+    """Load feed health data from JSON."""
+    if FEED_HEALTH_FILE.exists():
+        try:
+            with open(FEED_HEALTH_FILE, "r", encoding="utf-8") as f:
+                return json.load(f)
+        except (json.JSONDecodeError, OSError):
+            return {}
+    return {}
+
+
+def _save_feed_health(health):
+    """Save feed health data to JSON."""
+    with open(FEED_HEALTH_FILE, "w", encoding="utf-8") as f:
+        json.dump(health, f, indent=2, ensure_ascii=False)
+
+
+def _record_feed_success(health, url):
+    """Record a successful feed fetch."""
+    entry = health.get(url, {})
+    entry["last_success"] = datetime.now().isoformat()
+    entry["consecutive_failures"] = 0
+    health[url] = entry
+
+
+def _record_feed_failure(health, url, error):
+    """Record a failed feed fetch."""
+    entry = health.get(url, {})
+    entry["last_failure"] = datetime.now().isoformat()
+    entry["consecutive_failures"] = entry.get("consecutive_failures", 0) + 1
+    entry["last_error"] = str(error)
+    health[url] = entry
+
+
+def report_feed_health():
+    """Print a table of all feed health status."""
+    health = _load_feed_health()
+    if not health:
+        print("No feed health data yet. Run a collection first.")
+        return
+
+    print(f"\n{'URL':<70} {'Last OK':<20} {'Failures':<10} {'Last Error'}")
+    print("-" * 130)
+    for url, info in sorted(health.items()):
+        last_ok = info.get("last_success", "never")[:19]
+        fails = info.get("consecutive_failures", 0)
+        error = info.get("last_error", "")[:40]
+        print(f"{url:<70} {last_ok:<20} {fails:<10} {error}")
+    print()
+
+
+# ── Data backup & pruning ──────────────────────────────────────────────────
+
+def backup_collected_data():
+    """Delete collected JSON files older than BACKUP_RETENTION_DAYS."""
+    cutoff = date.today().toordinal() - BACKUP_RETENTION_DAYS
+    removed = 0
+    for f in sorted(COLLECTED_DIR.glob("*.json")):
+        try:
+            file_date = date.fromisoformat(f.stem)
+            if file_date.toordinal() < cutoff:
+                f.unlink()
+                removed += 1
+        except ValueError:
+            continue
+    if removed:
+        print(f"  Pruned {removed} collected files older than {BACKUP_RETENTION_DAYS} days")
 
 
 # ── HTTP helper ──────────────────────────────────────────────────────────────
@@ -128,7 +209,8 @@ def strip_html(html_str):
     stripper = HTMLStripper()
     try:
         stripper.feed(html_str)
-    except Exception:
+    except Exception as e:
+        _log_error("strip_html", f"Failed to strip HTML: {e}")
         return html_str
     return stripper.get_text()
 
@@ -172,13 +254,17 @@ def save_seen_articles(seen):
 
 # ── Source fetchers ──────────────────────────────────────────────────────────
 
-def fetch_rss_feeds():
+def fetch_rss_feeds(health=None):
     """Fetch all configured RSS feeds. Returns list of article dicts."""
     all_articles = []
     for source_name, feed_info in RSS_FEEDS.items():
+        url = feed_info["url"]
         print(f"  Fetching {source_name}...")
-        raw = fetch_url(feed_info["url"])
+        raw = fetch_url(url)
         if not raw:
+            if health is not None:
+                _record_feed_failure(health, url, "fetch returned None")
+            _log_error("rss", f"Failed to fetch {source_name}: {url}")
             continue
         try:
             text = raw.decode("utf-8", errors="replace")
@@ -189,17 +275,23 @@ def fetch_rss_feeds():
             a["source"] = source_name
             a["type"] = "article"
         all_articles.extend(articles)
+        if health is not None:
+            _record_feed_success(health, url)
         print(f"    Got {len(articles)} articles")
     return all_articles
 
 
-def fetch_podcasts():
+def fetch_podcasts(health=None):
     """Fetch latest podcast episodes from configured feeds."""
     all_episodes = []
     for name, feed_info in PODCAST_FEEDS.items():
+        url = feed_info["url"]
         print(f"  Fetching {name}...")
-        raw = fetch_url(feed_info["url"])
+        raw = fetch_url(url)
         if not raw:
+            if health is not None:
+                _record_feed_failure(health, url, "fetch returned None")
+            _log_error("podcast", f"Failed to fetch {name}: {url}")
             continue
         try:
             text = raw.decode("utf-8", errors="replace")
@@ -210,17 +302,23 @@ def fetch_podcasts():
             ep["source"] = name
             ep["type"] = "podcast"
         all_episodes.extend(episodes)
+        if health is not None:
+            _record_feed_success(health, url)
         print(f"    Got {len(episodes)} episodes")
     return all_episodes
 
 
-def fetch_youtube_videos():
+def fetch_youtube_videos(health=None):
     """Fetch latest videos from configured YouTube channels via RSS."""
     all_videos = []
     for name, channel_info in YOUTUBE_CHANNELS.items():
+        url = channel_info["url"]
         print(f"  Fetching {name}...")
-        raw = fetch_url(channel_info["url"])
+        raw = fetch_url(url)
         if not raw:
+            if health is not None:
+                _record_feed_failure(health, url, "fetch returned None")
+            _log_error("youtube", f"Failed to fetch {name}: {url}")
             continue
         try:
             text = raw.decode("utf-8", errors="replace")
@@ -231,6 +329,8 @@ def fetch_youtube_videos():
             v["source"] = name
             v["type"] = "video"
         all_videos.extend(videos)
+        if health is not None:
+            _record_feed_success(health, url)
         print(f"    Got {len(videos)} videos")
     return all_videos
 
@@ -300,12 +400,21 @@ def fetch_luma_nextdata(url, location):
 
     try:
         data = _json.loads(m.group(1))
-    except _json.JSONDecodeError:
+    except _json.JSONDecodeError as e:
+        _log_error("luma", f"JSON decode error for {url}: {e}")
         return []
 
     page_props = data.get("props", {}).get("pageProps", {}).get("initialData", {})
     featured = page_props.get("featured_place", {})
     raw_events = featured.get("events", [])
+
+    # Allowed UK cities/regions — reject events outside these
+    uk_cities = {
+        "london", "oxford", "cambridge", "manchester", "birmingham",
+        "bristol", "edinburgh", "glasgow", "leeds", "liverpool",
+        "cardiff", "belfast", "nottingham", "sheffield", "reading",
+        "brighton", "bath", "southampton", "newcastle", "coventry",
+    }
 
     events = []
     for entry in raw_events[:15]:
@@ -313,15 +422,29 @@ def fetch_luma_nextdata(url, location):
         name = ev.get("name", "").strip()
         slug = ev.get("url", "")
         start = ev.get("start_at", "")
-        geo_city = ev.get("geo_address_info", {}).get("city", location)
+        geo_info = ev.get("geo_address_info", {})
+        geo_city = geo_info.get("city", "")
+        geo_country = geo_info.get("country", "")
 
         if not name:
+            continue
+
+        # Geo-filter: reject events not in the UK
+        actual_city = geo_city or location
+        city_lower = actual_city.lower().strip()
+        country_lower = (geo_country or "").lower().strip()
+
+        # Accept only if city matches UK list or country is explicitly UK/GB
+        is_uk = (
+            city_lower in uk_cities
+            or country_lower in ("uk", "gb", "united kingdom", "great britain", "england", "scotland", "wales")
+        )
+        if not is_uk:
             continue
 
         event_url = f"https://lu.ma/{slug}" if slug else ""
         date_str = start[:10] if start else ""
 
-        actual_city = geo_city or location
         events.append({
             "title": name,
             "url": event_url,
@@ -405,8 +528,8 @@ def parse_eventbrite_html(html_text, location):
     parser = EventbriteParser()
     try:
         parser.feed(html_text)
-    except Exception:
-        pass
+    except Exception as e:
+        _log_error("eventbrite", f"HTML parse error for {location}: {e}")
     events = []
     for ev in parser.events[:15]:  # grab more, filter later
         events.append({
@@ -464,17 +587,20 @@ def collect_all(target_date=None):
     print("=" * 50)
 
     seen = load_seen_articles()
+    health = _load_feed_health()
     all_items = []
 
     # Fetch all sources
     print("\n[RSS Feeds]")
-    all_items.extend(fetch_rss_feeds())
+    all_items.extend(fetch_rss_feeds(health))
 
     print("\n[Podcasts]")
-    all_items.extend(fetch_podcasts())
+    all_items.extend(fetch_podcasts(health))
 
     print("\n[YouTube]")
-    all_items.extend(fetch_youtube_videos())
+    all_items.extend(fetch_youtube_videos(health))
+
+    _save_feed_health(health)
 
     print("\n[Events]")
     all_items.extend(fetch_events())
@@ -494,17 +620,45 @@ def collect_all(target_date=None):
 
 
 def save_collected(target_date, items, seen):
-    """Save collected items and update seen articles."""
+    """Save collected items and update seen articles.
+    Merges new items with any existing collected file for the same date."""
     output_file = COLLECTED_DIR / f"{target_date}.json"
+
+    # Merge with existing collected data for this date (avoid overwriting on re-run)
+    existing = []
+    if output_file.exists():
+        try:
+            with open(output_file, "r", encoding="utf-8") as f:
+                existing = json.load(f)
+        except (json.JSONDecodeError, OSError):
+            existing = []
+
+    if existing and items:
+        existing_urls = {i.get("url") for i in existing if i.get("url")}
+        for item in items:
+            if item.get("url") not in existing_urls:
+                existing.append(item)
+        merged = existing
+    elif existing and not items:
+        merged = existing  # keep existing data on re-run with 0 new items
+        print(f"  No new items — keeping {len(merged)} existing items")
+    else:
+        merged = items
+
     with open(output_file, "w", encoding="utf-8") as f:
-        json.dump(items, f, indent=2, ensure_ascii=False)
-    print(f"  Saved to {output_file}")
+        json.dump(merged, f, indent=2, ensure_ascii=False)
+    print(f"  Saved {len(merged)} items to {output_file}")
     save_seen_articles(seen)
+    backup_collected_data()
 
 
 # ── CLI ──────────────────────────────────────────────────────────────────────
 
 def main():
+    if "--health" in sys.argv:
+        report_feed_health()
+        return
+
     dry_run = "--dry-run" in sys.argv
     target_date = None
 

@@ -7,7 +7,7 @@
     <key>ProgramArguments</key>
     <array>
         <string>/bin/bash</string>
-        <string>/Users/Pulkit/ai-newsletter/run_newsletter.sh</string>
+        <string>/Users/Pulkit/the-ai-brief/run_newsletter.sh</string>
     </array>
     <key>StartCalendarInterval</key>
     <array>
@@ -39,9 +39,9 @@
         </dict>
     </array>
     <key>StandardOutPath</key>
-    <string>/Users/Pulkit/ai-newsletter/newsletter.log</string>
+    <string>/Users/Pulkit/the-ai-brief/newsletter.log</string>
     <key>StandardErrorPath</key>
-    <string>/Users/Pulkit/ai-newsletter/newsletter.log</string>
+    <string>/Users/Pulkit/the-ai-brief/newsletter.log</string>
     <key>WorkingDirectory</key>
     <string>/Users/Pulkit/ai-newsletter</string>
 </dict>

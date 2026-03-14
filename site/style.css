@@ -226,6 +226,64 @@ a { color: var(--link); }
   margin: 0;
 }
 
+/* ── Direct subscribe form (Formspree) ───────────────────────────────────── */
+
+.hero-direct-subscribe {
+  max-width: 460px;
+  margin: 0 auto 24px;
+}
+
+.direct-sub-label {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+}
+
+.direct-sub-form {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.direct-sub-form input {
+  flex: 1;
+  min-width: 140px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-size: 0.88rem;
+  font-family: inherit;
+  color: var(--text-primary);
+  background: var(--bg);
+}
+
+.direct-sub-form input:focus {
+  outline: none;
+  border-color: var(--border-strong);
+}
+
+.direct-sub-form input::placeholder {
+  color: var(--text-muted);
+}
+
+.direct-sub-form button {
+  background: var(--oxford-blue, #002147);
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 20px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: opacity 0.15s;
+  white-space: nowrap;
+}
+
+.direct-sub-form button:hover {
+  opacity: 0.85;
+}
+
 /* ── Title bar (Last 30 days + see all) ──────────────────────────────────── */
 
 .title-bar {

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Unsubscribed — Oxford AI Pulse</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .unsub-container {
+      max-width: 520px;
+      margin: 80px auto;
+      padding: 0 24px;
+      text-align: center;
+    }
+    .unsub-container h1 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 12px;
+    }
+    .unsub-container .unsub-email {
+      font-size: 0.95rem;
+      color: var(--text-secondary);
+      margin-bottom: 24px;
+      word-break: break-all;
+    }
+    .unsub-container p {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      margin-bottom: 16px;
+      line-height: 1.6;
+    }
+    .unsub-container .resub-link {
+      display: inline-block;
+      margin-top: 8px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      text-decoration: none;
+    }
+    .unsub-container .resub-link:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <a class="logo" href="index.html">Oxford AI Pulse</a>
+  </header>
+
+  <div class="unsub-container">
+    <h1>You've been unsubscribed</h1>
+    <p class="unsub-email" id="unsub-email"></p>
+    <p>You will no longer receive daily emails from Oxford AI Pulse.</p>
+    <p>Changed your mind?</p>
+    <a class="resub-link" href="index.html#subscribe">Re-subscribe &rarr;</a>
+  </div>
+
+  <footer>
+    <a href="index.html">Home</a> &middot; <a href="archive.html">Archive</a>
+  </footer>
+
+  <script>
+    (function() {
+      var params = new URLSearchParams(window.location.search);
+      var email = params.get('email') || '';
+      var el = document.getElementById('unsub-email');
+      if (email) {
+        el.textContent = email + ' has been unsubscribed.';
+      } else {
+        el.textContent = 'Your email has been unsubscribed.';
+      }
+    })();
+  </script>
+</body>
+</html>

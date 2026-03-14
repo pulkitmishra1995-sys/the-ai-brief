@@ -26,9 +26,18 @@ import json
 from config import (
     DRAFTS_DIR, SITE_DIR, ISSUES_DIR, EMAIL,
     NEWSLETTER_NAME, OXFORD_BLUE, SUBSTACK_URL, COLLECTED_DIR,
-    GA_MEASUREMENT_ID, BETA_NOINDEX,
+    GA_MEASUREMENT_ID, BETA_NOINDEX, SITE_URL, LOG_FILE,
+    FORMSPREE_FORM_ID,
 )
-from subscribe import get_active_emails
+from subscribe import get_active_emails, _get_unsubscribe_url
+
+
+def _log_pub_error(source, message):
+    """Append a timestamped error entry to errors.log."""
+    from datetime import datetime
+    ts = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    with open(LOG_FILE, "a", encoding="utf-8") as f:
+        f.write(f"[{ts}] [publisher/{source}] {message}\n")
 
 
 # ── Markdown → HTML (for email, kept simple) ─────────────────────────────────
@@ -202,43 +211,200 @@ def _extract_tags(text):
         "openai": ("openai", "gray"),
         "anthropic": ("anthropic", "gray"),
         "google": ("google", "gray"),
-        "meta": ("meta", "gray"),
+        "meta ai": ("meta", "gray"),
+        "meta platforms": ("meta", "gray"),
         "microsoft": ("microsoft", "gray"),
         "nvidia": ("nvidia", "gray"),
         "deepmind": ("deepmind", "gray"),
+        "google deepmind": ("deepmind", "gray"),
         "amazon": ("amazon", "gray"),
         "apple": ("apple", "gray"),
         "softbank": ("softbank", "gray"),
-        # Models
+        "hugging face": ("hugging-face", "gray"),
+        "huggingface": ("hugging-face", "gray"),
+        "stability ai": ("stability-ai", "gray"),
+        "mistral": ("mistral", "gray"),
+        "cohere": ("cohere", "gray"),
+        "databricks": ("databricks", "gray"),
+        "snowflake": ("snowflake", "gray"),
+        "salesforce": ("salesforce", "gray"),
+        "ibm": ("ibm", "gray"),
+        "intel": ("intel", "gray"),
+        "amd": ("amd", "gray"),
+        "tesla": ("tesla", "gray"),
+        "baidu": ("baidu", "gray"),
+        "alibaba": ("alibaba", "gray"),
+        "tencent": ("tencent", "gray"),
+        "bytedance": ("bytedance", "gray"),
+        "samsung": ("samsung", "gray"),
+        "palantir": ("palantir", "gray"),
+        "scale ai": ("scale-ai", "gray"),
+        "replicate": ("replicate", "gray"),
+        "perplexity": ("perplexity", "gray"),
+        "character ai": ("character-ai", "gray"),
+        "runway": ("runway", "gray"),
+        "midjourney": ("midjourney", "gray"),
+        "elevenlabs": ("elevenlabs", "gray"),
+        "adept": ("adept", "gray"),
+        "inflection": ("inflection", "gray"),
+        "xai": ("xai", "gray"),
+        "x.ai": ("xai", "gray"),
+        # Model versions (longest first handled by sort)
+        "gpt-5": ("gpt-5", "green"),
+        "gpt-4o": ("gpt-4o", "green"),
+        "gpt-4": ("gpt-4", "green"),
         "gpt": ("gpt", "green"),
+        "claude opus": ("claude-opus", "green"),
+        "claude sonnet": ("claude-sonnet", "green"),
+        "claude haiku": ("claude-haiku", "green"),
         "claude": ("claude", "green"),
+        "gemini ultra": ("gemini-ultra", "green"),
+        "gemini pro": ("gemini-pro", "green"),
+        "gemini flash": ("gemini-flash", "green"),
         "gemini": ("gemini", "green"),
+        "llama 3": ("llama-3", "green"),
+        "llama 4": ("llama-4", "green"),
         "llama": ("llama", "green"),
+        "mixtral": ("mixtral", "green"),
+        "deepseek": ("deepseek", "green"),
+        "qwen": ("qwen", "green"),
+        "phi-3": ("phi-3", "green"),
+        "phi-4": ("phi-4", "green"),
         "codex": ("codex", "green"),
-        # Topics
+        "dall-e": ("dall-e", "green"),
+        "sora": ("sora", "green"),
+        "stable diffusion": ("stable-diffusion", "green"),
+        "midjourney v": ("midjourney", "green"),
+        "whisper": ("whisper", "green"),
+        "copilot": ("copilot", "green"),
+        "command r": ("command-r", "green"),
+        "grok": ("grok", "green"),
+        # People
+        "sam altman": ("sama", "teal"),
+        "sama": ("sama", "teal"),
+        "karpathy": ("karpathy", "teal"),
+        "andrej karpathy": ("karpathy", "teal"),
+        "jensen huang": ("jensen-huang", "teal"),
+        "dario amodei": ("dario-amodei", "teal"),
+        "sundar pichai": ("sundar-pichai", "teal"),
+        "satya nadella": ("satya-nadella", "teal"),
+        "mark zuckerberg": ("zuckerberg", "teal"),
+        "zuckerberg": ("zuckerberg", "teal"),
+        "elon musk": ("elon-musk", "teal"),
+        "demis hassabis": ("hassabis", "teal"),
+        "ilya sutskever": ("sutskever", "teal"),
+        "yann lecun": ("lecun", "teal"),
+        "fei-fei li": ("fei-fei-li", "teal"),
+        "greg brockman": ("brockman", "teal"),
+        "mustafa suleyman": ("suleyman", "teal"),
+        # Funding & business
         "funding": ("funding", "blue"),
         "investment": ("investment", "blue"),
+        "series a": ("series-a", "blue"),
+        "series b": ("series-b", "blue"),
+        "series c": ("series-c", "blue"),
+        "series d": ("series-d", "blue"),
         "series": ("series-round", "blue"),
         "valuation": ("valuation", "blue"),
         "startup": ("startup", "blue"),
         "acquisition": ("acquisition", "blue"),
+        "acqui-hire": ("acqui-hire", "blue"),
+        "ipo": ("ipo", "blue"),
+        "seed round": ("seed-round", "blue"),
+        "venture capital": ("venture-capital", "blue"),
+        "billion": ("billion-dollar", "blue"),
+        "unicorn": ("unicorn", "blue"),
+        "partnership": ("partnership", "blue"),
+        "revenue": ("revenue", "blue"),
+        # Safety & governance
         "ai safety": ("ai-safety", "orange"),
+        "alignment": ("alignment", "orange"),
         "regulation": ("regulation", "orange"),
+        "executive order": ("executive-order", "orange"),
+        "eu ai act": ("eu-ai-act", "orange"),
+        "ai act": ("eu-ai-act", "orange"),
+        "responsible ai": ("responsible-ai", "orange"),
+        "bias": ("bias", "orange"),
+        "deepfake": ("deepfake", "orange"),
+        "hallucination": ("hallucination", "orange"),
+        "guardrails": ("guardrails", "orange"),
+        "red team": ("red-teaming", "orange"),
+        "copyright": ("copyright", "orange"),
+        # Technical concepts
+        "context window": ("context-window", "purple"),
+        "context length": ("context-window", "purple"),
+        "latency": ("latency", "purple"),
+        "inference": ("inference", "purple"),
+        "training": ("training", "purple"),
+        "pre-training": ("pre-training", "purple"),
+        "fine-tuning": ("fine-tuning", "purple"),
+        "fine tuning": ("fine-tuning", "purple"),
+        "rlhf": ("rlhf", "purple"),
+        "rag": ("rag", "purple"),
+        "retrieval augmented": ("rag", "purple"),
+        "benchmark": ("benchmarking", "purple"),
+        "mmlu": ("benchmarking", "purple"),
+        "elo": ("benchmarking", "purple"),
         "robotics": ("robotics", "purple"),
         "autonomous": ("autonomous", "purple"),
+        "self-driving": ("self-driving", "purple"),
+        "agentic": ("agentic-ai", "purple"),
+        "ai agent": ("agentic-ai", "purple"),
         "agent": ("agents", "purple"),
         "multimodal": ("multimodal", "purple"),
+        "vision": ("vision", "purple"),
+        "text-to-image": ("text-to-image", "purple"),
+        "text-to-video": ("text-to-video", "purple"),
+        "text to speech": ("text-to-speech", "purple"),
+        "speech-to-text": ("speech-to-text", "purple"),
+        "embedding": ("embeddings", "purple"),
+        "vector database": ("vector-db", "purple"),
+        "transformer": ("transformer", "purple"),
+        "diffusion": ("diffusion", "purple"),
+        "open source": ("open-source", "purple"),
+        "open-source": ("open-source", "purple"),
+        "api": ("api", "purple"),
+        "token": ("tokens", "purple"),
+        "parameter": ("parameters", "purple"),
+        "quantization": ("quantization", "purple"),
+        "distillation": ("distillation", "purple"),
+        "reasoning": ("reasoning", "purple"),
+        "chain of thought": ("chain-of-thought", "purple"),
+        "chain-of-thought": ("chain-of-thought", "purple"),
+        "code generation": ("code-gen", "purple"),
+        "coding": ("code-gen", "purple"),
+        # Applications
+        "healthcare": ("healthcare", "red"),
+        "drug discovery": ("drug-discovery", "red"),
+        "biotech": ("biotech", "red"),
+        "climate": ("climate", "red"),
+        "education": ("education", "red"),
+        "cybersecurity": ("cybersecurity", "red"),
+        "fintech": ("fintech", "red"),
+        "search": ("search", "red"),
+        "chatbot": ("chatbot", "red"),
+        "enterprise": ("enterprise", "red"),
+        "developer tool": ("dev-tools", "red"),
+        "chip": ("chips", "red"),
+        "semiconductor": ("chips", "red"),
+        "gpu": ("gpu", "red"),
+        "tpu": ("tpu", "red"),
+        "data center": ("data-center", "red"),
     }
 
     text_lower = text.lower()
     found = []
     seen = set()
-    for keyword, (tag_name, color) in tag_keywords.items():
+    # Sort keywords longest-first so "claude opus" matches before "claude"
+    sorted_keywords = sorted(tag_keywords.keys(), key=len, reverse=True)
+    for keyword in sorted_keywords:
+        tag_name, color = tag_keywords[keyword]
         if keyword in text_lower and tag_name not in seen:
             found.append({"name": tag_name, "color": color})
             seen.add(tag_name)
 
-    return found
+    # Cap at 20 tags per item to avoid overcrowding
+    return found[:20]
 
 
 def _esc(text):
@@ -289,9 +455,29 @@ def build_header(home_prefix=""):
 def build_prefs_panel():
     """Build the preferences slide-out drawer HTML."""
     # Topic pills — grouped by category
-    companies = ["OpenAI", "Anthropic", "Google", "Meta", "Microsoft", "Nvidia", "DeepMind", "Apple", "Amazon"]
-    models = ["GPT", "Claude", "Gemini", "LLaMA", "Codex"]
-    topics = ["AI Safety", "Regulation", "Robotics", "Agents", "Multimodal", "Funding", "Startups", "Autonomous"]
+    companies = [
+        "OpenAI", "Anthropic", "Google", "Meta", "Microsoft", "Nvidia",
+        "DeepMind", "Apple", "Amazon", "Mistral", "Hugging Face", "xAI",
+        "Perplexity", "Cohere", "Databricks", "Scale AI", "Runway",
+        "Stability AI",
+    ]
+    models = [
+        "GPT", "GPT-4o", "GPT-5", "Claude", "Claude Opus", "Claude Sonnet",
+        "Gemini", "Gemini Flash", "LLaMA", "Mixtral", "DeepSeek", "Qwen",
+        "Codex", "Copilot", "Sora", "Grok",
+    ]
+    people = [
+        "Sam Altman", "Karpathy", "Jensen Huang", "Dario Amodei",
+        "Sundar Pichai", "Satya Nadella", "Zuckerberg", "Elon Musk",
+        "Hassabis", "Yann LeCun",
+    ]
+    topics = [
+        "AI Safety", "Regulation", "Robotics", "Agents", "Agentic AI",
+        "Multimodal", "Funding", "Startups", "Autonomous", "Fine-tuning",
+        "RAG", "Benchmarking", "Open Source", "Reasoning",
+        "Context Window", "Inference", "Code Gen", "Healthcare",
+        "Enterprise", "Chips", "GPU",
+    ]
 
     def _pills(items):
         parts = []
@@ -344,6 +530,10 @@ def build_prefs_panel():
       <div class="prefs-section-title" style="margin-top:12px;font-size:0.7rem;margin-bottom:6px;">Models</div>
       <div class="pref-pills">
         {_pills(models)}
+      </div>
+      <div class="prefs-section-title" style="margin-top:12px;font-size:0.7rem;margin-bottom:6px;">People</div>
+      <div class="pref-pills">
+        {_pills(people)}
       </div>
       <div class="prefs-section-title" style="margin-top:12px;font-size:0.7rem;margin-bottom:6px;">Topics</div>
       <div class="pref-pills">
@@ -554,7 +744,7 @@ def markdown_to_issue_html(md, target_date):
 
 # ── Email HTML (inline CSS, unchanged) ───────────────────────────────────────
 
-def build_email_html(content_html, target_date):
+def build_email_html(content_html, target_date, unsubscribe_url=""):
     """Build inline-CSS HTML email with Oxford blue branding."""
     try:
         dt = datetime.strptime(target_date, "%Y-%m-%d")
@@ -576,6 +766,7 @@ def build_email_html(content_html, target_date):
     </div>
     <div style="background:#f0f2f5;padding:20px 32px;text-align:center;font-size:13px;color:#666;">
       <p style="margin:0;">You're receiving this because you subscribed to {NEWSLETTER_NAME}.</p>
+      <p style="margin:8px 0 0;">{f'<a href="{unsubscribe_url}" style="color:#666;">Unsubscribe</a> &middot; ' if unsubscribe_url else ''}<a href="{SITE_URL}" style="color:#666;">View online</a></p>
     </div>
   </div>
 </body>
@@ -1154,13 +1345,25 @@ def get_all_issue_dates():
 
 def build_hero_section():
     """Build smol.ai-style stacked hero: title, subtitle, description, social proof, subscribe embed."""
+    direct_form = ""
+    if FORMSPREE_FORM_ID:
+        direct_form = f"""
+    <div class="hero-direct-subscribe">
+      <p class="direct-sub-label">Or subscribe directly:</p>
+      <form action="https://formspree.io/f/{FORMSPREE_FORM_ID}" method="POST" class="direct-sub-form">
+        <input type="email" name="email" placeholder="your@email.com" required>
+        <input type="text" name="name" placeholder="Name (optional)">
+        <button type="submit">Subscribe</button>
+      </form>
+    </div>"""
+
     return f"""<section class="hero" id="subscribe">
     <h1 class="hero-title">{NEWSLETTER_NAME}</h1>
     <p class="hero-subtitle">AI &amp; tech signal for Oxford MBAs &amp; founders.</p>
     <p class="hero-description">Top AI stories, funding rounds, podcasts, London/Oxford events &amp; videos — curated daily so you don&rsquo;t have to doom-scroll.</p>
     <div class="hero-subscribe">
       <iframe src="{SUBSTACK_URL}/embed" width="100%" height="150" style="border:none;background:transparent;" frameborder="0" scrolling="no"></iframe>
-    </div>
+    </div>{direct_form}
     <div class="hero-quotes">
       <blockquote>&ldquo;The best way to keep up with AI without doom-scrolling&rdquo;</blockquote>
     </div>
@@ -1471,7 +1674,8 @@ def extract_headlines_from_issue(filepath):
             headlines = re.findall(r"<strong>(.+?)</strong>", html)
         good = [h for h in headlines if len(h) > 10 and not h.startswith("No ")]
         return good[:3]
-    except Exception:
+    except (OSError, UnicodeDecodeError) as e:
+        _log_pub_error("extract_headlines", f"{filepath}: {e}")
         return []
 
 
@@ -1528,50 +1732,163 @@ def extract_issue_metadata(filepath):
             if next_h2 != -1:
                 first_section = first_section[next_h2 + 5:]
 
-            # Extract h3 + following p pairs
+            # Extract h3 + following p pairs — up to 6 items for richer summaries
             items = re.findall(r'<h3[^>]*>(?:<a[^>]*>)?(.+?)(?:</a>)?</h3>\s*<p>(.*?)</p>', first_section, re.DOTALL)
-            for h3_title, para in items[:4]:
+            for h3_title, para in items[:6]:
                 clean_title = re.sub(r'<[^>]+>', '', h3_title).strip()
                 # Strip all HTML except bold
                 clean_para = re.sub(r'<a[^>]*>(.*?)</a>', r'\1', para)
                 clean_para = re.sub(r'<(?!/?(?:strong|b)\b)[^>]+>', '', clean_para).strip()
-                # Truncate individual summary
-                if len(clean_para) > 150:
-                    dot = clean_para[:150].rfind('. ')
-                    clean_para = clean_para[:dot + 1] if dot > 50 else clean_para[:150] + "..."
+                # Truncate individual summary (200 chars)
+                if len(clean_para) > 200:
+                    dot = clean_para[:200].rfind('. ')
+                    clean_para = clean_para[:dot + 1] if dot > 50 else clean_para[:200] + "..."
                 if clean_title and clean_para:
-                    rich_parts.append(f"<strong>{_esc(clean_title)}</strong> {clean_para}")
+                    # Apply metric bolding to paragraph text
+                    clean_para = _bold_metrics_in_text(clean_para)
+                    # Apply company name bolding to titles
+                    bolded_title = _bold_company_names(_esc(clean_title))
+                    rich_parts.append(f"<strong>{bolded_title}</strong> {clean_para}")
 
         rich_summary = " ".join(rich_parts)
-        if len(rich_summary) > 600:
-            truncated = rich_summary[:600]
+        if len(rich_summary) > 800:
+            truncated = rich_summary[:800]
             last_period = truncated.rfind('. ')
-            if last_period > 300:
+            if last_period > 400:
                 rich_summary = truncated[:last_period + 1]
             else:
                 rich_summary = truncated + "..."
 
-        return {"title": title, "tags": tags[:8], "summary": summary, "rich_summary": rich_summary}
-    except Exception:
+        return {"title": title, "tags": tags[:12], "summary": summary, "rich_summary": rich_summary}
+    except (OSError, UnicodeDecodeError) as e:
+        _log_pub_error("extract_metadata", f"{filepath}: {e}")
         return {"title": "AI Brief", "tags": [], "summary": "", "rich_summary": ""}
 
 
 def _get_tag_color_for_name(tag_name):
     """Map a tag name to its color class."""
-    color_map = {
-        "openai": "gray", "anthropic": "gray", "google": "gray",
-        "meta": "gray", "microsoft": "gray", "nvidia": "gray",
-        "deepmind": "gray", "amazon": "gray", "apple": "gray",
-        "softbank": "gray",
-        "gpt": "green", "claude": "green", "gemini": "green",
-        "llama": "green", "codex": "green",
-        "funding": "blue", "investment": "blue", "series-round": "blue",
-        "valuation": "blue", "startup": "blue", "acquisition": "blue",
-        "ai-safety": "orange", "regulation": "orange",
-        "robotics": "purple", "autonomous": "purple",
-        "agents": "purple", "multimodal": "purple",
+    # Prefix-based lookup: check tag prefixes for color categories
+    green_prefixes = (
+        "gpt", "claude", "gemini", "llama", "mixtral", "deepseek", "qwen",
+        "phi-", "codex", "dall-e", "sora", "stable-diffusion", "midjourney",
+        "whisper", "copilot", "command-r", "grok",
+    )
+    blue_tags = {
+        "funding", "investment", "series-round", "series-a", "series-b",
+        "series-c", "series-d", "valuation", "startup", "acquisition",
+        "acqui-hire", "ipo", "seed-round", "venture-capital",
+        "billion-dollar", "unicorn", "partnership", "revenue",
     }
-    return color_map.get(tag_name, "gray")
+    orange_tags = {
+        "ai-safety", "alignment", "regulation", "executive-order",
+        "eu-ai-act", "responsible-ai", "bias", "deepfake",
+        "hallucination", "guardrails", "red-teaming", "copyright",
+    }
+    purple_tags = {
+        "context-window", "latency", "inference", "training",
+        "pre-training", "fine-tuning", "rlhf", "rag", "benchmarking",
+        "robotics", "autonomous", "self-driving", "agentic-ai", "agents",
+        "multimodal", "vision", "text-to-image", "text-to-video",
+        "text-to-speech", "speech-to-text", "embeddings", "vector-db",
+        "transformer", "diffusion", "open-source", "api", "tokens",
+        "parameters", "quantization", "distillation", "reasoning",
+        "chain-of-thought", "code-gen",
+    }
+    teal_tags = {
+        "sama", "karpathy", "jensen-huang", "dario-amodei",
+        "sundar-pichai", "satya-nadella", "zuckerberg", "elon-musk",
+        "hassabis", "sutskever", "lecun", "fei-fei-li", "brockman",
+        "suleyman",
+    }
+    red_tags = {
+        "healthcare", "drug-discovery", "biotech", "climate", "education",
+        "cybersecurity", "fintech", "search", "chatbot", "enterprise",
+        "dev-tools", "chips", "gpu", "tpu", "data-center",
+    }
+    company_tags = {
+        "openai", "anthropic", "google", "meta", "microsoft", "nvidia",
+        "deepmind", "amazon", "apple", "softbank", "hugging-face",
+        "stability-ai", "mistral", "cohere", "databricks", "snowflake",
+        "salesforce", "ibm", "intel", "amd", "tesla", "baidu", "alibaba",
+        "tencent", "bytedance", "samsung", "palantir", "scale-ai",
+        "replicate", "perplexity", "character-ai", "runway", "elevenlabs",
+        "adept", "inflection", "xai",
+    }
+
+    if any(tag_name.startswith(p) for p in green_prefixes):
+        return "green"
+    if tag_name in blue_tags:
+        return "blue"
+    if tag_name in orange_tags:
+        return "orange"
+    if tag_name in purple_tags:
+        return "purple"
+    if tag_name in teal_tags:
+        return "teal"
+    if tag_name in red_tags:
+        return "red"
+    if tag_name in company_tags:
+        return "gray"
+    return "gray"
+
+
+def _bold_metrics_in_text(text):
+    """Bold metrics in HTML text: $X, X%, Xx faster, X Elo, XK tokens, X billion, etc."""
+    # Dollar amounts: $50M, $1.2B, $500K, $2.5 billion, $100 million
+    text = re.sub(
+        r'(\$[\d,.]+\s*(?:[BMKbmk]|billion|million|thousand)\b)',
+        r'<strong>\1</strong>', text
+    )
+    # Percentages: 76.8%, 2.5%
+    text = re.sub(r'([\d,.]+%)', r'<strong>\1</strong>', text)
+    # Multipliers: 2.5x faster, 10x, 3x improvement
+    text = re.sub(
+        r'([\d,.]+x(?:\s+(?:faster|slower|cheaper|more|less|improvement|better|larger|smaller))?)',
+        r'<strong>\1</strong>', text, flags=re.IGNORECASE
+    )
+    # Elo scores: 1432 Elo
+    text = re.sub(r'([\d,]+\s+Elo)', r'<strong>\1</strong>', text)
+    # Token counts: 128K tokens, 1M tokens, 200K context
+    text = re.sub(
+        r'([\d,.]+[KMBkmb]\s+(?:tokens?|context|parameters?))',
+        r'<strong>\1</strong>', text, flags=re.IGNORECASE
+    )
+    # Large numbers with units: 1.5 billion users, 100 million DAU
+    text = re.sub(
+        r'([\d,.]+\s+(?:billion|million|thousand)\s+(?:users?|DAU|MAU|downloads?|parameters?))',
+        r'<strong>\1</strong>', text, flags=re.IGNORECASE
+    )
+    # Avoid double-bolding
+    text = re.sub(r'<strong>\s*<strong>', '<strong>', text)
+    text = re.sub(r'</strong>\s*</strong>', '</strong>', text)
+    return text
+
+
+def _bold_company_names(text):
+    """Bold major company/model names on first mention in HTML text."""
+    names = [
+        "OpenAI", "Anthropic", "Google DeepMind", "DeepMind", "Google",
+        "Microsoft", "Meta", "Nvidia", "Amazon", "Apple", "xAI",
+        "Mistral", "Hugging Face", "Stability AI", "Cohere",
+        "GPT-5", "GPT-4o", "GPT-4", "Claude", "Gemini", "LLaMA",
+        "Mixtral", "DeepSeek", "Sora", "Copilot", "Grok",
+    ]
+    bolded = set()
+    for name in names:
+        if name.lower() in bolded:
+            continue
+        # Only bold first occurrence, case-insensitive
+        pattern = re.compile(re.escape(name), re.IGNORECASE)
+        match = pattern.search(text)
+        if match:
+            original = match.group(0)
+            # Don't bold if already inside a tag
+            before = text[:match.start()]
+            if '<strong>' in before[before.rfind('<'):] if '<' in before else False:
+                continue
+            text = text[:match.start()] + f'<strong>{original}</strong>' + text[match.end():]
+            bolded.add(name.lower())
+    return text
 
 
 def update_archive_page():
@@ -1728,7 +2045,8 @@ def generate_subject_line(target_date, md_content):
 
 # ── Email sending ────────────────────────────────────────────────────────────
 
-def send_newsletter_email(subject, html_body, recipients):
+def send_newsletter_email(subject, content_html, target_date, recipients):
+    """Send personalized emails with individual unsubscribe links."""
     cfg = EMAIL
     if not all([cfg["from_addr"], cfg["smtp_user"], cfg["smtp_password"]]):
         print("  [WARN] Email not configured — set SMTP variables in .env")
@@ -1738,23 +2056,30 @@ def send_newsletter_email(subject, html_body, recipients):
         print("  [WARN] No active subscribers to send to")
         return False
 
-    msg = MIMEMultipart("alternative")
-    msg["From"] = f"{NEWSLETTER_NAME} <{cfg['from_addr']}>"
-    msg["To"] = cfg["from_addr"]
-    msg["Subject"] = subject
-
-    plain = f"View this issue online: https://yourusername.github.io/ai-newsletter/"
-    msg.attach(MIMEText(plain, "plain"))
-    msg.attach(MIMEText(html_body, "html"))
-
-    all_recipients = [cfg["from_addr"]] + recipients
-
     try:
         with smtplib.SMTP(cfg["smtp_host"], cfg["smtp_port"], timeout=15) as server:
             server.starttls()
             server.login(cfg["smtp_user"], cfg["smtp_password"])
-            server.sendmail(cfg["from_addr"], all_recipients, msg.as_string())
-        print(f"  Email sent to {len(recipients)} subscriber(s)")
+
+            sent = 0
+            for recipient in recipients:
+                unsub_url = _get_unsubscribe_url(recipient)
+                html_body = build_email_html(content_html, target_date, unsubscribe_url=unsub_url)
+
+                msg = MIMEMultipart("alternative")
+                msg["From"] = f"{NEWSLETTER_NAME} <{cfg['from_addr']}>"
+                msg["To"] = recipient
+                msg["Subject"] = subject
+                msg["List-Unsubscribe"] = f"<{unsub_url}>"
+
+                plain = f"View this issue online: {SITE_URL}\nUnsubscribe: {unsub_url}"
+                msg.attach(MIMEText(plain, "plain"))
+                msg.attach(MIMEText(html_body, "html"))
+
+                server.sendmail(cfg["from_addr"], [recipient], msg.as_string())
+                sent += 1
+
+        print(f"  Email sent to {sent} subscriber(s)")
         return True
     except Exception as e:
         print(f"  [WARN] SMTP failed: {e}")
@@ -1804,9 +2129,8 @@ def publish(target_date=None, email_only=False, site_only=False, dry_run=False):
         print("\n[Email]")
         subject = generate_subject_line(target_date, md_content)
         print(f"  Subject: {subject}")
-        email_html = build_email_html(content_html, target_date)
         recipients = get_active_emails()
-        send_newsletter_email(subject, email_html, recipients)
+        send_newsletter_email(subject, content_html, target_date, recipients)
 
     print("\nDone!")
 

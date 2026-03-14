@@ -20,6 +20,8 @@ SUBSCRIBERS_CSV = DATA_DIR / "subscribers.csv"
 SEEN_ARTICLES_FILE = DATA_DIR / "seen_articles.json"
 COLLECTED_DIR = DATA_DIR / "collected"
 ISSUES_DIR = SITE_DIR / "issues"
+FEED_HEALTH_FILE = DATA_DIR / "feed_health.json"
+LOG_FILE = DATA_DIR / "errors.log"
 
 # Ensure directories exist
 for d in [DATA_DIR, DRAFTS_DIR, SITE_DIR, COLLECTED_DIR, ISSUES_DIR]:
@@ -78,6 +80,10 @@ RSS_FEEDS = {
     },
     "TechCrunch Venture": {
         "url": "https://techcrunch.com/category/venture/feed/",
+        "type": "rss",
+    },
+    "Scaling Europe Daily": {
+        "url": "https://scalingeurope.substack.com/feed",
         "type": "rss",
     },
 }
@@ -163,12 +169,13 @@ YOUTUBE_CHANNELS = {
 # ── Events config ────────────────────────────────────────────────────────────
 
 EVENTS_CONFIG = {
-    "locations": ["London", "Oxford"],
+    "locations": ["London", "Oxford", "Cambridge"],
     "eventbrite_urls": [
         "https://www.eventbrite.co.uk/d/{location}/ai-artificial-intelligence/?page=1",
         "https://www.eventbrite.co.uk/d/{location}/startup-technology/?page=1",
     ],
     # Luma discover pages — parsed via __NEXT_DATA__ JSON, not HTML scraping
+    # Geo-filtering in collector.py rejects non-UK results
     "luma_discover_urls": [
         "https://lu.ma/discover?near={location}&tag=ai",
         "https://lu.ma/discover?near={location}&tag=tech",
@@ -232,8 +239,24 @@ GA_MEASUREMENT_ID = os.getenv("GA_MEASUREMENT_ID", "")
 # Set to True during beta to prevent search engine indexing
 BETA_NOINDEX = True
 
+# ── Site URL ─────────────────────────────────────────────────────────────────
+
+SITE_URL = os.getenv("SITE_URL", "https://pulkitmishra1995-sys.github.io/the-ai-brief/")
+
+# ── Unsubscribe ─────────────────────────────────────────────────────────────
+
+UNSUBSCRIBE_SECRET = os.getenv("UNSUBSCRIBE_SECRET", "change-me-to-a-random-string")
+
+# ── Formspree (self-hosted subscribe form) ──────────────────────────────────
+
+FORMSPREE_FORM_ID = os.getenv("FORMSPREE_FORM_ID", "")
+
 # ── Scraper settings ─────────────────────────────────────────────────────────
 
 REQUEST_TIMEOUT = 15
 MAX_RETRIES = 2
 USER_AGENT = "OxfordAIPulse/1.0 (+https://github.com/pulkitmishra1995-sys)"
+
+# ── Backup settings ──────────────────────────────────────────────────────────
+
+BACKUP_RETENTION_DAYS = 30

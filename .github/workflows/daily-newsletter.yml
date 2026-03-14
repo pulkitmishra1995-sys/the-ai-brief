@@ -31,6 +31,10 @@ jobs:
       - name: Collect fresh data
         run: python3 collector.py
 
+      - name: Feed health check
+        run: python3 healthcheck.py --feeds
+        continue-on-error: true
+
       - name: Generate draft (local mode)
         run: python3 summarizer.py --local
 
@@ -41,7 +45,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add site/ data/seen_articles.json
+          git add site/ data/seen_articles.json data/collected/ data/feed_health.json
           git diff --cached --quiet || git commit -m "Daily newsletter update — $(date -u +%Y-%m-%d)"
           git push
 
